@@ -100,8 +100,6 @@ public class Organism implements Comparable<Organism> {
         row = r;
         col = c;
 
-        // setRandomAttributes();
-
         origRow = row;
         origCol = col;
 
@@ -400,8 +398,6 @@ public class Organism implements Comparable<Organism> {
         } else {
             return;
         }
-
-        // envr.resetPosition(row, col, this);
 
         energy -= moveCost;
         movesMade++;

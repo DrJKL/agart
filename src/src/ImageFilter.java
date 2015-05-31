@@ -27,7 +27,6 @@ public class ImageFilter extends FileFilter {
         return false;
     }
 
-    // The description of this filter
     @Override
     public String getDescription() {
         return "Just Images";

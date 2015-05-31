@@ -62,9 +62,7 @@ public class DrippyStrain implements Strain {
             }
         }
 
-        // setView();
         org.updates++;
-        // if (check)
         org.check();
     }
 }

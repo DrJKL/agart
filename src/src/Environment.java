@@ -105,8 +105,6 @@ public class Environment {
     }
 
     public void add(int number, Strain str) {
-        // if (activeStrains.keySet().size() + number > 26)
-        // throw new RuntimeException("adding too many critters");
         int placeX, placeY;
         for (int i = 0; i < number; i++) {
             do {
@@ -228,7 +226,6 @@ public class Environment {
     }
 
     private void addKids() {
-        // orgs.addAll(kids);
         if (kids.size() > 0) {
             for (final Organism o : kids) {
                 this.addToStrains(o);
@@ -239,8 +236,6 @@ public class Environment {
     }
 
     private void bringOutDead() {
-        // orgs.removeAll(graveyard);
-        // tomb.addAll(graveyard);
         if (graveyard.size() > 0) {
             for (final Organism org : graveyard) {
                 this.removeFromActiveStrains(org);
@@ -252,8 +247,6 @@ public class Environment {
 
     public void exterminate(Strain str) {
         if (activeStrains.containsKey(str)) {
-            // orgs.removeAll(activeStrains.get(str));
-            // tomb.addAll(activeStrains.get(str));
             tombedStrains.put(str, activeStrains.get(str));
             activeStrains.remove(str);
         }
@@ -269,22 +262,6 @@ public class Environment {
         }
         return false;
     }
-
-    // public void youngestGen(int o) {
-    // if (o > youngestIn) {
-    // youngestIn = o;
-    // }
-    // }
-    //
-    // public int youngestIn(Strain strain) {
-    // int youngest = 0;
-    // for (Organism o : strains.get(strain)) {
-    // int check = o.getGeneration();
-    // if (check > youngest)
-    // youngest = check;
-    // }
-    // return youngest;
-    // }
 
     public String listLiving() {
         for (final List<Organism> orgs : activeStrains.values()) {
@@ -326,7 +303,6 @@ public class Environment {
 
     public String listTombed() {
         for (final List<Organism> tomb : tombedStrains.values()) {
-
             Collections.sort(tomb);
         }
         int i = 1;
@@ -550,9 +526,6 @@ public class Environment {
         return width * height;
     }
 
-    /**
-     * @param child1
-     */
     public void addKid(Organism org) {
         kids.add(org);
     }

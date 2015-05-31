@@ -40,15 +40,7 @@ import strains.RayStrain;
 public class Client {
 
     public static void main(String[] args) throws Exception {
-
-        // BufferedImage bf = ImageIO.read(new File("cid_596.jpg"));
-
-        // EnvFrame frame = new EnvFrame();
-        // frame.pack();
-        // frame.setVisible(true);
-
         javax.swing.SwingUtilities.invokeLater(() -> doGUI());
-
     }
 
     private static void doGUI() {
@@ -56,7 +48,6 @@ public class Client {
         frame.pack();
         frame.setVisible(true);
     }
-
 }
 
 @SuppressWarnings("serial")
@@ -103,7 +94,6 @@ class EnvFrame extends JFrame {
 
         myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
-        // setSize(envr.width, envr.height);
         contentPane.add(myPanel, "Center");
 
         addTimer();
@@ -216,28 +206,20 @@ class EnvFrame extends JFrame {
 
         orgAddButton = new JButton("Add Organism");
         orgAddButton.addActionListener(e -> {
-            // String strChoice = (String) JOptionPane.showInputDialog(
-            // new JFrame(), "Strain?", "Strain Choice",
-            // JOptionPane.PLAIN_MESSAGE, null, strToStrain.keySet()
-            // .toArray(), strToStrain.keySet().toArray()[0]);
-                final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
-                final Strain str = strToStrain.get(strChoice);
-                envr.add(str);
-                updateData();
-            });
+            final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
+            final Strain str = strToStrain.get(strChoice);
+            envr.add(str);
+            updateData();
+        });
 
         multOrgAddButton = new JButton("Add Organisms");
         multOrgAddButton.addActionListener(e -> {
             final int num = Integer.parseInt(JOptionPane.showInputDialog("Number of Organisms?"));
-            // String strChoice = (String) JOptionPane.showInputDialog(
-            // new JFrame(), "Strain?", "Strain Choice",
-            // JOptionPane.PLAIN_MESSAGE, null, strToStrain.keySet()
-            // .toArray(), strToStrain.keySet().toArray()[0]);
-                final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
-                final Strain str = strToStrain.get(strChoice);
-                envr.add(num, str);
-                updateData();
-            });
+            final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
+            final Strain str = strToStrain.get(strChoice);
+            envr.add(num, str);
+            updateData();
+        });
 
         orgPlaceButton = new JButton("Place Organism");
         orgPlaceButton.addActionListener(e -> {
@@ -416,10 +398,7 @@ class EnvFrame extends JFrame {
 
     }
 
-    private void addTimer()
-    // post: creates a timer that calls the model's update
-    // method and repaints the display
-    {
+    private void addTimer() {
         final ActionListener updater = e -> {
             envr.update();
             updateData();
@@ -428,10 +407,7 @@ class EnvFrame extends JFrame {
         myTimer = new javax.swing.Timer(MAX_DELAY / 2, updater);
     }
 
-    private void addRandomTimer()
-    // post: creates a timer that calls the model's update
-    // method and repaints the display
-    {
+    private void addRandomTimer() {
         final ActionListener updater = e -> {
             if (envr.livingOrgs() == 0) {
                 final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
@@ -450,10 +426,6 @@ class EnvFrame extends JFrame {
         numStrainsLabel.setText("Strains: " + envr.strains.keySet().size());
         numTombedLabel.setText("Tombed: " + envr.tombedOrgs());
         numUpdatesLabel.setText("Updates: " + envr.updates);
-        // visStrainLabel.setText(envr.listStrainData());
-        // allStrains.setText(envr.listStrainData());
-        // livingStrains.setText(envr.listActiveStrainData());
-        // deadStrains.setText(envr.listTombStrainData());
     }
 }
 

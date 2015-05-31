@@ -62,9 +62,7 @@ public class FloatyStrain implements Strain {
             }
         }
 
-        // setView();
         org.updates++;
-        // if (check)
         org.check();
     }
 }
