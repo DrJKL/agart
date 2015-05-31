@@ -118,9 +118,7 @@ public class Environment {
     }
 
     public Organism addOneAt(Strain str, int r, int c) {
-        r = checkRow(r);
-        c = checkCol(c);
-        final Organism next = new Organism(this, new DefaultStrain(), r, c);
+        final Organism next = new Organism(this, new DefaultStrain(), checkRow(r), checkCol(c));
         String strName = str.getStrainName();
         final int i = 0;
         String newName = strName;
@@ -137,20 +135,12 @@ public class Environment {
     }
 
     public Organism addOneAt(Strain str, int xMin, int yMin, int xMax, int yMax) {
-        if (xMin < 0) {
-            xMin = 0;
-        }
-        if (yMin < 0) {
-            yMin = 0;
-        }
-        if (xMax >= width) {
-            xMax = width - 1;
-        }
-        if (yMax >= height) {
-            yMax = height - 1;
-        }
-        final int orgX = randomInt(xMin, xMax);
-        final int orgY = randomInt(yMin, yMax);
+        final int checkedXMin = Math.max(xMin, 0);
+        final int checkedYMin = Math.max(yMin, 0);
+        final int checkedXMax = Math.max(xMax, 0);
+        final int checkedYMax = Math.max(yMax, 0);
+        final int orgX = randomInt(checkedXMin, checkedXMax);
+        final int orgY = randomInt(checkedYMin, checkedYMax);
         final Organism next = addOneAt(str, orgY, orgX);
         return next;
     }
