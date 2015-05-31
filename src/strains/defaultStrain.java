@@ -3,58 +3,62 @@ package strains;
 import src.Organism;
 import src.Strain;
 
-public class defaultStrain implements Strain {
+public class DefaultStrain implements Strain {
 
-	String strainName = "AllgemeineVIRUS ";
-	int youngest = -1;
+    String strainName = "AllgemeineVIRUS ";
+    int youngest = -1;
 
-	public defaultStrain(String str) {
-		strainName = str;
-	}
+    public DefaultStrain(String str) {
+        strainName = str;
+    }
 
-	public defaultStrain() {
-		strainName = "AllgemeineVIRUS ";
-	}
+    public DefaultStrain() {
+        strainName = "AllgemeineVIRUS ";
+    }
 
-	public String getStrainName() {
-		return strainName;
-	}
+    @Override
+    public String getStrainName() {
+        return strainName;
+    }
 
-	public void renameStrain(String str) {
-		strainName = str;
-	}
+    @Override
+    public void renameStrain(String str) {
+        strainName = str;
+    }
 
-	public void youngest(int orgGen) {
-		if (orgGen > youngest) {
-			youngest = orgGen;
-		}
-	}
+    @Override
+    public void youngest(int orgGen) {
+        if (orgGen > youngest) {
+            youngest = orgGen;
+        }
+    }
 
-	public int getYoungest() {
-		return youngest;
-	}
+    @Override
+    public int getYoungest() {
+        return youngest;
+    }
 
-	public void update(Organism org) {
+    @Override
+    public void update(Organism org) {
 
-		for (int j = 0; j < 15; j++) {
-			org.acquireRand(org.getRedX(), org.getGreenX(), org.getBlueX());
-		}
+        for (int j = 0; j < 15; j++) {
+            org.acquireRand(org.getRedX(), org.getGreenX(), org.getBlueX());
+        }
 
-		if (org.getEnergy() >= org.getEnergyCap() - 20
-				&& org.getGeneration() < org.getBreedcap()
-				&& org.getChildrenSpawned() < org.getMaxkids()
-				&& Math.random() * 100 < org.getReprX()) {
-			org.replicate();
-		}
+        if (org.getEnergy() >= org.getEnergyCap() - 20 && org.getGeneration() < org.getBreedcap()
+                && org.getChildrenSpawned() < org.getMaxkids()
+                && Math.random() * 100 < org.getReprX()) {
+            org.replicate();
+        }
 
-		for (int i = 0; i < org.randomInt(0, org.getMovesEach()); i++) {
-			if (org.getEnergy() < org.getMoveCost())
-				break;
-			else {
-				org.move();
-			}
-		}
-		org.updates++;
-		org.check();
-	}
+        for (int i = 0; i < org.randomInt(0, org.getMovesEach()); i++) {
+            if (org.getEnergy() < org.getMoveCost()) {
+                break;
+            } else {
+                org.move();
+            }
+        }
+        org.updates++;
+        org.check();
+    }
 }
