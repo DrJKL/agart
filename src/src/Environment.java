@@ -38,8 +38,6 @@ public class Environment {
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
     private static final String defName = "V-Land";
-    // ArrayList<Organism> orgs = new ArrayList<Organism>();
-    // ArrayList<Organism> tomb = new ArrayList<Organism>();
     ArrayList<Organism> graveyard = new ArrayList<>();
     ArrayList<Organism> kids = new ArrayList<>();
 
@@ -47,12 +45,16 @@ public class Environment {
         return low + (int) (Math.random() * (high - low + 1));
     }
 
+    static int checkBounds(int c, int max) {
+        return Math.min(Math.max(c, 0), max);
+    }
+
     private int checkCol(int c) {
-        return Math.min(Math.max(c, 0), this.width - 1);
+        return checkBounds(c, width - 1);
     }
 
     private int checkRow(int r) {
-        return Math.min(Math.max(r, 0), this.height - 1);
+        return checkBounds(r, height - 1);
     }
 
     public Environment(BufferedImage bimage) {
@@ -116,8 +118,6 @@ public class Environment {
     }
 
     public Organism addOneAt(Strain str, int r, int c) {
-        // if (strains.keySet().size() + 1 > 26)
-        // throw new RuntimeException("too many critters");
         r = checkRow(r);
         c = checkCol(c);
         final Organism next = new Organism(this, new DefaultStrain(), r, c);
@@ -130,7 +130,6 @@ public class Environment {
         final Strain strainSet = str;
         next.setStrain(strainSet);
         lastStrain++;
-        // orgs.add(next);
         str.youngest(0);
         addToStrains(next);
         addToActiveStrains(next);
@@ -138,8 +137,6 @@ public class Environment {
     }
 
     public Organism addOneAt(Strain str, int xMin, int yMin, int xMax, int yMax) {
-        // if (orgs.size() + 1 > this.size())
-        // throw new RuntimeException("too many critters");
         if (xMin < 0) {
             xMin = 0;
         }

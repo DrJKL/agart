@@ -444,20 +444,11 @@ public class Organism implements Comparable<Organism> {
     }
 
     public boolean inRegion(int minX, int minY, int maxX, int maxY) {
-        if (minX < 0) {
-            minX = 0;
-        }
-        if (minY < 0) {
-            minY = 0;
-        }
-        if (maxX >= envr.width) {
-            maxX = envr.width - 1;
-        }
-        if (maxY >= envr.height) {
-            maxY = envr.width - 1;
-        }
-
-        return (col >= minX && row >= minY && col <= maxX && row <= maxY);
+        final int boundedMinX = Math.max(0, minX);
+        final int boundedMinY = Math.max(0, minY);
+        final int boundedMaxX = Math.min(envr.width - 1, maxX);
+        final int boundedMaxY = Math.min(envr.height - 1, maxY);
+        return (col >= boundedMinX && row >= boundedMinY && col <= boundedMaxX && row <= boundedMaxY);
     }
 
     public boolean inRegion(Region reg) {
@@ -1064,9 +1055,6 @@ public class Organism implements Comparable<Organism> {
         return builder.toString();
     }
 
-    /**
-     * @param strainSet
-     */
     public void setStrain(Strain strainSet) {
         strain = strainSet;
         final String newName = strainSet.getStrainName()
@@ -1078,9 +1066,6 @@ public class Organism implements Comparable<Organism> {
         return movesEach;
     }
 
-    /**
-     * @return reprX
-     */
     public double getReprX() {
         return reprX;
     }
