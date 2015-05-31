@@ -1010,10 +1010,6 @@ public class Organism implements Comparable<Organism> {
         return orgName.length() - org.orgName.length();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
