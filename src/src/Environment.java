@@ -27,10 +27,10 @@ public class Environment {
     String name;
     int updates;
 
-    List<String> strainNames = new LinkedList<String>();
-    HashMap<Strain, LinkedList<Organism>> strains = new HashMap<Strain, LinkedList<Organism>>();
-    HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<Strain, LinkedList<Organism>>();
-    HashMap<Strain, LinkedList<Organism>> tombedStrains = new HashMap<Strain, LinkedList<Organism>>();
+    List<String> strainNames = new LinkedList<>();
+    HashMap<Strain, LinkedList<Organism>> strains = new HashMap<>();
+    HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
+    HashMap<Strain, LinkedList<Organism>> tombedStrains = new HashMap<>();
 
     int youngestIn = 0;
     int lastStrain = 0;
@@ -40,33 +40,19 @@ public class Environment {
     private static final String defName = "V-Land";
     // ArrayList<Organism> orgs = new ArrayList<Organism>();
     // ArrayList<Organism> tomb = new ArrayList<Organism>();
-    ArrayList<Organism> graveyard = new ArrayList<Organism>();
-    ArrayList<Organism> kids = new ArrayList<Organism>();
+    ArrayList<Organism> graveyard = new ArrayList<>();
+    ArrayList<Organism> kids = new ArrayList<>();
 
-    private int randomInt(int low, int high) {
+    private static int randomInt(int low, int high) {
         return low + (int) (Math.random() * (high - low + 1));
     }
 
     private int checkCol(int c) {
-        if (c < 0) {
-            c = 0;
-        }
-        if (c >= this.width) {
-            c = this.width - 1;
-        }
-
-        return c;
+        return Math.min(Math.max(c, 0), this.width - 1);
     }
 
     private int checkRow(int r) {
-        if (r < 0) {
-            r = 0;
-        }
-        if (r >= this.height) {
-            r = this.height - 1;
-        }
-
-        return r;
+        return Math.min(Math.max(r, 0), this.height - 1);
     }
 
     public Environment(BufferedImage bimage) {
@@ -139,9 +125,6 @@ public class Environment {
         final int i = 0;
         String newName = strName;
         while (strainNames.contains(newName)) {
-            if (i == 26) {
-                return null;
-            }
             newName = strName += strainNameMods[i];
         }
         final Strain strainSet = str;
@@ -179,7 +162,7 @@ public class Environment {
         final Strain s = org.strain;
         LinkedList<Organism> toAdd = strains.get(s);
         if (toAdd == null) {
-            toAdd = new LinkedList<Organism>();
+            toAdd = new LinkedList<>();
         }
         toAdd.add(org);
         strains.put(s, toAdd);
@@ -190,7 +173,7 @@ public class Environment {
         final Strain s = org.strain;
         LinkedList<Organism> toAdd = activeStrains.get(s);
         if (toAdd == null) {
-            toAdd = new LinkedList<Organism>();
+            toAdd = new LinkedList<>();
         }
         toAdd.add(org);
         activeStrains.put(s, toAdd);
@@ -200,7 +183,7 @@ public class Environment {
         final Strain sChar = org.strain;
         LinkedList<Organism> toAdd = activeStrains.get(sChar);
         if (toAdd == null) {
-            toAdd = new LinkedList<Organism>();
+            toAdd = new LinkedList<>();
         }
         toAdd.remove(org);
         activeStrains.put(sChar, toAdd);
@@ -210,7 +193,7 @@ public class Environment {
         final Strain sChar = org.strain;
         LinkedList<Organism> toAdd = tombedStrains.get(sChar);
         if (toAdd == null) {
-            toAdd = new LinkedList<Organism>();
+            toAdd = new LinkedList<>();
         }
         toAdd.add(org);
         tombedStrains.put(sChar, toAdd);
@@ -220,27 +203,24 @@ public class Environment {
         final LinkedList<Organism> thisStrain = strains.get(s);
         if (thisStrain == null) {
             return 0;
-        } else {
-            return thisStrain.size();
         }
+        return thisStrain.size();
     }
 
     public int getActiveStrainSize(Strain strain) {
         final LinkedList<Organism> thisStrain = activeStrains.get(strain);
         if (thisStrain == null) {
             return 0;
-        } else {
-            return thisStrain.size();
         }
+        return thisStrain.size();
     }
 
     public int getTombStrainSize(Strain strain) {
         final LinkedList<Organism> thisStrain = tombedStrains.get(strain);
         if (thisStrain == null) {
             return 0;
-        } else {
-            return thisStrain.size();
         }
+        return thisStrain.size();
     }
 
     public void update() {

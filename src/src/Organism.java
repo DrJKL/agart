@@ -215,30 +215,28 @@ public class Organism implements Comparable<Organism> {
     public void divide() {
         if (energy < energyCap || !hasSpace()) {
             return;
-        } else {
-            Organism child1, child2;
-            child1 = repr();
-            childrenSpawned++;
-            child2 = repr();
-            childrenSpawned++;
-            envr.addKid(child1);
-            envr.addKid(child2);
-            strain.youngest(generation + 1);
-            passOn();
         }
+        Organism child1, child2;
+        child1 = repr();
+        childrenSpawned++;
+        child2 = repr();
+        childrenSpawned++;
+        envr.addKid(child1);
+        envr.addKid(child2);
+        strain.youngest(generation + 1);
+        passOn();
     }
 
     public void replicate() {
         if (energy < reprCost || !hasSpace()) {
             return;
-        } else {
-            Organism child;
-            child = repr();
-            energy /= 2;
-            childrenSpawned++;
-            envr.addKid(child);
-            strain.youngest(generation + 1);
         }
+        Organism child;
+        child = repr();
+        energy /= 2;
+        childrenSpawned++;
+        envr.addKid(child);
+        strain.youngest(generation + 1);
     }
 
     // Creates new Virus with mutated attributes
@@ -502,7 +500,7 @@ public class Organism implements Comparable<Organism> {
     }
 
     private void setView() {
-        view = new ArrayList<Color>();
+        view = new ArrayList<>();
         final int r = row;
         final int c = col;
         if (r < 0 || c < 0 || r >= envr.height || c >= envr.width) {
@@ -1017,9 +1015,8 @@ public class Organism implements Comparable<Organism> {
     public int compareTo(Organism org) {
         if (orgName.length() == org.orgName.length()) {
             return orgName.compareTo(org.orgName);
-        } else {
-            return orgName.length() - org.orgName.length();
         }
+        return orgName.length() - org.orgName.length();
     }
 
     /*
@@ -1115,9 +1112,8 @@ class OrgSortByStrainID implements Comparator<Organism> {
     public int compare(Organism o1, Organism o2) {
         if (o1.orgName.length() == o2.orgName.length()) {
             return o1.orgName.compareTo(o2.orgName);
-        } else {
-            return o1.orgName.length() - o2.orgName.length();
         }
+        return o1.orgName.length() - o2.orgName.length();
     }
 }
 

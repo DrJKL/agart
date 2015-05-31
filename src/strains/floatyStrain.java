@@ -54,12 +54,11 @@ public class FloatyStrain implements Strain {
         for (int i = 0; i < org.randomInt(0, org.getMovesEach()); i++) {
             if (org.getEnergy() < org.getMoveCost()) {
                 break;
+            }
+            if (org.viewMaxAll() == 0) {
+                org.move(org.viewMaxAll());
             } else {
-                if (org.viewMaxAll() == 0) {
-                    org.move(org.viewMaxAll());
-                } else {
-                    org.move();
-                }
+                org.move();
             }
         }
 

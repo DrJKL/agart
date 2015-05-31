@@ -55,9 +55,8 @@ public class RayStrain implements Strain {
         for (int i = 0; i < org.randomInt(0, org.getMovesEach()); i++) {
             if (org.getEnergy() < org.getMoveCost()) {
                 break;
-            } else {
-                org.move(org.northX, org.eastX, org.southX, org.westX);
             }
+            org.move(org.northX, org.eastX, org.southX, org.westX);
         }
 
         org.updates++;

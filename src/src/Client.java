@@ -77,9 +77,9 @@ class EnvFrame extends JFrame {
     JPanel mainControlsPanel, organismControls, orgAddPanel;
     JRadioButton defStrainButton, dripStrainButton, floatStrainButton;
 
-    HashMap<String, Strain> strToStrain = new HashMap<String, Strain>();
-    Set<JButton> orgButtons = new HashSet<JButton>();
-    Set<JButton> dataButtons = new HashSet<JButton>();
+    HashMap<String, Strain> strToStrain = new HashMap<>();
+    Set<JButton> orgButtons = new HashSet<>();
+    Set<JButton> dataButtons = new HashSet<>();
 
     private static final int MAX_DELAY = 140;
 
@@ -379,15 +379,14 @@ class EnvFrame extends JFrame {
     private void toggleRunningButtons() {
         if (randTimer.isRunning()) {
             return;
+        }
+        if (myTimer.isRunning()) {
+            for (final JButton but : dataButtons) {
+                but.setEnabled(false);
+            }
         } else {
-            if (myTimer.isRunning()) {
-                for (final JButton but : dataButtons) {
-                    but.setEnabled(false);
-                }
-            } else {
-                for (final JButton but : dataButtons) {
-                    but.setEnabled(true);
-                }
+            for (final JButton but : dataButtons) {
+                but.setEnabled(true);
             }
         }
     }

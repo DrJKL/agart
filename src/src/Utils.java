@@ -31,9 +31,8 @@ public class Utils {
         final java.net.URL imgURL = Utils.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
         }
+        System.err.println("Couldn't find file: " + path);
+        return null;
     }
 }

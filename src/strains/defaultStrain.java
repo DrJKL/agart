@@ -54,9 +54,8 @@ public class DefaultStrain implements Strain {
         for (int i = 0; i < org.randomInt(0, org.getMovesEach()); i++) {
             if (org.getEnergy() < org.getMoveCost()) {
                 break;
-            } else {
-                org.move();
             }
+            org.move();
         }
         org.updates++;
         org.check();
