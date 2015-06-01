@@ -5,7 +5,7 @@ import src.Strain;
 
 public class FloatyStrain implements Strain {
 
-    String strainName = "TrielFligVIRUS ";
+    final String strainName;
     int youngest = -1;
 
     public FloatyStrain(String str) {
@@ -13,17 +13,12 @@ public class FloatyStrain implements Strain {
     }
 
     public FloatyStrain() {
-        strainName = "TrielFligVIRUS ";
+        strainName = "Floaty VIRUS ";
     }
 
     @Override
     public String getStrainName() {
         return strainName;
-    }
-
-    @Override
-    public void renameStrain(String str) {
-        strainName = str;
     }
 
     @Override
@@ -51,7 +46,7 @@ public class FloatyStrain implements Strain {
             org.replicate();
         }
 
-        for (int i = 0; i < org.randomInt(0, org.getMovesEach()); i++) {
+        for (int i = 0; i < Organism.randomInt(0, org.getMovesEach()); i++) {
             if (org.getEnergy() < org.getMoveCost()) {
                 break;
             }

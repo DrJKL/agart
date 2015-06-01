@@ -5,7 +5,7 @@ import src.Strain;
 
 public class TestStrain implements Strain {
 
-    String strainName = "Test ";
+    final String strainName;
     int youngest = -1;
 
     public TestStrain(String str) {
@@ -19,11 +19,6 @@ public class TestStrain implements Strain {
     @Override
     public String getStrainName() {
         return strainName;
-    }
-
-    @Override
-    public void renameStrain(String str) {
-        strainName = str;
     }
 
     @Override
@@ -59,7 +54,7 @@ public class TestStrain implements Strain {
         // }
 
         // if (updateX == 2) {
-        for (int i = 0; i < org.randomInt(0, org.getMovesEach()); i++) {
+        for (int i = 0; i < Organism.randomInt(0, org.getMovesEach()); i++) {
             if (org.getEnergy() < org.getMoveCost()) {
                 break;
             }

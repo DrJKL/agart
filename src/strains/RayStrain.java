@@ -5,7 +5,7 @@ import src.Strain;
 
 public class RayStrain implements Strain {
 
-    String strainName = "StrahlVIRUS ";
+    final String strainName;
     int youngest = -1;
 
     public RayStrain(String str) {
@@ -13,17 +13,12 @@ public class RayStrain implements Strain {
     }
 
     public RayStrain() {
-        strainName = "StrahlVIRUS ";
+        strainName = "Ray VIRUS ";
     }
 
     @Override
     public String getStrainName() {
         return strainName;
-    }
-
-    @Override
-    public void renameStrain(String str) {
-        strainName = str;
     }
 
     @Override
@@ -52,7 +47,7 @@ public class RayStrain implements Strain {
             org.replicate();
         }
 
-        for (int i = 0; i < org.randomInt(0, org.getMovesEach()); i++) {
+        for (int i = 0; i < Organism.randomInt(0, org.getMovesEach()); i++) {
             if (org.getEnergy() < org.getMoveCost()) {
                 break;
             }
