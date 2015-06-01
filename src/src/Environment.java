@@ -346,8 +346,7 @@ public class Environment {
     public String getLongestTombedOrgName() {
         String res = "";
         for (final Strain strain : tombedStrains.keySet()) {
-            final List<Organism> tomb = tombedStrains.get(strain);
-            for (final Organism o : tomb) {
+            for (final Organism o : tombedStrains.get(strain)) {
                 if (o.orgName.length() > res.length()) {
                     res = o.orgName;
                 }
