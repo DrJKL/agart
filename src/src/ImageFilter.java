@@ -10,21 +10,7 @@ public class ImageFilter extends FileFilter {
     // Accept all directories and all gif, jpg, tiff, or png files.
     @Override
     public boolean accept(File f) {
-        if (f.isDirectory()) {
-            return true;
-        }
-
-        final String extension = Utils.getExtension(f);
-        if (extension != null) {
-            if (extension.equals(Utils.tiff) || extension.equals(Utils.tif)
-                    || extension.equals(Utils.gif) || extension.equals(Utils.jpeg)
-                    || extension.equals(Utils.jpg) || extension.equals(Utils.png)) {
-                return true;
-            }
-            return false;
-        }
-
-        return false;
+        return f.isDirectory() || Utils.validExtension(Utils.getExtension(f));
     }
 
     @Override

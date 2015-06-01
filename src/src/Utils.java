@@ -1,21 +1,27 @@
 package src;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
 /* Utils.java is used by FileChooserDemo2.java. */
 public class Utils {
-    public final static String jpeg = "jpeg";
-    public final static String jpg = "jpg";
-    public final static String gif = "gif";
-    public final static String tiff = "tiff";
-    public final static String tif = "tif";
-    public final static String png = "png";
+    public static final String jpeg = "jpeg";
+    public static final String jpg = "jpg";
+    public static final String gif = "gif";
+    public static final String tiff = "tiff";
+    public static final String tif = "tif";
+    public static final String png = "png";
+    public static final List<String> extensions = Arrays.asList(jpeg, jpg, gif, tiff, tif, png);
+
+    public static boolean validExtension(String extension) {
+        return extension != null && extensions.contains(extension);
+    }
 
     /** Get the extension of a file. */
     public static String getExtension(File f) {
-
         String ext = null;
         final String s = f.getName();
         final int i = s.lastIndexOf('.');
