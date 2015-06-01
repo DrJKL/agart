@@ -177,7 +177,7 @@ public class Organism implements Comparable<Organism> {
         if (onEdge()) {
             causeOfDeath = codHereBeDragons;
         }
-        if (!causeOfDeath.equals("")) {
+        if (!causeOfDeath.equals("Living")) {
             passOn();
         }
     }
