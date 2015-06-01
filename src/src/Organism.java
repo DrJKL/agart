@@ -2,7 +2,6 @@ package src;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class Organism implements Comparable<Organism> {
 
@@ -20,8 +19,6 @@ public class Organism implements Comparable<Organism> {
     private final int mutation, mutationX, moveCost, reprCost, reprX, energyCap;
 
     private int row, col;
-    private final int origRow;
-    private final int origCol;
 
     public final int redX, greenX, blueX;
     public int northX, eastX, southX, westX;
@@ -29,8 +26,6 @@ public class Organism implements Comparable<Organism> {
     private static final String codDef = "Living";
     private static final String codStarved = "Starvation";
     private static final String codOldAge = "Old Age";
-    @SuppressWarnings("unused")
-    private static final String codCrowding = "Overcrowding";
     private static final String codGericide = "Gericide";
     private static final String codHereBeDragons = "Dragons";
 
@@ -56,52 +51,26 @@ public class Organism implements Comparable<Organism> {
 
     private static final int lowestRGBPer = 30;
 
-    public int randomInt(int low, int high) {
+    public static int randomInt(int low, int high) {
         return low + (int) (Math.random() * (high - low + 1));
     }
 
     // New organism with random attributes at random location
     public Organism(Environment env, Strain str) {
-        envr = env;
-        strain = str;
-        orgName = str.getStrainName();
-        causeOfDeath = codDef;
-        generation = 0;
-        strain.youngest(0);
-
-        row = randomInt(0, envr.height);
-        col = randomInt(0, envr.width);
-        origRow = row;
-        origCol = col;
-
-        energyCap = randomInt(capLow, capHigh);
-        energy = energyCap / 2;
-
-        moveCost = randomInt(moveLow, moveHigh);
-        reprCost = randomInt(rprLow, rprHigh);
-        reprX = randomInt(rprXLow, rprXHigh);
-        mutation = randomInt(mutLow, mutHigh);
-        mutationX = randomInt(mutXLow, mutXHigh);
-
-        redX = randomInt(0, 100);
-        greenX = randomInt(0, 100);
-        blueX = randomInt(0, 100);
+        this(env, str, randomInt(0, env.height), randomInt(0, env.width));
     }
 
     // New virus with random attributes at a set location
     public Organism(Environment env, Strain str, int r, int c) {
+        row = r;
+        col = c;
+
         envr = env;
         strain = str;
         orgName = str.getStrainName();
         causeOfDeath = codDef;
         generation = 0;
         strain.youngest(0);
-
-        row = r;
-        col = c;
-
-        origRow = row;
-        origCol = col;
 
         energyCap = randomInt(capLow, capHigh);
         energy = energyCap / 2;
@@ -128,8 +97,6 @@ public class Organism implements Comparable<Organism> {
         envr = env;
         row = r;
         col = c;
-        origRow = row;
-        origCol = col;
         generation = gen;
         energy = cap / 2;
         mutation = mut;
@@ -188,21 +155,6 @@ public class Organism implements Comparable<Organism> {
 
     public void passOn() {
         envr.graveyard.add(this);
-    }
-
-    public void divide() {
-        if (energy < energyCap || !hasSpace()) {
-            return;
-        }
-        Organism child1, child2;
-        child1 = repr();
-        childrenSpawned++;
-        child2 = repr();
-        childrenSpawned++;
-        envr.addKid(child1);
-        envr.addKid(child2);
-        strain.youngest(generation + 1);
-        passOn();
     }
 
     public void replicate() {
@@ -318,31 +270,6 @@ public class Organism implements Comparable<Organism> {
         move(direction);
     }
 
-    // dir is one of the four cardinal directions ("North", "South", "East",
-    // "West")
-    // or one "Up", "Down", "Left", "Right"
-    // Case doesn't matter, abbreviations or single characters valid
-    public void move(String dir) {
-
-        int direction = -1;
-        final char dirChar = dir.toLowerCase().charAt(0);
-
-        if (dirChar == 'u' || dirChar == 'n') {
-            direction = 0;
-        }
-        if (dirChar == 'r' || dirChar == 'e') {
-            direction = 1;
-        }
-        if (dirChar == 'd' || dirChar == 's') {
-            direction = 2;
-        }
-        if (dirChar == 'l' || dirChar == 'w') {
-            direction = 3;
-        }
-
-        move(direction);
-    }
-
     /** dir >= 0 and dir <4 */
     public void move(int dir) {
         int direction = -1;
@@ -417,37 +344,6 @@ public class Organism implements Comparable<Organism> {
         return false;
     }
 
-    public boolean inRegion(int minX, int minY, int maxX, int maxY) {
-        final int boundedMinX = Math.max(0, minX);
-        final int boundedMinY = Math.max(0, minY);
-        final int boundedMaxX = Math.min(envr.width - 1, maxX);
-        final int boundedMaxY = Math.min(envr.height - 1, maxY);
-        return (col >= boundedMinX && row >= boundedMinY && col <= boundedMaxX && row <= boundedMaxY);
-    }
-
-    public boolean inRegion(Region reg) {
-        return reg.inRegion(this);
-    }
-
-    @SuppressWarnings("unused")
-    private int neighborCount() {
-        int neighbors = 0;
-        for (int i = row - 1; i <= row + 1; i++) {
-            for (int j = col - 1; i <= col + 1; j++) {
-                if (i < 0 || j < 0 || i >= envr.image.getHeight() || j >= envr.image.getWidth()) {
-                    continue;
-                } else if (envr.orgAt(j, i)) {
-                    neighbors++;
-                }
-            }
-        }
-        return neighbors - 1;
-    }
-
-    public int distanceFromOrigin() {
-        return distanceFrom(origCol, origRow);
-    }
-
     public int distanceFromCenter() {
         final int x = envr.width / 2;
         final int y = envr.height / 2;
@@ -483,7 +379,7 @@ public class Organism implements Comparable<Organism> {
         if (East < envr.width) {
             view.add(1, new Color(envr.image.getRGB(East, r)));
         } else {
-            view.add(0, Color.BLACK);
+            view.add(1, Color.BLACK);
         }
         if (South < envr.height) {
             view.add(2, new Color(envr.image.getRGB(c, South)));
@@ -539,63 +435,6 @@ public class Organism implements Comparable<Organism> {
         return maxIdx;
     }
 
-    @SuppressWarnings("unchecked")
-    public int viewSecondRed() {
-        setView();
-        final ArrayList<Color> newView = (ArrayList<Color>) view.clone();
-        newView.set(this.viewMaxRed(), null);
-        int maxIdx = 0;
-        int maxRed = 0;
-        for (int i = 0; i < newView.size(); i++) {
-            if (newView.get(i) != null) {
-                final int currRed = newView.get(i).getRed();
-                if (currRed >= maxRed) {
-                    maxIdx = i;
-                    maxRed = currRed;
-                }
-            }
-        }
-        return maxIdx;
-    }
-
-    @SuppressWarnings("unchecked")
-    public int viewSecondGreen() {
-        setView();
-        final ArrayList<Color> newView = (ArrayList<Color>) view.clone();
-        newView.set(this.viewMaxGreen(), null);
-        int maxIdx = 0;
-        int maxGreen = 0;
-        for (int i = 0; i < newView.size(); i++) {
-            if (newView.get(i) != null) {
-                final int currGreen = newView.get(i).getGreen();
-                if (currGreen >= maxGreen) {
-                    maxIdx = i;
-                    maxGreen = currGreen;
-                }
-            }
-        }
-        return maxIdx;
-    }
-
-    @SuppressWarnings("unchecked")
-    public int viewSecondBlue() {
-        setView();
-        final ArrayList<Color> newView = (ArrayList<Color>) view.clone();
-        newView.set(this.viewMaxBlue(), null);
-        int maxIdx = 0;
-        int maxBlue = 0;
-        for (int i = 0; i < newView.size(); i++) {
-            if (newView.get(i) != null) {
-                final int currBlue = newView.get(i).getBlue();
-                if (currBlue >= maxBlue) {
-                    maxIdx = i;
-                    maxBlue = currBlue;
-                }
-            }
-        }
-        return maxIdx;
-    }
-
     public int viewMaxAll() {
         setView();
         int maxIdx = 0;
@@ -611,39 +450,6 @@ public class Organism implements Comparable<Organism> {
             }
         }
         return maxIdx;
-    }
-
-    @SuppressWarnings("unchecked")
-    public int viewSecondAll() {
-        setView();
-        final ArrayList<Color> newView = (ArrayList<Color>) view.clone();
-        newView.set(viewMaxAll(), null);
-        int maxIdx = 0;
-        int maxAll = 0;
-        for (int i = 0; i < newView.size(); i++) {
-            if (newView.get(i) != null) {
-                final Color check = newView.get(i);
-                final int currAll = check.getBlue() + check.getRed() + check.getGreen();
-                if (currAll >= maxAll) {
-                    maxIdx = i;
-                    maxAll = currAll;
-                }
-            }
-        }
-        return maxIdx;
-    }
-
-    public void acquireRand() {
-        final int rand = randomInt(1, 3);
-        if (rand == 1) {
-            acquireRed();
-        }
-        if (rand == 2) {
-            acquireGreen();
-        }
-        if (rand == 3) {
-            acquireBlue();
-        }
     }
 
     /*
@@ -712,28 +518,12 @@ public class Organism implements Comparable<Organism> {
         return generation;
     }
 
-    public int getMovesMade() {
-        return movesMade;
-    }
-
-    public int getResourcesGathered() {
-        return resourcesGathered;
-    }
-
     public int getEnergy() {
         return energy;
     }
 
-    public double getMutation() {
-        return mutation;
-    }
-
     public int getMoveCost() {
         return moveCost;
-    }
-
-    public int getReprCost() {
-        return reprCost;
     }
 
     public int getEnergyCap() {
@@ -819,48 +609,4 @@ public class Organism implements Comparable<Organism> {
         return reprX;
     }
 
-}
-
-class Region {
-
-    int minX, minY, maxX, maxY;
-
-    private Region(int minimumX, int minimumY, int maximumX, int maximumY) {
-        minX = minimumX;
-        minY = minimumY;
-        maxX = maximumX;
-        maxY = maximumY;
-    }
-
-    boolean inRegion(Organism org) {
-        final int col = org.getCol();
-        final int row = org.getRow();
-        return (col >= minX && row >= minY && col <= maxX && row <= maxY);
-    }
-}
-
-// Comparators Below
-
-class OrgSortByStrainID implements Comparator<Organism> {
-    @Override
-    public int compare(Organism o1, Organism o2) {
-        if (o1.orgName.length() == o2.orgName.length()) {
-            return o1.orgName.compareTo(o2.orgName);
-        }
-        return o1.orgName.length() - o2.orgName.length();
-    }
-}
-
-class OrgSortByGeneration implements Comparator<Organism> {
-    @Override
-    public int compare(Organism o1, Organism o2) {
-        return o1.getGeneration() - o2.getGeneration();
-    }
-}
-
-class OrgSortByCOD implements Comparator<Organism> {
-    @Override
-    public int compare(Organism o1, Organism o2) {
-        return o1.causeOfDeath.compareTo(o2.causeOfDeath);
-    }
 }
