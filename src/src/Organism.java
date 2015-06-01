@@ -6,10 +6,10 @@ import java.util.Comparator;
 
 public class Organism implements Comparable<Organism> {
 
-    String orgName, causeOfDeath;
+    String orgName, causeOfDeath = "";
     Strain strain;
     private final Environment envr;
-    private int generation;
+    private final int generation;
     private int childrenSpawned, movesMade;
 
     public int updates;
@@ -17,14 +17,14 @@ public class Organism implements Comparable<Organism> {
     private int resourcesGathered, energy, red, blue, green;
     private ArrayList<Color> view;
 
-    private int mutation, mutationX, moveCost, reprCost, reprX, energyCap;
+    private final int mutation, mutationX, moveCost, reprCost, reprX, energyCap;
 
-    private int row, col, origRow, origCol;
+    private int row, col;
+    private final int origRow;
+    private final int origCol;
 
-    public int redX, greenX, blueX;
+    public final int redX, greenX, blueX;
     public int northX, eastX, southX, westX;
-
-    private boolean immortal = false;
 
     private static final String codDef = "Living";
     private static final String codStarved = "Starvation";
@@ -150,25 +150,6 @@ public class Organism implements Comparable<Organism> {
 
     }
 
-    public void setRandomAttributes() {
-
-        origRow = row;
-        origCol = col;
-
-        energyCap = randomInt(capLow, capHigh);
-        energy = energyCap / 2;
-
-        moveCost = randomInt(moveLow, moveHigh);
-        reprCost = randomInt(rprLow, rprHigh);
-        reprX = randomInt(rprXLow, rprXHigh);
-        mutation = randomInt(mutLow, mutHigh);
-        mutationX = randomInt(mutXLow, mutXHigh);
-
-        redX = randomInt(1, 100);
-        greenX = randomInt(1, 100);
-        blueX = randomInt(1, 100);
-    }
-
     public void update() {
         strain.update(this);
     }
@@ -185,20 +166,19 @@ public class Organism implements Comparable<Organism> {
 
     public void check() {
         if (energy <= 0) {
-            passOn();
             causeOfDeath = codStarved;
         }
         if (updates > lifeSpan) {
-            passOn();
             causeOfDeath = codOldAge;
         }
         if (envr.getActiveStrainSize(strain) > popCap && generation + 1 < this.strain.getYoungest()) {
-            passOn();
             causeOfDeath = codGericide;
         }
         if (onEdge()) {
-            passOn();
             causeOfDeath = codHereBeDragons;
+        }
+        if (!causeOfDeath.equals("")) {
+            passOn();
         }
     }
 
@@ -363,9 +343,7 @@ public class Organism implements Comparable<Organism> {
         move(direction);
     }
 
-    /*
-     * dir >= 0 and dir <4
-     */
+    /** dir >= 0 and dir <4 */
     public void move(int dir) {
         int direction = -1;
 
@@ -730,252 +708,56 @@ public class Organism implements Comparable<Organism> {
         }
     }
 
-    /**
-     * @return the generation
-     */
     public int getGeneration() {
         return generation;
     }
 
-    /**
-     * @param generation
-     *            the generation to set
-     */
-    public void setGeneration(int generation) {
-        this.generation = generation;
-    }
-
-    /**
-     * @return the movesMade
-     */
     public int getMovesMade() {
         return movesMade;
     }
 
-    /**
-     * @param movesMade
-     *            the movesMade to set
-     */
-    public void setMovesMade(int movesMade) {
-        this.movesMade = movesMade;
-    }
-
-    /**
-     * @return the resourcesGathered
-     */
     public int getResourcesGathered() {
         return resourcesGathered;
     }
 
-    /**
-     * @param resourcesGathered
-     *            the resourcesGathered to set
-     */
-    public void setResourcesGathered(int resourcesGathered) {
-        this.resourcesGathered = resourcesGathered;
-    }
-
-    /**
-     * @return the energy
-     */
     public int getEnergy() {
         return energy;
     }
 
-    /**
-     * @param energy
-     *            the energy to set
-     */
-    public void setEnergy(int energy) {
-        this.energy = energy;
-    }
-
-    /**
-     * @return the mutation
-     */
     public double getMutation() {
         return mutation;
     }
 
-    /**
-     * @param mutation
-     *            the mutation to set
-     */
-    public void setMutation(int mutation) {
-        this.mutation = mutation;
-    }
-
-    /**
-     * @return the moveCost
-     */
     public int getMoveCost() {
         return moveCost;
     }
 
-    /**
-     * @param moveCost
-     *            the moveCost to set
-     */
-    public void setMoveCost(int moveCost) {
-        this.moveCost = moveCost;
-    }
-
-    /**
-     * @return the reprCost
-     */
     public int getReprCost() {
         return reprCost;
     }
 
-    /**
-     * @param reprCost
-     *            the reprCost to set
-     */
-    public void setReprCost(int reprCost) {
-        this.reprCost = reprCost;
-    }
-
-    /**
-     * @return the energyCap
-     */
     public int getEnergyCap() {
         return energyCap;
     }
 
-    /**
-     * @param energyCap
-     *            the energyCap to set
-     */
-    public void setEnergyCap(int energyCap) {
-        this.energyCap = energyCap;
-    }
-
-    /**
-     * @return the row
-     */
     public int getRow() {
         return row;
     }
 
-    /**
-     * @param row
-     *            the row to set
-     */
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    /**
-     * @return the col
-     */
     public int getCol() {
         return col;
     }
 
-    /**
-     * @param col
-     *            the col to set
-     */
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-    /**
-     * @return the red
-     */
-    public int getRed() {
-        return red;
-    }
-
-    /**
-     * @param red
-     *            the red to set
-     */
-    public void setRed(int red) {
-        this.red = red;
-    }
-
-    /**
-     * @return the blue
-     */
-    public int getBlue() {
-        return blue;
-    }
-
-    /**
-     * @param blue
-     *            the blue to set
-     */
-    public void setBlue(int blue) {
-        this.blue = blue;
-    }
-
-    /**
-     * @return the green
-     */
-    public int getGreen() {
-        return green;
-    }
-
-    /**
-     * @param green
-     *            the green to set
-     */
-    public void setGreen(int green) {
-        this.green = green;
-    }
-
-    /**
-     * @return the redX
-     */
     public int getRedX() {
         return redX;
     }
 
-    /**
-     * @return the greenX
-     */
     public int getGreenX() {
         return greenX;
     }
 
-    /**
-     * @return the blueX
-     */
     public int getBlueX() {
         return blueX;
-    }
-
-    /**
-     * @param redX
-     *            the redX to set
-     */
-    public void setRedX(int redX) {
-        this.redX = redX;
-    }
-
-    /**
-     * @param greenX
-     *            the greenX to set
-     */
-    public void setGreenX(int greenX) {
-        this.greenX = greenX;
-    }
-
-    /**
-     * @param blueX
-     *            the blueX to set
-     */
-    public void setBlueX(int blueX) {
-        this.blueX = blueX;
-    }
-
-    public int getMutationX() {
-        return mutationX;
-    }
-
-    public void setMutationX(int mutX) {
-        this.mutationX = mutX;
     }
 
     public int getBreedcap() {
@@ -988,14 +770,6 @@ public class Organism implements Comparable<Organism> {
 
     public int getMaxkids() {
         return maxKids;
-    }
-
-    public void setImmortal(boolean immortal) {
-        this.immortal = immortal;
-    }
-
-    public boolean isImmortal() {
-        return immortal;
     }
 
     @Override
