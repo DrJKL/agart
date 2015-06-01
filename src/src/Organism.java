@@ -514,6 +514,10 @@ public class Organism implements Comparable<Organism> {
         }
     }
 
+    public String getOrganismName() {
+        return orgName;
+    }
+
     public int getGeneration() {
         return generation;
     }
