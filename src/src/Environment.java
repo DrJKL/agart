@@ -14,10 +14,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.imageio.ImageIO;
 
 import strains.DefaultStrain;
+import core.ImageUtil;
 
 public class Environment {
 
@@ -203,39 +205,33 @@ public class Environment {
     }
 
     public void update() {
-        for (final Strain s : activeStrains.keySet()) {
-            for (final Organism o : activeStrains.get(s)) {
-                o.update();
-            }
-        }
+        activeStrains.values().stream().flatMap(List::stream).forEach(o -> {
+            o.update();
+        });
         bringOutDead();
         addKids();
         updates++;
     }
 
     public void update(int times) {
-        for (int i = 0; i < times; i++) {
+        IntStream.range(0, times).forEach(i -> {
             update();
-        }
+        });
     }
 
     private void addKids() {
-        if (kids.size() > 0) {
-            for (final Organism o : kids) {
-                this.addToStrains(o);
-                this.addToActiveStrains(o);
-            }
-        }
+        kids.forEach(o -> {
+            this.addToStrains(o);
+            this.addToActiveStrains(o);
+        });
         kids.clear();
     }
 
     private void bringOutDead() {
-        if (graveyard.size() > 0) {
-            for (final Organism org : graveyard) {
-                this.removeFromActiveStrains(org);
-                this.addToTombedStrains(org);
-            }
-        }
+        graveyard.forEach(org -> {
+            this.removeFromActiveStrains(org);
+            this.addToTombedStrains(org);
+        });
         graveyard.clear();
     }
 
@@ -247,14 +243,9 @@ public class Environment {
     }
 
     public boolean orgAt(int r, int c) {
-        for (final List<Organism> orgs : activeStrains.values()) {
-            for (final Organism o : orgs) {
-                if (o.getRow() == r && o.getCol() == c) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return activeStrains.values().stream().flatMap(List::stream).anyMatch(o -> {
+            return o.getRow() == r && o.getCol() == c;
+        });
     }
 
     public String listLiving() {
@@ -421,28 +412,15 @@ public class Environment {
     }
 
     public int livingOrgs() {
-        int i = 0;
-        for (final List<Organism> orgs : activeStrains.values()) {
-            i += orgs.size();
-        }
-        return i;
+        return activeStrains.values().stream().mapToInt(List::size).sum();
     }
 
     public int tombedOrgs() {
-        int i = 0;
-        for (final List<Organism> orgs : tombedStrains.values()) {
-            i += orgs.size();
-        }
-        return i;
+        return tombedStrains.values().stream().mapToInt(List::size).sum();
     }
 
     public int totalOrgs() {
-        // return strains.values().stream().mapToInt(List::size).sum();
-        int i = 0;
-        for (final List<Organism> orgs : strains.values()) {
-            i += orgs.size();
-        }
-        return i;
+        return strains.values().stream().mapToInt(List::size).sum();
     }
 
     private static String getDateTime() {
@@ -475,33 +453,27 @@ public class Environment {
     }
 
     public int getRed(int r, int c) {
-        return new Color(image.getRGB(r, c)).getRed();
+        return ImageUtil.getRed(r, c, image);
     }
 
     public int getGreen(int r, int c) {
-        return new Color(image.getRGB(r, c)).getGreen();
+        return ImageUtil.getGreen(r, c, image);
     }
 
     public int getBlue(int r, int c) {
-        return new Color(image.getRGB(r, c)).getBlue();
+        return ImageUtil.getBlue(r, c, image);
     }
 
     public void setRed(int r, int c, int newRed) {
-        final Color color = new Color(image.getRGB(r, c));
-        final Color newColor = new Color(newRed, color.getGreen(), color.getBlue());
-        image.setRGB(r, c, newColor.getRGB());
+        ImageUtil.setRed(r, c, newRed, image);
     }
 
     public void setGreen(int r, int c, int newGreen) {
-        final Color color = new Color(image.getRGB(r, c));
-        final Color newColor = new Color(color.getRed(), newGreen, color.getBlue());
-        image.setRGB(r, c, newColor.getRGB());
+        ImageUtil.setGreen(r, c, newGreen, image);
     }
 
     public void setBlue(int r, int c, int newBlue) {
-        final Color color = new Color(image.getRGB(r, c));
-        final Color newColor = new Color(color.getRed(), color.getGreen(), newBlue);
-        image.setRGB(r, c, newColor.getRGB());
+        ImageUtil.setBlue(r, c, newBlue, image);
     }
 
     public int size() {
