@@ -485,15 +485,15 @@ class MyPanel extends JPanel {
 @SuppressWarnings("serial")
 class orgAddPanel extends JPanel implements ActionListener {
 
-    static String defStrainString = "AllgemeineVIRUS";
+    static String defaultStrainString = "AllgemeineVIRUS";
     static String dripStrainString = "FlossVIRUS";
     static String floatStrainString = "TrielFligVIRUS";
     static String rayStrainString = "StrahlVIRUS";
 
-    static String defStrain = "AllgemeineVIRUS ";
-    static String dripStrain = "FlossVIRUS ";
-    static String floatStrain = "TrielFligVIRUS ";
-    static String rayStrain = "StrahlVIRUS ";
+    static String defaultStrain = "Default VIRUS ";
+    static String dripStrain = "Drippy VIRUS ";
+    static String floatStrain = "Floaty VIRUS ";
+    static String rayStrain = "Ray VIRUS ";
 
     String chosenStrain;
 
@@ -501,9 +501,9 @@ class orgAddPanel extends JPanel implements ActionListener {
 
         super(new BorderLayout());
 
-        final JRadioButton defStrainButton = new JRadioButton(defStrainString);
+        final JRadioButton defStrainButton = new JRadioButton(defaultStrainString);
         defStrainButton.setMnemonic(KeyEvent.VK_1);
-        defStrainButton.setActionCommand(defStrain);
+        defStrainButton.setActionCommand(defaultStrain);
         defStrainButton.setSelected(true);
 
         final JRadioButton dripStrainButton = new JRadioButton(dripStrainString);
@@ -529,7 +529,7 @@ class orgAddPanel extends JPanel implements ActionListener {
         floatStrainButton.addActionListener(this);
         rayStrainButton.addActionListener(this);
 
-        chosenStrain = defStrain;
+        chosenStrain = defaultStrain;
 
         final JPanel radioPanel = new JPanel(new GridLayout(0, 1));
         radioPanel.add(defStrainButton);
