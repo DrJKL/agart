@@ -442,6 +442,7 @@ public class Environment {
     }
 
     public int totalOrgs() {
+        // return strains.values().stream().mapToInt(List::size).sum();
         int i = 0;
         for (final List<Organism> orgs : strains.values()) {
             i += orgs.size();
@@ -458,18 +459,7 @@ public class Environment {
     public void saveImage() {
         final String date = getDateTime();
         final File output = new File("./outputImages/" + date + ".png");
-        if (!output.exists()) {
-            try {
-                output.createNewFile();
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            ImageIO.write(image, "jpeg", output);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        saveImage(output, image);
     }
 
     public void saveNegative() {
@@ -477,31 +467,28 @@ public class Environment {
         final RescaleOp op = new RescaleOp(-1.0f, 255f, null);
         final BufferedImage negative = op.filter(image, null);
         final File outputNeg = new File("./outputImages/" + date + "Neg.png");
+        saveImage(outputNeg, negative);
+    }
+
+    private static void saveImage(File file, BufferedImage image) {
         try {
-            outputNeg.createNewFile();
+            file.createNewFile();
+            ImageIO.write(image, "png", file);
         } catch (final IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            ImageIO.write(negative, "jpeg", outputNeg);
-        } catch (final IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     public int getRed(int r, int c) {
-        final Color color = new Color(image.getRGB(r, c));
-        return color.getRed();
+        return new Color(image.getRGB(r, c)).getRed();
     }
 
     public int getGreen(int r, int c) {
-        final Color color = new Color(image.getRGB(r, c));
-        return color.getGreen();
+        return new Color(image.getRGB(r, c)).getGreen();
     }
 
     public int getBlue(int r, int c) {
-        final Color color = new Color(image.getRGB(r, c));
-        return color.getBlue();
+        return new Color(image.getRGB(r, c)).getBlue();
     }
 
     public void setRed(int r, int c, int newRed) {
