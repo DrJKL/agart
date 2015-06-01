@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -47,14 +48,6 @@ public class Environment {
 
     static int checkBounds(int c, int max) {
         return Math.min(Math.max(c, 0), max);
-    }
-
-    private int checkCol(int c) {
-        return checkBounds(c, width - 1);
-    }
-
-    private int checkRow(int r) {
-        return checkBounds(r, height - 1);
     }
 
     public Environment(BufferedImage bimage) {
@@ -116,7 +109,8 @@ public class Environment {
     }
 
     public Organism addOneAt(Strain str, int r, int c) {
-        final Organism next = new Organism(this, new DefaultStrain(), checkRow(r), checkCol(c));
+        final Organism next = new Organism(this, new DefaultStrain(), checkBounds(r, height - 1),
+                checkBounds(c, width - 1));
         String strName = str.getStrainName();
         final int i = 0;
         String newName = strName;
@@ -264,24 +258,22 @@ public class Environment {
     }
 
     public String listLiving() {
-        for (final List<Organism> orgs : activeStrains.values()) {
-            Collections.sort(orgs);
-        }
+        activeStrains.values().stream().forEach(Collections::sort);
         int i = 1;
         int columns = 0;
         final int spacePer = this.getLongestLivingOrgName().length() + 15;
         final StringBuilder builder = new StringBuilder();
-        builder.append("\n" + livingOrgs() + " Living:" + "\n");
-        for (final Strain strain : activeStrains.keySet()) {
-            final List<Organism> orgs = activeStrains.get(strain);
-            for (final Organism o : orgs) {
+        builder.append("\n" + livingOrgs() + " Living:\n");
+        for (final LinkedList<Organism> strain : activeStrains.values()) {
+            for (final Organism o : strain) {
                 String str = o.orgName;
-                for (int j = 0; j < this.getLongestLivingOrgName().length() - o.orgName.length()
-                        + 1; j++) {
+                final int spaces = this.getLongestLivingOrgName().length() - o.orgName.length() + 1;
+                for (int j = 0; j < spaces; j++) {
                     str += " ";
                 }
                 str += o.distanceFromCenter();
-                for (int j = 0; j < 3 - Integer.toString(o.distanceFromCenter()).length(); j++) {
+                final int moreSpaces = 3 - Integer.toString(o.distanceFromCenter()).length();
+                for (int j = 0; j < moreSpaces; j++) {
                     str += " ";
                 }
                 str += "from OP";
@@ -309,7 +301,7 @@ public class Environment {
         int columns = 0;
         final int spacePer = this.getLongestTombedOrgName().length() + 16;
         final StringBuilder builder = new StringBuilder();
-        builder.append("\n" + tombedOrgs() + " Dead:" + "\n");
+        builder.append("\n" + tombedOrgs() + " Dead:\n");
         for (final Strain strain : tombedStrains.keySet()) {
             final List<Organism> tomb = tombedStrains.get(strain);
             for (final Organism o : tomb) {
@@ -332,8 +324,7 @@ public class Environment {
 
     public String getLongestLivingOrgName() {
         String res = "";
-        for (final Strain strain : activeStrains.keySet()) {
-            final List<Organism> orgs = activeStrains.get(strain);
+        for (final List<Organism> orgs : activeStrains.values()) {
             for (final Organism o : orgs) {
                 if (o.orgName.length() > res.length()) {
                     res = o.orgName;
@@ -341,6 +332,11 @@ public class Environment {
             }
         }
         return res;
+    }
+
+    public String getLongestLivingOrgName_new() {
+        return activeStrains.values().stream().flatMap(LinkedList::stream)
+                .map(Organism::getOrganismName).max(Comparator.comparing(String::length)).get();
     }
 
     public String getLongestTombedOrgName() {
