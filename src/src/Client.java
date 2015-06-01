@@ -228,13 +228,19 @@ class EnvFrame extends JFrame {
             int placeX = envr.width / 2;
             int placeY = envr.height / 2;
             try {
-                placeX = Integer.parseInt(JOptionPane.showInputDialog("X?" + " (0-" + envr.width
-                        + ")"));
-            } catch (final Exception e11) {}
+                final String xValue = JOptionPane.showInputDialog("X? (0-" + envr.width + ")");
+                placeX = Integer.parseInt(xValue);
+            } catch (final NumberFormatException e11) {
+                System.err.println("Failed to get X Value");
+                return;
+            }
             try {
-                placeY = Integer.parseInt(JOptionPane.showInputDialog("Y?" + " (0-" + envr.height
-                        + ")"));
-            } catch (final Exception e12) {}
+                final String yValue = JOptionPane.showInputDialog("Y? (0-" + envr.height + ")");
+                placeY = Integer.parseInt(yValue);
+            } catch (final NumberFormatException e12) {
+                System.err.println("Failed to get Y Value");
+                return;
+            }
             envr.addOneAt(str, placeY, placeX);
             updateData();
         });
@@ -388,7 +394,7 @@ class EnvFrame extends JFrame {
         try {
             bmg = ImageIO.read(img);
         } catch (final IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         envr = new Environment(bmg);
         myPanel = new MyPanel(envr.image);
