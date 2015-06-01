@@ -25,15 +25,15 @@ public class Environment {
 
     BufferedImage image;
 
-    int width;
-    int height;
-    String name;
+    final int width;
+    final int height;
+    final String name;
     int updates;
 
-    List<String> strainNames = new LinkedList<>();
-    HashMap<Strain, LinkedList<Organism>> strains = new HashMap<>();
-    HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
-    HashMap<Strain, LinkedList<Organism>> tombedStrains = new HashMap<>();
+    final List<String> strainNames = new LinkedList<>();
+    final HashMap<Strain, LinkedList<Organism>> strains = new HashMap<>();
+    final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
+    final HashMap<Strain, LinkedList<Organism>> tombedStrains = new HashMap<>();
 
     int youngestIn = 0;
     int lastStrain = 0;
@@ -71,27 +71,15 @@ public class Environment {
     public BufferedImage SetEnvironment(int w, int h, boolean rand) {
         // Create buffered image that does not support transparency
         final BufferedImage bimage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        if (rand) {
-            for (int i = 0; i < w; i++) {
-                for (int j = 0; j < h; j++) {
-                    final int R = (int) (Math.random() * 256);
-                    final int G = (int) (Math.random() * 256);
-                    final int B = (int) (Math.random() * 256);
-                    final Color randomColor = new Color(R, G, B);
-                    bimage.setRGB(i, j, randomColor.getRGB());
-                }
-            }
-        } else {
-            for (int i = 0; i < w; i++) {
-                for (int j = 0; j < h; j++) {
-                    final int R = 255;
-                    final int G = 255;
-                    final int B = 255;
-                    final Color color = new Color(R, G, B);
-                    bimage.setRGB(i, j, color.getRGB());
-                }
-            }
-        }
+        IntStream.range(0, w).forEach(x -> {
+            IntStream.range(0, h).forEach(y -> {
+                final int R = rand ? (int) (Math.random() * 256) : 255;
+                final int G = rand ? (int) (Math.random() * 256) : 255;
+                final int B = rand ? (int) (Math.random() * 256) : 255;
+                final Color color = new Color(R, G, B);
+                bimage.setRGB(x, y, color.getRGB());
+            });
+        });
         return bimage;
     }
 
@@ -100,14 +88,14 @@ public class Environment {
     }
 
     public void add(int number, Strain str) {
-        int placeX, placeY;
-        for (int i = 0; i < number; i++) {
+        IntStream.range(0, number).forEach(i -> {
+            int placeX, placeY;
             do {
                 placeX = randomInt(0, this.width);
                 placeY = randomInt(0, this.height);
             } while (this.orgAt(placeY, placeX));
             this.addOneAt(str, placeY, placeX);
-        }
+        });
     }
 
     public Organism addOneAt(Strain str, int r, int c) {
@@ -474,10 +462,6 @@ public class Environment {
 
     public void setBlue(int r, int c, int newBlue) {
         ImageUtil.setBlue(r, c, newBlue, image);
-    }
-
-    public int size() {
-        return width * height;
     }
 
     public void addKid(Organism org) {
