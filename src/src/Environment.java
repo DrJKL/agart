@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,20 +23,18 @@ public class Environment {
 
     final int width;
     final int height;
-    final String name;
     int updates;
 
     final List<String> strainNames = new LinkedList<>();
-    final HashMap<Strain, LinkedList<Organism>> strains = new HashMap<>();
-    final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
-    final HashMap<Strain, LinkedList<Organism>> tombedStrains = new HashMap<>();
+    public final HashMap<Strain, LinkedList<Organism>> strains = new HashMap<>();
+    public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
+    public final HashMap<Strain, LinkedList<Organism>> tombedStrains = new HashMap<>();
 
     int youngestIn = 0;
     int lastStrain = 0;
     String[] strainNameMods = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
-    private static final String defName = "V-Land";
     ArrayList<Organism> graveyard = new ArrayList<>();
     ArrayList<Organism> kids = new ArrayList<>();
 
@@ -54,19 +50,17 @@ public class Environment {
         image = bimage;
         width = image.getWidth();
         height = image.getHeight();
-        name = defName;
         updates = 0;
     }
 
     public Environment(int w, int h, boolean rand) {
-        image = SetEnvironment(w, h, rand);
+        image = setEnvironment(w, h, rand);
         width = w;
         height = h;
-        name = defName;
         updates = 0;
     }
 
-    public BufferedImage SetEnvironment(int w, int h, boolean rand) {
+    private static BufferedImage setEnvironment(int w, int h, boolean rand) {
         // Create buffered image that does not support transparency
         final BufferedImage bimage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         IntStream.range(0, w).forEach(x -> {
@@ -114,23 +108,13 @@ public class Environment {
         return next;
     }
 
-    public Organism addOneAt(Strain str, int xMin, int yMin, int xMax, int yMax) {
-        final int checkedXMin = Math.max(xMin, 0);
-        final int checkedYMin = Math.max(yMin, 0);
-        final int checkedXMax = Math.max(xMax, 0);
-        final int checkedYMax = Math.max(yMax, 0);
-        final int orgX = randomInt(checkedXMin, checkedXMax);
-        final int orgY = randomInt(checkedYMin, checkedYMax);
-        final Organism next = addOneAt(str, orgY, orgX);
-        return next;
+    public void addKid(Organism org) {
+        kids.add(org);
     }
 
     private void addToStrains(Organism org) {
         final Strain s = org.strain;
-        LinkedList<Organism> toAdd = strains.get(s);
-        if (toAdd == null) {
-            toAdd = new LinkedList<>();
-        }
+        final LinkedList<Organism> toAdd = strains.getOrDefault(s, new LinkedList<>());
         toAdd.add(org);
         strains.put(s, toAdd);
         strainNames.add(s.getStrainName());
@@ -138,20 +122,14 @@ public class Environment {
 
     private void addToActiveStrains(Organism org) {
         final Strain s = org.strain;
-        LinkedList<Organism> toAdd = activeStrains.get(s);
-        if (toAdd == null) {
-            toAdd = new LinkedList<>();
-        }
+        final LinkedList<Organism> toAdd = activeStrains.getOrDefault(s, new LinkedList<>());
         toAdd.add(org);
         activeStrains.put(s, toAdd);
     }
 
     private void removeFromActiveStrains(Organism org) {
         final Strain sChar = org.strain;
-        LinkedList<Organism> toAdd = activeStrains.get(sChar);
-        if (toAdd == null) {
-            toAdd = new LinkedList<>();
-        }
+        final LinkedList<Organism> toAdd = activeStrains.getOrDefault(sChar, new LinkedList<>());
         toAdd.remove(org);
         activeStrains.put(sChar, toAdd);
     }
@@ -189,12 +167,6 @@ public class Environment {
         updates++;
     }
 
-    public void update(int times) {
-        IntStream.range(0, times).forEach(i -> {
-            update();
-        });
-    }
-
     private void addKids() {
         kids.forEach(o -> {
             this.addToStrains(o);
@@ -222,169 +194,6 @@ public class Environment {
         return activeStrains.values().stream().flatMap(List::stream).anyMatch(o -> {
             return o.getRow() == r && o.getCol() == c;
         });
-    }
-
-    public String listLiving() {
-        activeStrains.values().stream().forEach(Collections::sort);
-        int i = 1;
-        int columns = 0;
-        final int spacePer = this.getLongestLivingOrgName().length() + 15;
-        final StringBuilder builder = new StringBuilder();
-        builder.append("\n" + livingOrgs() + " Living:\n");
-        for (final LinkedList<Organism> strain : activeStrains.values()) {
-            for (final Organism o : strain) {
-                String str = o.orgName;
-                final int spaces = this.getLongestLivingOrgName().length() - o.orgName.length() + 1;
-                for (int j = 0; j < spaces; j++) {
-                    str += " ";
-                }
-                str += o.distanceFromCenter();
-                final int moreSpaces = 3 - Integer.toString(o.distanceFromCenter()).length();
-                for (int j = 0; j < moreSpaces; j++) {
-                    str += " ";
-                }
-                str += "from OP";
-                builder.append(str);
-                columns += str.length();
-                while (columns % spacePer != 0) {
-                    builder.append(" ");
-                    columns++;
-                }
-                if (i % 1 == 0) {
-                    builder.append("\n");
-                    columns = 0;
-                }
-                i++;
-            }
-        }
-        return builder.toString();
-    }
-
-    public String listTombed() {
-        for (final List<Organism> tomb : tombedStrains.values()) {
-            Collections.sort(tomb);
-        }
-        int i = 1;
-        int columns = 0;
-        final int spacePer = this.getLongestTombedOrgName().length() + 16;
-        final StringBuilder builder = new StringBuilder();
-        builder.append("\n" + tombedOrgs() + " Dead:\n");
-        for (final Strain strain : tombedStrains.keySet()) {
-            final List<Organism> tomb = tombedStrains.get(strain);
-            for (final Organism o : tomb) {
-                final String str = o.orgName + " of " + o.causeOfDeath;
-                builder.append(str);
-                columns += str.length();
-                while (columns % spacePer != 0) {
-                    builder.append(" ");
-                    columns++;
-                }
-                if (i % 3 == 0) {
-                    builder.append("\n");
-                    columns = 0;
-                }
-                i++;
-            }
-        }
-        return builder.toString();
-    }
-
-    public String getLongestLivingOrgName() {
-        String res = "";
-        for (final List<Organism> orgs : activeStrains.values()) {
-            for (final Organism o : orgs) {
-                if (o.orgName.length() > res.length()) {
-                    res = o.orgName;
-                }
-            }
-        }
-        return res;
-    }
-
-    public String getLongestLivingOrgName_new() {
-        return activeStrains.values().stream().flatMap(LinkedList::stream)
-                .map(Organism::getOrganismName).max(Comparator.comparing(String::length)).get();
-    }
-
-    public String getLongestTombedOrgName() {
-        String res = "";
-        for (final Strain strain : tombedStrains.keySet()) {
-            for (final Organism o : tombedStrains.get(strain)) {
-                if (o.orgName.length() > res.length()) {
-                    res = o.orgName;
-                }
-            }
-        }
-        return res;
-    }
-
-    public String listStrains() {
-        final StringBuilder res = new StringBuilder();
-        for (final Strain c : strains.keySet()) {
-            final LinkedList<Organism> orgsIn = strains.get(c);
-            Collections.sort(orgsIn);
-            res.append(orgsIn.size() + " in Strain " + c.getStrainName() + ":" + "\n");
-            for (final Organism o : orgsIn) {
-                res.append(o.orgName + "\n");
-            }
-            res.append("-------------------" + "\n");
-        }
-        return res.toString();
-    }
-
-    public String listStrainDataText() {
-        final StringBuilder res = new StringBuilder();
-        for (final Strain s : this.strains.keySet()) {
-            res.append("Strain " + s.getStrainName() + ": \t" + this.getActiveStrainSize(s) + "\n");
-        }
-        return res.toString();
-    }
-
-    public String listActiveStrainDataText() {
-        final StringBuilder res = new StringBuilder();
-        for (final Strain s : this.activeStrains.keySet()) {
-            res.append("Strain " + s.getStrainName() + ": \t" + this.getActiveStrainSize(s) + "\n");
-        }
-        return res.toString();
-    }
-
-    public String listTombStrainDataText() {
-        final StringBuilder res = new StringBuilder();
-        for (final Strain s : this.tombedStrains.keySet()) {
-            res.append("Strain " + s.getStrainName() + ": \t" + this.getTombStrainSize(s) + "\n");
-        }
-        return res.toString();
-    }
-
-    public String listStrainData() {
-        final StringBuilder res = new StringBuilder();
-        res.append("<html>");
-        for (final Strain s : this.strains.keySet()) {
-            res.append("Strain " + s.getStrainName() + ": \t" + this.getStrainSize(s) + "<BR>");
-        }
-        res.append("</html>");
-        return res.toString();
-    }
-
-    public String listActiveStrainData() {
-        final StringBuilder res = new StringBuilder();
-        res.append("<html>");
-        for (final Strain s : this.activeStrains.keySet()) {
-            res.append("Strain " + s.getStrainName() + ": \t" + this.getActiveStrainSize(s)
-                    + "<BR>");
-        }
-        res.append("</html>");
-        return res.toString();
-    }
-
-    public String listTombStrainData() {
-        final StringBuilder res = new StringBuilder();
-        res.append("<html>");
-        for (final Strain s : this.tombedStrains.keySet()) {
-            res.append("Strain " + s.getStrainName() + ": \t" + this.getTombStrainSize(s) + "<BR>");
-        }
-        res.append("</html>");
-        return res.toString();
     }
 
     public int livingOrgs() {
@@ -443,10 +252,6 @@ public class Environment {
 
     public void setBlue(int r, int c, int newBlue) {
         ImageUtil.setBlue(r, c, newBlue, image);
-    }
-
-    public void addKid(Organism org) {
-        kids.add(org);
     }
 
 }

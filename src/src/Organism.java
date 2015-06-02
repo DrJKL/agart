@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 public class Organism implements Comparable<Organism> {
 
-    String orgName, causeOfDeath = "";
+    public String orgName;
+    public String causeOfDeath = "";
     Strain strain;
     private final Environment envr;
     private final int generation;

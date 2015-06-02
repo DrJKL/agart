@@ -39,6 +39,7 @@ import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
 import strains.RayStrain;
+import core.EnvironmentDataFormatter;
 
 public class Client {
 
@@ -56,6 +57,7 @@ public class Client {
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
     private Environment envr;
+    private EnvironmentDataFormatter environmentData;
 
     private MyPanel myPanel;
 
@@ -110,15 +112,15 @@ class EnvFrame extends JFrame {
 
         organismControls.setLayout(new BoxLayout(organismControls, BoxLayout.Y_AXIS));
 
-        allStrains = new JLabel(envr.listStrainData());
+        allStrains = new JLabel(environmentData.listStrainData());
         strainDataPane.addTab("All Strains", allStrains);
         strainDataPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        livingStrains = new JLabel(envr.listActiveStrainData());
+        livingStrains = new JLabel(environmentData.listActiveStrainData());
         strainDataPane.addTab("Living Strains", livingStrains);
         strainDataPane.setMnemonicAt(1, KeyEvent.VK_2);
 
-        deadStrains = new JLabel(envr.listTombStrainData());
+        deadStrains = new JLabel(environmentData.listTombStrainData());
         strainDataPane.addTab("Tomb Strains", deadStrains);
         strainDataPane.setMnemonicAt(2, KeyEvent.VK_3);
 
@@ -126,7 +128,7 @@ class EnvFrame extends JFrame {
         numTombedLabel = new JLabel("Tombed: " + envr.tombedOrgs());
         numStrainsLabel = new JLabel("Strains: " + envr.strainNames.size());
         numUpdatesLabel = new JLabel("Updates: " + envr.updates);
-        visStrainLabel = new JLabel(envr.listStrainData());
+        visStrainLabel = new JLabel(environmentData.listStrainData());
 
         createNewImageButton(contentPane);
         createSetImageButton(contentPane, fc);
@@ -228,7 +230,7 @@ class EnvFrame extends JFrame {
     private void createShowStrainData() {
         showStrainData = new JButton("Strain Data");
         showStrainData.addActionListener(e -> {
-            final JTextArea strainText = new JTextArea(envr.listStrains(), 10, 50);
+            final JTextArea strainText = new JTextArea(environmentData.listStrains(), 10, 50);
             final JScrollPane sText = new JScrollPane(strainText);
             sText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             JOptionPane.showMessageDialog(null, sText);
@@ -238,7 +240,7 @@ class EnvFrame extends JFrame {
     private void createShowTombData() {
         showTombData = new JButton("Tombed Data");
         showTombData.addActionListener(e -> {
-            final JTextArea strainText = new JTextArea(envr.listTombed(), 10, 50);
+            final JTextArea strainText = new JTextArea(environmentData.listTombed(), 10, 50);
             final JScrollPane sText = new JScrollPane(strainText);
             sText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             JOptionPane.showMessageDialog(null, sText);
@@ -274,7 +276,7 @@ class EnvFrame extends JFrame {
     private void createShowLivingData() {
         showLivingData = new JButton("Living Data");
         showLivingData.addActionListener(e -> {
-            final JTextArea strainText = new JTextArea(envr.listLiving(), 10, 50);
+            final JTextArea strainText = new JTextArea(environmentData.listLiving(), 10, 50);
             final JScrollPane sText = new JScrollPane(strainText);
             sText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             JOptionPane.showMessageDialog(null, sText);
@@ -413,6 +415,7 @@ class EnvFrame extends JFrame {
 
     private void setUpEnvironment() {
         envr = new Environment(800, 600, false);
+        environmentData = new EnvironmentDataFormatter(envr);
         myPanel = new MyPanel(envr.image);
         myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         final Dimension d = new Dimension(envr.width + 150, envr.height + 100);
