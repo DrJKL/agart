@@ -2,6 +2,7 @@ package core;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 
 public class ImageUtil {
 
@@ -33,5 +34,11 @@ public class ImageUtil {
         final Color color = new Color(image.getRGB(r, c));
         final Color newColor = new Color(color.getRed(), color.getGreen(), newBlue);
         image.setRGB(r, c, newColor.getRGB());
+    }
+
+    public static BufferedImage negative(BufferedImage image) {
+        final RescaleOp op = new RescaleOp(-1.0f, 255f, null);
+        final BufferedImage negative = op.filter(image, null);
+        return negative;
     }
 }

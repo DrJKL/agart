@@ -2,10 +2,8 @@ package src;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -160,36 +158,26 @@ public class Environment {
 
     private void addToTombedStrains(Organism org) {
         final Strain sChar = org.strain;
-        LinkedList<Organism> toAdd = tombedStrains.get(sChar);
-        if (toAdd == null) {
-            toAdd = new LinkedList<>();
-        }
+        final LinkedList<Organism> toAdd = tombedStrains.getOrDefault(sChar, new LinkedList<>());
         toAdd.add(org);
         tombedStrains.put(sChar, toAdd);
     }
 
-    public int getStrainSize(Strain s) {
-        final LinkedList<Organism> thisStrain = strains.get(s);
-        if (thisStrain == null) {
-            return 0;
-        }
-        return thisStrain.size();
+    public int getStrainSize(Strain strain) {
+        return getStrainSize(strains, strain);
     }
 
     public int getActiveStrainSize(Strain strain) {
-        final LinkedList<Organism> thisStrain = activeStrains.get(strain);
-        if (thisStrain == null) {
-            return 0;
-        }
-        return thisStrain.size();
+        return getStrainSize(activeStrains, strain);
     }
 
     public int getTombStrainSize(Strain strain) {
-        final LinkedList<Organism> thisStrain = tombedStrains.get(strain);
-        if (thisStrain == null) {
-            return 0;
-        }
-        return thisStrain.size();
+        return getStrainSize(tombedStrains, strain);
+    }
+
+    private static final int getStrainSize(HashMap<Strain, LinkedList<Organism>> strains,
+            Strain strain) {
+        return strains.containsKey(strain) ? strains.get(strain).size() : 0;
     }
 
     public void update() {
@@ -412,26 +400,19 @@ public class Environment {
     }
 
     private static String getDateTime() {
-        final DateFormat dateFormat = new SimpleDateFormat("MM-dd-HHmmss");
-        final Date date = new Date();
-        return dateFormat.format(date);
+        return new SimpleDateFormat("MM-dd-HHmmss").format(new Date());
     }
 
     public void saveImage() {
-        final String date = getDateTime();
-        final File output = new File("./outputImages/" + date + ".png");
-        saveImage(output, image);
+        saveImage("", image);
     }
 
     public void saveNegative() {
-        final String date = getDateTime();
-        final RescaleOp op = new RescaleOp(-1.0f, 255f, null);
-        final BufferedImage negative = op.filter(image, null);
-        final File outputNeg = new File("./outputImages/" + date + "Neg.png");
-        saveImage(outputNeg, negative);
+        saveImage("Negative", ImageUtil.negative(image));
     }
 
-    private static void saveImage(File file, BufferedImage image) {
+    private static void saveImage(String suffix, BufferedImage image) {
+        final File file = new File(String.format("./outputImages/%s%s.png", getDateTime(), suffix));
         try {
             file.createNewFile();
             ImageIO.write(image, "png", file);
