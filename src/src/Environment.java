@@ -221,8 +221,10 @@ public class Environment {
     }
 
     private static void saveImage(String suffix, BufferedImage image) {
-        final File file = new File(String.format("./outputImages/%s%s.png", getDateTime(), suffix));
+        final File file = new File(System.getProperty("user.home"), String.format(
+                "/outputImages/%s%s.png", getDateTime(), suffix));
         try {
+            file.getParentFile().mkdirs();
             file.createNewFile();
             ImageIO.write(image, "png", file);
         } catch (final IOException e) {
