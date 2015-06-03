@@ -473,7 +473,7 @@ class EnvFrame extends JFrame {
 @SuppressWarnings("serial")
 class MyPanel extends JPanel {
 
-    BufferedImage bf;
+    private final BufferedImage bf;
 
     public MyPanel(BufferedImage image) {
         bf = image;
