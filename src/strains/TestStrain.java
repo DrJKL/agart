@@ -54,7 +54,8 @@ public class TestStrain implements Strain {
         // }
 
         // if (updateX == 2) {
-        for (int i = 0; i < Organism.randomInt(0, org.getMovesEach()); i++) {
+        int randomInt = Organism.randomInt(0, org.getMovesEach());
+        for (int i = 0; i < randomInt; i++) {
             if (org.getEnergy() < org.getMoveCost()) {
                 break;
             }
