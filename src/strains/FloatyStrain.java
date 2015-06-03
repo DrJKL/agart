@@ -2,6 +2,7 @@ package strains;
 
 import src.Organism;
 import src.Strain;
+import core.Direction;
 
 public class FloatyStrain implements Strain {
 
@@ -46,12 +47,13 @@ public class FloatyStrain implements Strain {
             org.replicate();
         }
 
-        for (int i = 0; i < Organism.randomInt(0, org.getMovesEach()); i++) {
+        int randomInt = Organism.randomInt(0, org.getMovesEach());
+        for (int i = 0; i < randomInt; i++) {
             if (org.getEnergy() < org.getMoveCost()) {
                 break;
             }
             if (org.viewMaxAll() == 0) {
-                org.move(org.viewMaxAll());
+                org.move(Direction.fromInt(org.viewMaxAll()));
             } else {
                 org.move();
             }

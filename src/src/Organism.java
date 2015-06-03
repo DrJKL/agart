@@ -1,7 +1,8 @@
 package src;
 
 import java.awt.Color;
-import java.util.ArrayList;
+
+import core.Direction;
 
 public class Organism implements Comparable<Organism> {
 
@@ -15,7 +16,6 @@ public class Organism implements Comparable<Organism> {
     public int updates;
 
     private int resourcesGathered, energy, red, blue, green;
-    private ArrayList<Color> view;
 
     private final int mutation, mutationX, moveCost, reprCost, reprX, energyCap;
 
@@ -124,7 +124,7 @@ public class Organism implements Comparable<Organism> {
 
     public void updateSpiral() {
         for (int i = 0; i < updates; i++) {
-            move(updates);
+            move(Direction.fromInt(updates));
             for (int j = 0; j < Math.pow(Math.log(updates), 2); j++) {
                 this.acquireRand(redX, greenX, blueX);
             }
@@ -267,41 +267,35 @@ public class Organism implements Comparable<Organism> {
     }
 
     public void move() {
-        final int direction = randomInt(0, 3);
-        move(direction);
+        move(Direction.random());
     }
 
     /** dir >= 0 and dir <4 */
-    public void move(int dir) {
-        int direction = -1;
-
-        direction = Math.abs(dir % 4);
-
-        if (direction == 0) {
-            if (row - 1 >= 0) {
+    public void move(Direction dir) {
+        switch (dir) {
+        case NORTH:
+            if (row > 0) {
                 row--;
-            } else {
-                return;
+                break;
             }
-        } else if (direction == 1) {
-            if (col + 1 < envr.width) {
+            return;
+        case EAST:
+            if (col < envr.width - 1) {
                 col++;
-            } else {
-                return;
+                break;
             }
-        } else if (direction == 2) {
-            if (row + 1 < envr.height) {
+            return;
+        case SOUTH:
+            if (row < envr.height - 1) {
                 row++;
-            } else {
-                return;
+                break;
             }
-        } else if (direction == 3) {
-            if (col - 1 >= 0) {
+            return;
+        case WEST:
+            if (col > 0) {
                 col--;
-            } else {
-                return;
+                break;
             }
-        } else {
             return;
         }
 
@@ -322,19 +316,19 @@ public class Organism implements Comparable<Organism> {
         }
         final int rand = randomInt(1, totX);
         if (rand > 0 && rand <= nX) {
-            move(0);
+            move(Direction.NORTH);
         } else if (rand > nX && rand <= (nX + eX)) {
-            move(1);
+            move(Direction.EAST);
         } else if (rand > (nX + eX) && rand <= (nX + eX + sX)) {
-            move(2);
+            move(Direction.SOUTH);
         } else {
-            move(3);
+            move(Direction.WEST);
         }
     }
 
     private boolean hasSpace() {
         for (int i = getRow() - 3; i <= getRow() + 3; i++) {
-            for (int j = getCol() - 3; i <= getCol() + 3; j++) {
+            for (int j = getCol() - 3; j <= getCol() + 3; j++) {
                 if (i < 0 || j < 0 || i >= envr.image.getHeight() || j >= envr.image.getWidth()) {
                     continue;
                 } else if (!envr.orgAt(i, j)) {
@@ -361,45 +355,46 @@ public class Organism implements Comparable<Organism> {
         return change;
     }
 
-    private void setView() {
-        view = new ArrayList<>();
+    private Color[] setView() {
+        final Color[] view = new Color[4];
         final int r = row;
         final int c = col;
         if (r < 0 || c < 0 || r >= envr.height || c >= envr.width) {
-            return;
+            throw new RuntimeException();
         }
         final int North = r - 1;
         final int East = c + 1;
         final int South = r + 1;
         final int West = c - 1;
         if (North >= 0) {
-            view.add(0, new Color(envr.image.getRGB(c, North)));
+            view[0] = new Color(envr.image.getRGB(c, North));
         } else {
-            view.add(0, Color.BLACK);
+            view[0] = Color.BLACK;
         }
         if (East < envr.width) {
-            view.add(1, new Color(envr.image.getRGB(East, r)));
+            view[1] = new Color(envr.image.getRGB(East, r));
         } else {
-            view.add(1, Color.BLACK);
+            view[1] = Color.BLACK;
         }
         if (South < envr.height) {
-            view.add(2, new Color(envr.image.getRGB(c, South)));
+            view[2] = new Color(envr.image.getRGB(c, South));
         } else {
-            view.add(2, Color.BLACK);
+            view[2] = Color.BLACK;
         }
         if (West >= 0) {
-            view.add(3, new Color(envr.image.getRGB(West, r)));
+            view[3] = new Color(envr.image.getRGB(West, r));
         } else {
-            view.add(3, Color.BLACK);
+            view[3] = Color.BLACK;
         }
+        return view;
     }
 
     public int viewMaxRed() {
-        setView();
+        final Color[] view = setView();
         int maxIdx = 0;
         int maxRed = 0;
-        for (int i = 0; i < view.size(); i++) {
-            final int currRed = view.get(i).getRed();
+        for (int i = 0; i < view.length; i++) {
+            final int currRed = view[i].getRed();
             if (currRed >= maxRed) {
                 maxIdx = i;
                 maxRed = currRed;
@@ -409,11 +404,11 @@ public class Organism implements Comparable<Organism> {
     }
 
     public int viewMaxGreen() {
-        setView();
+        final Color[] view = setView();
         int maxIdx = 0;
         int maxGreen = 0;
-        for (int i = 0; i < view.size(); i++) {
-            final int currGreen = view.get(i).getGreen();
+        for (int i = 0; i < view.length; i++) {
+            final int currGreen = view[i].getGreen();
             if (currGreen >= maxGreen) {
                 maxIdx = i;
                 maxGreen = currGreen;
@@ -423,11 +418,11 @@ public class Organism implements Comparable<Organism> {
     }
 
     public int viewMaxBlue() {
-        setView();
+        final Color[] view = setView();
         int maxIdx = 0;
         int maxBlue = 0;
-        for (int i = 0; i < view.size(); i++) {
-            final int currBlue = view.get(i).getBlue();
+        for (int i = 0; i < view.length; i++) {
+            final int currBlue = view[i].getBlue();
             if (currBlue >= maxBlue) {
                 maxIdx = i;
                 maxBlue = currBlue;
@@ -437,12 +432,12 @@ public class Organism implements Comparable<Organism> {
     }
 
     public int viewMaxAll() {
-        setView();
+        final Color[] view = setView();
         int maxIdx = 0;
         int maxAll = 0;
-        for (int i = view.size() - 1; i >= 0; i--) {
-            if (view.get(i) != null) {
-                final Color check = view.get(i);
+        for (int i = view.length - 1; i >= 0; i--) {
+            if (view[i] != null) {
+                final Color check = view[i];
                 final int currAll = check.getBlue() + check.getRed() + check.getGreen();
                 if (currAll >= maxAll) {
                     maxIdx = i;
