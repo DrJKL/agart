@@ -32,7 +32,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 import strains.DefaultStrain;
@@ -66,7 +65,7 @@ class EnvFrame extends JFrame {
 
   JButton startStopButton, singleStepButton, saveImageButton, saveNegButton, orgAddButton,
       orgPlaceButton, multOrgAddButton, exterminateStrainButton, startStopRandomButton;
-  JButton newImageButton, setImageButton, showLivingData, showStrainData, showAllStrainData;
+  JButton newImageButton, setImageButton, showLivingData, showStrainData;
   JLabel numOrgLabel, numStrainsLabel, numUpdatesLabel, visStrainLabel, allStrains, livingStrains,
       deadStrains;
   JPanel mainControlsPanel, organismControls, orgAddPanel;
@@ -104,19 +103,10 @@ class EnvFrame extends JFrame {
     mainControlsPanel = new JPanel();
     organismControls = new JPanel();
     orgAddPanel = new orgAddPanel();
-    final JTabbedPane strainDataPane = new JTabbedPane();
 
     mainControlsPanel.setLayout(new GridLayout(0, 5, 2, 2));
 
     organismControls.setLayout(new BoxLayout(organismControls, BoxLayout.Y_AXIS));
-
-    allStrains = new JLabel(environmentData.listStrainData());
-    strainDataPane.addTab("All Strains", allStrains);
-    strainDataPane.setMnemonicAt(0, KeyEvent.VK_1);
-
-    livingStrains = new JLabel(environmentData.listActiveStrainData());
-    strainDataPane.addTab("Living Strains", livingStrains);
-    strainDataPane.setMnemonicAt(1, KeyEvent.VK_2);
 
     numOrgLabel = new JLabel("Organisms: " + envr.livingOrgs());
     numStrainsLabel = new JLabel("Strains: " + envr.strains.keySet().size());
@@ -144,7 +134,6 @@ class EnvFrame extends JFrame {
 
     createShowLivingData();
     createShowStrainData();
-    createShowAllStrainData(strainDataPane);
 
     numOrgLabel.setAlignmentX((float) 0.5);
     orgAddButton.setAlignmentX((float) 0.5);
@@ -155,7 +144,6 @@ class EnvFrame extends JFrame {
     numStrainsLabel.setAlignmentX((float) 0.5);
     numUpdatesLabel.setAlignmentX((float) 0.5);
     visStrainLabel.setAlignmentX((float) 0.5);
-    showAllStrainData.setAlignmentX((float) 0.5);
     exterminateStrainButton.setAlignmentX((float) 0.5);
 
     mainControlsPanel.add(newImageButton);
@@ -174,13 +162,11 @@ class EnvFrame extends JFrame {
     organismControls.add(exterminateStrainButton);
     organismControls.add(showStrainData);
     organismControls.add(showLivingData);
-    organismControls.add(showAllStrainData);
     orgButtons.add(orgAddButton);
     orgButtons.add(orgPlaceButton);
     orgButtons.add(multOrgAddButton);
     orgButtons.add(exterminateStrainButton);
     dataButtons.add(showStrainData);
-    dataButtons.add(showAllStrainData);
     dataButtons.add(showLivingData);
 
     addSpeedSlider();
@@ -202,16 +188,6 @@ class EnvFrame extends JFrame {
     mainControlsPanel.add(new JLabel(" Slow"));
     mainControlsPanel.add(speedBar);
     mainControlsPanel.add(new JLabel("Fast "));
-  }
-
-  private void createShowAllStrainData(final JTabbedPane strainDataPane) {
-    showAllStrainData = new JButton("All Strain Data");
-    showAllStrainData.addActionListener(e -> {
-      final JFrame strainDataOptPane = new JFrame();
-      strainDataOptPane.add(strainDataPane);
-      strainDataOptPane.setSize(200, 800);
-      strainDataOptPane.setVisible(true);
-    });
   }
 
   private void createShowStrainData() {
