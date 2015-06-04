@@ -44,8 +44,9 @@ public class DrippyStrain implements Strain {
       if (org.getEnergy() < org.getMoveCost()) {
         break;
       }
-      if (org.viewMaxAll() == 2) {
-        org.move(Direction.fromInt(org.viewMaxAll()));
+      final Direction max = org.viewMaxAll();
+      if (max == Direction.SOUTH) {
+        org.move(max);
       } else {
         org.move();
       }

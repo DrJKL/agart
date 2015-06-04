@@ -1,6 +1,9 @@
 package src;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.IntStream;
 
 import core.Direction;
@@ -306,7 +309,7 @@ public class Organism implements Comparable<Organism> {
     return change;
   }
 
-  private Color[] setView() {
+  private Map<Direction, Color> setView() {
     final int r = row;
     final int c = col;
     if (r < 0 || c < 0 || r >= envr.height || c >= envr.width) {
@@ -316,71 +319,25 @@ public class Organism implements Comparable<Organism> {
     final int East = c + 1;
     final int South = r + 1;
     final int West = c - 1;
-    final Color[] view = new Color[4];
-    view[0] = (North >= 0) ? new Color(envr.image.getRGB(c, North)) : Color.BLACK;
-    view[1] = (East < envr.width) ? new Color(envr.image.getRGB(East, r)) : Color.BLACK;
-    view[2] = (South < envr.height) ? new Color(envr.image.getRGB(c, South)) : Color.BLACK;
-    view[3] = (West >= 0) ? new Color(envr.image.getRGB(West, r)) : Color.BLACK;
+    final Map<Direction, Color> view = new HashMap<>();
+    view.put(Direction.NORTH, (North >= 0) ? new Color(envr.image.getRGB(c, North)) : Color.BLACK);
+    view.put(Direction.EAST, (East < envr.width) ? new Color(envr.image.getRGB(East, r))
+        : Color.BLACK);
+    view.put(Direction.SOUTH, (South < envr.height) ? new Color(envr.image.getRGB(c, South))
+        : Color.BLACK);
+    view.put(Direction.WEST, (West >= 0) ? new Color(envr.image.getRGB(West, r)) : Color.BLACK);
     return view;
   }
 
-  public int viewMaxRed() {
-    final Color[] view = setView();
-    int maxIdx = 0;
-    int maxRed = 0;
-    for (int i = 0; i < view.length; i++) {
-      final int currRed = view[i].getRed();
-      if (currRed >= maxRed) {
-        maxIdx = i;
-        maxRed = currRed;
-      }
-    }
-    return maxIdx;
+  private static Integer totalNutrition(Color color) {
+    return color.getBlue() + color.getRed() + color.getGreen();
   }
 
-  public int viewMaxGreen() {
-    final Color[] view = setView();
-    int maxIdx = 0;
-    int maxGreen = 0;
-    for (int i = 0; i < view.length; i++) {
-      final int currGreen = view[i].getGreen();
-      if (currGreen >= maxGreen) {
-        maxIdx = i;
-        maxGreen = currGreen;
-      }
-    }
-    return maxIdx;
-  }
-
-  public int viewMaxBlue() {
-    final Color[] view = setView();
-    int maxIdx = 0;
-    int maxBlue = 0;
-    for (int i = 0; i < view.length; i++) {
-      final int currBlue = view[i].getBlue();
-      if (currBlue >= maxBlue) {
-        maxIdx = i;
-        maxBlue = currBlue;
-      }
-    }
-    return maxIdx;
-  }
-
-  public int viewMaxAll() {
-    final Color[] view = setView();
-    int maxIdx = 0;
-    int maxAll = 0;
-    for (int i = view.length - 1; i >= 0; i--) {
-      if (view[i] != null) {
-        final Color check = view[i];
-        final int currAll = check.getBlue() + check.getRed() + check.getGreen();
-        if (currAll >= maxAll) {
-          maxIdx = i;
-          maxAll = currAll;
-        }
-      }
-    }
-    return maxIdx;
+  public Direction viewMaxAll() {
+    final Map<Direction, Color> view = setView();
+    final Entry<Direction, Color> max = view.entrySet().stream()
+        .max((a, b) -> totalNutrition(a.getValue()).compareTo(totalNutrition(b.getValue()))).get();
+    return max.getKey();
   }
 
   public void feast() {
@@ -411,42 +368,39 @@ public class Organism implements Comparable<Organism> {
   }
 
   public void acquireRed() {
-    if (envr.getRed(col, row) > lowestRGBPer) {
-      final int orig = envr.getRed(col, row);
-      final int take = randomInt(1, 20);
-      red += take;
-      resourcesGathered += take;
-      energy += take;
-      envr.setRed(col, row, orig - take);
-    } else {
+    final int orig = envr.getRed(col, row);
+    if (orig <= lowestRGBPer) {
       return;
     }
+    final int take = randomInt(1, 20);
+    red += take;
+    resourcesGathered += take;
+    energy += take;
+    envr.setRed(col, row, orig - take);
   }
 
   public void acquireGreen() {
-    if (envr.getGreen(col, row) > lowestRGBPer) {
-      final int orig = envr.getGreen(col, row);
-      final int take = randomInt(1, 20);
-      green += take;
-      resourcesGathered += take;
-      energy += take;
-      envr.setGreen(col, row, orig - take);
-    } else {
+    final int orig = envr.getGreen(col, row);
+    if (orig <= lowestRGBPer) {
       return;
     }
+    final int take = randomInt(1, 20);
+    green += take;
+    resourcesGathered += take;
+    energy += take;
+    envr.setGreen(col, row, orig - take);
   }
 
   public void acquireBlue() {
-    if (envr.getBlue(col, row) > lowestRGBPer) {
-      final int orig = envr.getBlue(col, row);
-      final int take = randomInt(1, 20);
-      blue += take;
-      resourcesGathered += take;
-      energy += take;
-      envr.setBlue(col, row, orig - take);
-    } else {
+    final int orig = envr.getBlue(col, row);
+    if (orig <= lowestRGBPer) {
       return;
     }
+    final int take = randomInt(1, 20);
+    blue += take;
+    resourcesGathered += take;
+    energy += take;
+    envr.setBlue(col, row, orig - take);
   }
 
   public String getOrganismName() {
@@ -467,18 +421,6 @@ public class Organism implements Comparable<Organism> {
 
   public int getCol() {
     return col;
-  }
-
-  public int getRedX() {
-    return redX;
-  }
-
-  public int getGreenX() {
-    return greenX;
-  }
-
-  public int getBlueX() {
-    return blueX;
   }
 
   public int getChildrenSpawned() {

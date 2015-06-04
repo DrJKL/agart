@@ -44,8 +44,9 @@ public class FloatyStrain implements Strain {
       if (org.getEnergy() < org.getMoveCost()) {
         break;
       }
-      if (org.viewMaxAll() == 0) {
-        org.move(Direction.fromInt(org.viewMaxAll()));
+      final Direction max = org.viewMaxAll();
+      if (max == Direction.NORTH) {
+        org.move(max);
       } else {
         org.move();
       }
