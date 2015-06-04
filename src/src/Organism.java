@@ -281,16 +281,11 @@ public class Organism implements Comparable<Organism> {
   }
 
   private boolean hasSpace() {
-    for (int i = getRow() - 3; i <= getRow() + 3; i++) {
-      for (int j = getCol() - 3; j <= getCol() + 3; j++) {
-        if (i < 0 || j < 0 || i >= envr.image.getHeight() || j >= envr.image.getWidth()) {
-          continue;
-        } else if (!envr.orgAt(i, j)) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return IntStream.rangeClosed(row - 3, row + 3).anyMatch(i -> {
+      return IntStream.rangeClosed(col - 3, col + 3).anyMatch(j -> {
+        return !envr.orgAt(i, j);
+      });
+    });
   }
 
   public int distanceFromCenter() {
