@@ -1,7 +1,5 @@
 package strains;
 
-import java.util.stream.IntStream;
-
 import src.Organism;
 import src.Strain;
 
@@ -37,9 +35,10 @@ public class DefaultStrain implements Strain {
 
   @Override
   public void update(Organism org) {
-    IntStream.range(0, 15).forEach(j -> {
+
+    for (int j = 0; j < 15; j++) {
       org.acquireRand(org.getRedX(), org.getGreenX(), org.getBlueX());
-    });
+    }
 
     org.replicate();
 

@@ -448,12 +448,20 @@ public class Organism implements Comparable<Organism> {
     return orgName;
   }
 
+  public int getGeneration() {
+    return generation;
+  }
+
   public int getEnergy() {
     return energy;
   }
 
   public int getMoveCost() {
     return moveCost;
+  }
+
+  public int getEnergyCap() {
+    return energyCap;
   }
 
   public int getRow() {
@@ -476,15 +484,23 @@ public class Organism implements Comparable<Organism> {
     return blueX;
   }
 
+  public int getBreedcap() {
+    return breedCap;
+  }
+
   public int getChildrenSpawned() {
     return childrenSpawned;
   }
 
+  public int getMaxkids() {
+    return maxKids;
+  }
+
   public boolean canReplicate() {
-    return getEnergy() >= energyCap - 20 //
-        && generation < breedCap //
-        && getChildrenSpawned() < maxKids //
-        && Math.random() * 100 < reprX;
+    return getEnergy() >= getEnergyCap() - 20 //
+        && getGeneration() < getBreedcap() //
+        && getChildrenSpawned() < getMaxkids() //
+        && Math.random() * 100 < getReprX();
   }
 
   @Override
@@ -528,6 +544,10 @@ public class Organism implements Comparable<Organism> {
 
   public int getMovesEach() {
     return movesEach;
+  }
+
+  public double getReprX() {
+    return reprX;
   }
 
 }
