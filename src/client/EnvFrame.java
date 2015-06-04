@@ -1,14 +1,10 @@
-package src;
+package client;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,36 +18,24 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 
+import src.Environment;
+import src.ImageFilter;
+import src.Strain;
 import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
 import strains.RayStrain;
 import core.EnvironmentDataFormatter;
-
-public class Client {
-
-  public static void main(String[] args) throws Exception {
-    javax.swing.SwingUtilities.invokeLater(() -> doGUI());
-  }
-
-  private static void doGUI() {
-    final EnvFrame frame = new EnvFrame();
-    frame.pack();
-    frame.setVisible(true);
-  }
-}
 
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
@@ -73,7 +57,8 @@ class EnvFrame extends JFrame {
   private JButton startStopRandomButton;
   private JButton newImageButton, setImageButton, showLivingData;
   private final JLabel numOrgLabel, numUpdatesLabel;
-  private final JPanel mainControlsPanel, organismControls, orgAddPanel;
+  private final JPanel mainControlsPanel, organismControls;
+  private final OrgAddPanel orgAddPanel;
 
   private final HashMap<String, Strain> strToStrain = new HashMap<>();
   private final Set<JButton> orgButtons = new HashSet<>();
@@ -82,7 +67,7 @@ class EnvFrame extends JFrame {
   private static final int MAX_DELAY = 140;
 
   public EnvFrame() {
-    setTitle("LangZeitVIRUS");
+    setTitle("VIRUS");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     final Container contentPane = getContentPane();
     final JFileChooser fc = new JFileChooser();
@@ -106,7 +91,7 @@ class EnvFrame extends JFrame {
 
     mainControlsPanel = new JPanel();
     organismControls = new JPanel();
-    orgAddPanel = new orgAddPanel();
+    orgAddPanel = new OrgAddPanel();
 
     mainControlsPanel.setLayout(new GridLayout(0, 5, 2, 2));
 
@@ -188,7 +173,7 @@ class EnvFrame extends JFrame {
   private void createOrgPlaceButton() {
     orgPlaceButton = new JButton("Place Organism");
     orgPlaceButton.addActionListener(e -> {
-      final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
+      final String strChoice = orgAddPanel.getChosenStrain();
       final Strain str = strToStrain.get(strChoice);
       int placeX = envr.width / 2;
       int placeY = envr.height / 2;
@@ -237,7 +222,7 @@ class EnvFrame extends JFrame {
     multOrgAddButton = new JButton("Add Organisms");
     multOrgAddButton.addActionListener(e -> {
       final int num = Integer.parseInt(JOptionPane.showInputDialog("Number of Organisms?"));
-      final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
+      final String strChoice = orgAddPanel.getChosenStrain();
       final Strain str = strToStrain.get(strChoice);
       envr.add(num, str);
       updateData();
@@ -247,7 +232,7 @@ class EnvFrame extends JFrame {
   private void createOrgAddButton() {
     orgAddButton = new JButton("Add Organism");
     orgAddButton.addActionListener(e -> {
-      final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
+      final String strChoice = (orgAddPanel).getChosenStrain();
       final Strain str = strToStrain.get(strChoice);
       envr.add(str);
       updateData();
@@ -389,7 +374,7 @@ class EnvFrame extends JFrame {
   private void addRandomTimer() {
     final ActionListener updater = e -> {
       if (envr.livingOrgs() == 0) {
-        final String strChoice = ((src.orgAddPanel) orgAddPanel).getChosenStrain();
+        final String strChoice = orgAddPanel.getChosenStrain();
         final Strain strain = strToStrain.get(strChoice);
         envr.add(strain);
       }
@@ -404,94 +389,4 @@ class EnvFrame extends JFrame {
     numOrgLabel.setText("Organisms: " + envr.livingOrgs());
     numUpdatesLabel.setText("Updates: " + envr.updates);
   }
-}
-
-@SuppressWarnings("serial")
-class MyPanel extends JPanel {
-
-  private final BufferedImage bf;
-
-  public MyPanel(BufferedImage image) {
-    bf = image;
-  }
-
-  @Override
-  protected void paintComponent(Graphics g) {
-    g.drawImage(bf, 0, 0, this);
-  }
-}
-
-@SuppressWarnings("serial")
-class orgAddPanel extends JPanel implements ActionListener {
-
-  static String defaultStrainString = "Default VIRUS";
-  static String dripStrainString = "Drippy VIRUS";
-  static String floatStrainString = "Floaty VIRUS";
-  static String rayStrainString = "Ray VIRUS";
-
-  static String defaultStrain = "Default VIRUS ";
-  static String dripStrain = "Drippy VIRUS ";
-  static String floatStrain = "Floaty VIRUS ";
-  static String rayStrain = "Ray VIRUS ";
-
-  String chosenStrain;
-
-  public orgAddPanel() {
-
-    super(new BorderLayout());
-
-    final JRadioButton defStrainButton = new JRadioButton(defaultStrainString);
-    defStrainButton.setMnemonic(KeyEvent.VK_1);
-    defStrainButton.setActionCommand(defaultStrain);
-    defStrainButton.setSelected(true);
-
-    final JRadioButton dripStrainButton = new JRadioButton(dripStrainString);
-    dripStrainButton.setMnemonic(KeyEvent.VK_2);
-    dripStrainButton.setActionCommand(dripStrain);
-
-    final JRadioButton floatStrainButton = new JRadioButton(floatStrainString);
-    floatStrainButton.setMnemonic(KeyEvent.VK_3);
-    floatStrainButton.setActionCommand(floatStrain);
-
-    final JRadioButton rayStrainButton = new JRadioButton(rayStrainString);
-    rayStrainButton.setMnemonic(KeyEvent.VK_4);
-    rayStrainButton.setActionCommand(rayStrain);
-
-    final ButtonGroup group = new ButtonGroup();
-    group.add(defStrainButton);
-    group.add(dripStrainButton);
-    group.add(floatStrainButton);
-    group.add(rayStrainButton);
-
-    defStrainButton.addActionListener(this);
-    dripStrainButton.addActionListener(this);
-    floatStrainButton.addActionListener(this);
-    rayStrainButton.addActionListener(this);
-
-    chosenStrain = defaultStrain;
-
-    final JPanel radioPanel = new JPanel(new GridLayout(0, 1));
-    radioPanel.add(defStrainButton);
-    radioPanel.add(dripStrainButton);
-    radioPanel.add(floatStrainButton);
-    radioPanel.add(rayStrainButton);
-
-    add(radioPanel, BorderLayout.LINE_START);
-    setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-    final Dimension d = new Dimension();
-    d.setSize(5000, 100);
-    this.setMaximumSize(d);
-
-  }
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    chosenStrain = e.getActionCommand();
-  }
-
-  public String getChosenStrain() {
-    return chosenStrain;
-  }
-
 }

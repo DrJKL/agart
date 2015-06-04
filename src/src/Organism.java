@@ -168,12 +168,8 @@ public class Organism implements Comparable<Organism> {
   public Organism repr() {
     int r = row;
     int c = col;
-    while (r == row //
-        || c == col //
-        || r < 0 //
-        || c < 0 //
-        || r >= envr.image.getHeight() //
-        || c >= envr.image.getWidth()) {
+    while (r == row || c == col //
+        || !envr.inBounds(r, c)) {
       r = randomInt(row - 3, row + 3);
       c = randomInt(col - 3, col + 3);
     }
@@ -299,12 +295,10 @@ public class Organism implements Comparable<Organism> {
     final int South = r + 1;
     final int West = c - 1;
     final Map<Direction, Color> view = new HashMap<>();
-    view.put(Direction.NORTH, (North >= 0) ? new Color(envr.image.getRGB(c, North)) : Color.BLACK);
-    view.put(Direction.EAST, (East < envr.width) ? new Color(envr.image.getRGB(East, r))
-        : Color.BLACK);
-    view.put(Direction.SOUTH, (South < envr.height) ? new Color(envr.image.getRGB(c, South))
-        : Color.BLACK);
-    view.put(Direction.WEST, (West >= 0) ? new Color(envr.image.getRGB(West, r)) : Color.BLACK);
+    view.put(Direction.NORTH, (North >= 0) ? envr.getColor(c, North) : Color.BLACK);
+    view.put(Direction.EAST, (East < envr.width) ? envr.getColor(East, r) : Color.BLACK);
+    view.put(Direction.SOUTH, (South < envr.height) ? envr.getColor(c, South) : Color.BLACK);
+    view.put(Direction.WEST, (West >= 0) ? envr.getColor(West, r) : Color.BLACK);
     return view;
   }
 

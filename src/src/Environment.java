@@ -19,11 +19,11 @@ import core.ImageUtil;
 
 public class Environment {
 
-  BufferedImage image;
+  public final BufferedImage image;
 
-  final int width;
-  final int height;
-  int updates;
+  public final int width;
+  public final int height;
+  public int updates;
 
   public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
 
@@ -184,6 +184,15 @@ public class Environment {
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public boolean inBounds(int r, int c) {
+    return r >= 0 && r < height //
+        && c >= 0 && c < width;
+  }
+
+  public Color getColor(int r, int c) {
+    return new Color(image.getRGB(r, c));
   }
 
   public int getRed(int r, int c) {
