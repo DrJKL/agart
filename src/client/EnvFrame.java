@@ -47,7 +47,6 @@ class EnvFrame extends JFrame {
   private final JButton saveImageButton;
   private final JButton saveNegButton;
   private JButton orgAddButton;
-  private JButton orgPlaceButton;
   private JButton multOrgAddButton;
   private JButton exterminateStrainButton;
   private JButton startStopRandomButton;
@@ -109,14 +108,12 @@ class EnvFrame extends JFrame {
 
     createOrgAddButton();
     createMultOrgAddButton();
-    createOrgPlaceButton();
     createExterminateStrainButton();
 
     numOrgLabel.setAlignmentX((float) 0.5);
     numUpdatesLabel.setAlignmentX((float) 0.5);
 
     orgAddButton.setAlignmentX((float) 0.5);
-    orgPlaceButton.setAlignmentX((float) 0.5);
     multOrgAddButton.setAlignmentX((float) 0.5);
     exterminateStrainButton.setAlignmentX((float) 0.5);
 
@@ -133,12 +130,10 @@ class EnvFrame extends JFrame {
     organismControls.add(numUpdatesLabel);
 
     organismControls.add(orgAddButton);
-    organismControls.add(orgPlaceButton);
     organismControls.add(multOrgAddButton);
     organismControls.add(exterminateStrainButton);
 
     orgButtons.add(orgAddButton);
-    orgButtons.add(orgPlaceButton);
     orgButtons.add(multOrgAddButton);
     orgButtons.add(exterminateStrainButton);
 
@@ -161,32 +156,6 @@ class EnvFrame extends JFrame {
     mainControlsPanel.add(new JLabel(" Slow"));
     mainControlsPanel.add(speedBar);
     mainControlsPanel.add(new JLabel("Fast "));
-  }
-
-  private void createOrgPlaceButton() {
-    orgPlaceButton = new JButton("Place Organism");
-    orgPlaceButton.addActionListener(e -> {
-      final String strChoice = orgAddPanel.getChosenStrain();
-      final Strain str = strToStrain.get(strChoice);
-      int placeX = envr.width / 2;
-      int placeY = envr.height / 2;
-      try {
-        final String xValue = JOptionPane.showInputDialog("X? (0-" + envr.width + ")");
-        placeX = Integer.parseInt(xValue);
-      } catch (final NumberFormatException e11) {
-        System.err.println("Failed to get X Value");
-        return;
-      }
-      try {
-        final String yValue = JOptionPane.showInputDialog("Y? (0-" + envr.height + ")");
-        placeY = Integer.parseInt(yValue);
-      } catch (final NumberFormatException e12) {
-        System.err.println("Failed to get Y Value");
-        return;
-      }
-      envr.addOneAt(str, placeY, placeX);
-      updateData();
-    });
   }
 
   private void createExterminateStrainButton() {
