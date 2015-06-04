@@ -440,10 +440,10 @@ class MyPanel extends JPanel {
 @SuppressWarnings("serial")
 class orgAddPanel extends JPanel implements ActionListener {
 
-  static String defaultStrainString = "AllgemeineVIRUS";
-  static String dripStrainString = "FlossVIRUS";
-  static String floatStrainString = "TrielFligVIRUS";
-  static String rayStrainString = "StrahlVIRUS";
+  static String defaultStrainString = "Default VIRUS";
+  static String dripStrainString = "Drippy VIRUS";
+  static String floatStrainString = "Floaty VIRUS";
+  static String rayStrainString = "Ray VIRUS";
 
   static String defaultStrain = "Default VIRUS ";
   static String dripStrain = "Drippy VIRUS ";
