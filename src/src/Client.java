@@ -63,17 +63,21 @@ class EnvFrame extends JFrame {
   private javax.swing.Timer myTimer;
   private javax.swing.Timer randTimer;
 
-  JButton startStopButton, singleStepButton, saveImageButton, saveNegButton, orgAddButton,
-      orgPlaceButton, multOrgAddButton, exterminateStrainButton, startStopRandomButton;
-  JButton newImageButton, setImageButton, showLivingData, showStrainData;
-  JLabel numOrgLabel, numStrainsLabel, numUpdatesLabel, visStrainLabel, allStrains, livingStrains,
-      deadStrains;
-  JPanel mainControlsPanel, organismControls, orgAddPanel;
-  JRadioButton defStrainButton, dripStrainButton, floatStrainButton;
+  private JButton startStopButton, singleStepButton;
+  private final JButton saveImageButton;
+  private final JButton saveNegButton;
+  private JButton orgAddButton;
+  private JButton orgPlaceButton;
+  private JButton multOrgAddButton;
+  private JButton exterminateStrainButton;
+  private JButton startStopRandomButton;
+  private JButton newImageButton, setImageButton, showLivingData;
+  private final JLabel numOrgLabel, numUpdatesLabel;
+  private final JPanel mainControlsPanel, organismControls, orgAddPanel;
 
-  HashMap<String, Strain> strToStrain = new HashMap<>();
-  Set<JButton> orgButtons = new HashSet<>();
-  Set<JButton> dataButtons = new HashSet<>();
+  private final HashMap<String, Strain> strToStrain = new HashMap<>();
+  private final Set<JButton> orgButtons = new HashSet<>();
+  private final Set<JButton> dataButtons = new HashSet<>();
 
   private static final int MAX_DELAY = 140;
 
@@ -109,9 +113,7 @@ class EnvFrame extends JFrame {
     organismControls.setLayout(new BoxLayout(organismControls, BoxLayout.Y_AXIS));
 
     numOrgLabel = new JLabel("Organisms: " + envr.livingOrgs());
-    numStrainsLabel = new JLabel("Strains: " + envr.strains.keySet().size());
     numUpdatesLabel = new JLabel("Updates: " + envr.updates);
-    visStrainLabel = new JLabel(environmentData.listStrainData());
 
     createNewImageButton(contentPane);
     createSetImageButton(contentPane, fc);
@@ -133,17 +135,13 @@ class EnvFrame extends JFrame {
     createExterminateStrainButton();
 
     createShowLivingData();
-    createShowStrainData();
 
     numOrgLabel.setAlignmentX((float) 0.5);
     orgAddButton.setAlignmentX((float) 0.5);
     orgPlaceButton.setAlignmentX((float) 0.5);
     multOrgAddButton.setAlignmentX((float) 0.5);
-    showStrainData.setAlignmentX((float) 0.5);
     showLivingData.setAlignmentX((float) 0.5);
-    numStrainsLabel.setAlignmentX((float) 0.5);
     numUpdatesLabel.setAlignmentX((float) 0.5);
-    visStrainLabel.setAlignmentX((float) 0.5);
     exterminateStrainButton.setAlignmentX((float) 0.5);
 
     mainControlsPanel.add(newImageButton);
@@ -154,19 +152,16 @@ class EnvFrame extends JFrame {
     mainControlsPanel.add(setImageButton);
     organismControls.add(orgAddPanel);
     organismControls.add(numOrgLabel);
-    organismControls.add(numStrainsLabel);
     organismControls.add(numUpdatesLabel);
     organismControls.add(orgAddButton);
     organismControls.add(orgPlaceButton);
     organismControls.add(multOrgAddButton);
     organismControls.add(exterminateStrainButton);
-    organismControls.add(showStrainData);
     organismControls.add(showLivingData);
     orgButtons.add(orgAddButton);
     orgButtons.add(orgPlaceButton);
     orgButtons.add(multOrgAddButton);
     orgButtons.add(exterminateStrainButton);
-    dataButtons.add(showStrainData);
     dataButtons.add(showLivingData);
 
     addSpeedSlider();
@@ -188,16 +183,6 @@ class EnvFrame extends JFrame {
     mainControlsPanel.add(new JLabel(" Slow"));
     mainControlsPanel.add(speedBar);
     mainControlsPanel.add(new JLabel("Fast "));
-  }
-
-  private void createShowStrainData() {
-    showStrainData = new JButton("Strain Data");
-    showStrainData.addActionListener(e -> {
-      final JTextArea strainText = new JTextArea(environmentData.listStrains(), 10, 50);
-      final JScrollPane sText = new JScrollPane(strainText);
-      sText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-      JOptionPane.showMessageDialog(null, sText);
-    });
   }
 
   private void createOrgPlaceButton() {
@@ -417,7 +402,6 @@ class EnvFrame extends JFrame {
 
   private void updateData() {
     numOrgLabel.setText("Organisms: " + envr.livingOrgs());
-    numStrainsLabel.setText("Strains: " + envr.strains.keySet().size());
     numUpdatesLabel.setText("Updates: " + envr.updates);
   }
 }

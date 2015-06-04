@@ -63,30 +63,6 @@ public class EnvironmentDataFormatter {
         .map(Organism::getOrganismName).max(Comparator.comparing(String::length)).get();
   }
 
-  public String listStrains() {
-    final StringBuilder res = new StringBuilder();
-    for (final Strain c : environment.strains.keySet()) {
-      final LinkedList<Organism> orgsIn = environment.strains.get(c);
-      Collections.sort(orgsIn);
-      res.append(orgsIn.size() + " in Strain " + c.getStrainName() + ":" + "\n");
-      for (final Organism o : orgsIn) {
-        res.append(o.orgName + "\n");
-      }
-      res.append("-------------------" + "\n");
-    }
-    return res.toString();
-  }
-
-  public String listStrainData() {
-    final StringBuilder res = new StringBuilder();
-    res.append("<html>");
-    for (final Strain s : environment.strains.keySet()) {
-      res.append("Strain " + s.getStrainName() + ": \t" + environment.getStrainSize(s) + "<BR>");
-    }
-    res.append("</html>");
-    return res.toString();
-  }
-
   public String listActiveStrainData() {
     final StringBuilder res = new StringBuilder();
     res.append("<html>");

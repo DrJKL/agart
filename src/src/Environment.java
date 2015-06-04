@@ -25,7 +25,6 @@ public class Environment {
   final int height;
   int updates;
 
-  public final HashMap<Strain, LinkedList<Organism>> strains = new HashMap<>();
   public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
 
   int youngestIn = 0;
@@ -95,20 +94,12 @@ public class Environment {
     next.setStrain(strainSet);
     lastStrain++;
     str.youngest(0);
-    addToStrains(next);
     addToActiveStrains(next);
     return next;
   }
 
   public void addKid(Organism org) {
     kids.add(org);
-  }
-
-  private void addToStrains(Organism org) {
-    final Strain s = org.strain;
-    final LinkedList<Organism> toAdd = strains.getOrDefault(s, new LinkedList<>());
-    toAdd.add(org);
-    strains.put(s, toAdd);
   }
 
   private void addToActiveStrains(Organism org) {
@@ -123,10 +114,6 @@ public class Environment {
     final LinkedList<Organism> toAdd = activeStrains.getOrDefault(sChar, new LinkedList<>());
     toAdd.remove(org);
     activeStrains.put(sChar, toAdd);
-  }
-
-  public int getStrainSize(Strain strain) {
-    return getStrainSize(strains, strain);
   }
 
   public int getActiveStrainSize(Strain strain) {
@@ -149,7 +136,6 @@ public class Environment {
 
   private void addKids() {
     kids.forEach(o -> {
-      this.addToStrains(o);
       this.addToActiveStrains(o);
     });
     kids.clear();
@@ -174,10 +160,6 @@ public class Environment {
 
   public int livingOrgs() {
     return activeStrains.values().stream().mapToInt(List::size).sum();
-  }
-
-  public int totalOrgs() {
-    return strains.values().stream().mapToInt(List::size).sum();
   }
 
   private static String getDateTime() {
