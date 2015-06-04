@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.Color;
+import java.util.stream.IntStream;
 
 import core.Direction;
 
@@ -380,6 +381,10 @@ public class Organism implements Comparable<Organism> {
       }
     }
     return maxIdx;
+  }
+
+  public void feast() {
+    IntStream.range(0, 15).forEach(j -> acquireRand(redX, greenX, blueX));
   }
 
   /*
