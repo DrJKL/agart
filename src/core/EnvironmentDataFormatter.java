@@ -52,32 +52,6 @@ public class EnvironmentDataFormatter {
         return builder.toString();
     }
 
-    public String listTombed() {
-        environment.tombedStrains.values().forEach(Collections::sort);
-        int i = 1;
-        int columns = 0;
-        final int spacePer = this.getLongestTombedOrgName().length() + 16;
-        final StringBuilder builder = new StringBuilder();
-        builder.append("\n" + environment.tombedOrgs() + " Dead:\n");
-        for (final List<Organism> tomb : environment.tombedStrains.values()) {
-            for (final Organism o : tomb) {
-                final String str = o.orgName + " of " + o.causeOfDeath;
-                builder.append(str);
-                columns += str.length();
-                while (columns % spacePer != 0) {
-                    builder.append(" ");
-                    columns++;
-                }
-                if (i % 3 == 0) {
-                    builder.append("\n");
-                    columns = 0;
-                }
-                i++;
-            }
-        }
-        return builder.toString();
-    }
-
     public String getLongestLivingOrgName() {
         String res = "";
         for (final List<Organism> orgs : environment.activeStrains.values()) {
@@ -93,18 +67,6 @@ public class EnvironmentDataFormatter {
     public String getLongestLivingOrgName_new() {
         return environment.activeStrains.values().stream().flatMap(LinkedList::stream)
                 .map(Organism::getOrganismName).max(Comparator.comparing(String::length)).get();
-    }
-
-    public String getLongestTombedOrgName() {
-        String res = "";
-        for (final List<Organism> strain : environment.tombedStrains.values()) {
-            for (final Organism o : strain) {
-                if (o.orgName.length() > res.length()) {
-                    res = o.orgName;
-                }
-            }
-        }
-        return res;
     }
 
     public String listStrains() {
@@ -143,14 +105,4 @@ public class EnvironmentDataFormatter {
         return res.toString();
     }
 
-    public String listTombStrainData() {
-        final StringBuilder res = new StringBuilder();
-        res.append("<html>");
-        for (final Strain s : environment.tombedStrains.keySet()) {
-            res.append("Strain " + s.getStrainName() + ": \t" + environment.getTombStrainSize(s)
-                    + "<BR>");
-        }
-        res.append("</html>");
-        return res.toString();
-    }
 }

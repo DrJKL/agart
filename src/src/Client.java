@@ -66,10 +66,9 @@ class EnvFrame extends JFrame {
 
     JButton startStopButton, singleStepButton, saveImageButton, saveNegButton, orgAddButton,
             orgPlaceButton, multOrgAddButton, exterminateStrainButton, startStopRandomButton;
-    JButton newImageButton, setImageButton, showLivingData, showTombData, showStrainData,
-            showAllStrainData;
-    JLabel numOrgLabel, numStrainsLabel, numTombedLabel, numUpdatesLabel, visStrainLabel,
-            allStrains, livingStrains, deadStrains;
+    JButton newImageButton, setImageButton, showLivingData, showStrainData, showAllStrainData;
+    JLabel numOrgLabel, numStrainsLabel, numUpdatesLabel, visStrainLabel, allStrains,
+            livingStrains, deadStrains;
     JPanel mainControlsPanel, organismControls, orgAddPanel;
     JRadioButton defStrainButton, dripStrainButton, floatStrainButton;
 
@@ -120,12 +119,7 @@ class EnvFrame extends JFrame {
         strainDataPane.addTab("Living Strains", livingStrains);
         strainDataPane.setMnemonicAt(1, KeyEvent.VK_2);
 
-        deadStrains = new JLabel(environmentData.listTombStrainData());
-        strainDataPane.addTab("Tomb Strains", deadStrains);
-        strainDataPane.setMnemonicAt(2, KeyEvent.VK_3);
-
         numOrgLabel = new JLabel("Organisms: " + envr.livingOrgs());
-        numTombedLabel = new JLabel("Tombed: " + envr.tombedOrgs());
         numStrainsLabel = new JLabel("Strains: " + envr.strainNames.size());
         numUpdatesLabel = new JLabel("Updates: " + envr.updates);
         visStrainLabel = new JLabel(environmentData.listStrainData());
@@ -150,7 +144,6 @@ class EnvFrame extends JFrame {
         createExterminateStrainButton();
 
         createShowLivingData();
-        createShowTombData();
         createShowStrainData();
         createShowAllStrainData(strainDataPane);
 
@@ -160,8 +153,6 @@ class EnvFrame extends JFrame {
         multOrgAddButton.setAlignmentX((float) 0.5);
         showStrainData.setAlignmentX((float) 0.5);
         showLivingData.setAlignmentX((float) 0.5);
-        showTombData.setAlignmentX((float) 0.5);
-        numTombedLabel.setAlignmentX((float) 0.5);
         numStrainsLabel.setAlignmentX((float) 0.5);
         numUpdatesLabel.setAlignmentX((float) 0.5);
         visStrainLabel.setAlignmentX((float) 0.5);
@@ -176,7 +167,6 @@ class EnvFrame extends JFrame {
         mainControlsPanel.add(setImageButton);
         organismControls.add(orgAddPanel);
         organismControls.add(numOrgLabel);
-        organismControls.add(numTombedLabel);
         organismControls.add(numStrainsLabel);
         organismControls.add(numUpdatesLabel);
         organismControls.add(orgAddButton);
@@ -185,7 +175,6 @@ class EnvFrame extends JFrame {
         organismControls.add(exterminateStrainButton);
         organismControls.add(showStrainData);
         organismControls.add(showLivingData);
-        organismControls.add(showTombData);
         organismControls.add(showAllStrainData);
         orgButtons.add(orgAddButton);
         orgButtons.add(orgPlaceButton);
@@ -194,7 +183,6 @@ class EnvFrame extends JFrame {
         dataButtons.add(showStrainData);
         dataButtons.add(showAllStrainData);
         dataButtons.add(showLivingData);
-        dataButtons.add(showTombData);
 
         addSpeedSlider();
 
@@ -231,16 +219,6 @@ class EnvFrame extends JFrame {
         showStrainData = new JButton("Strain Data");
         showStrainData.addActionListener(e -> {
             final JTextArea strainText = new JTextArea(environmentData.listStrains(), 10, 50);
-            final JScrollPane sText = new JScrollPane(strainText);
-            sText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-            JOptionPane.showMessageDialog(null, sText);
-        });
-    }
-
-    private void createShowTombData() {
-        showTombData = new JButton("Tombed Data");
-        showTombData.addActionListener(e -> {
-            final JTextArea strainText = new JTextArea(environmentData.listTombed(), 10, 50);
             final JScrollPane sText = new JScrollPane(strainText);
             sText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             JOptionPane.showMessageDialog(null, sText);
@@ -465,7 +443,6 @@ class EnvFrame extends JFrame {
     private void updateData() {
         numOrgLabel.setText("Organisms: " + envr.livingOrgs());
         numStrainsLabel.setText("Strains: " + envr.strains.keySet().size());
-        numTombedLabel.setText("Tombed: " + envr.tombedOrgs());
         numUpdatesLabel.setText("Updates: " + envr.updates);
     }
 }

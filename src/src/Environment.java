@@ -28,7 +28,6 @@ public class Environment {
     final List<String> strainNames = new LinkedList<>();
     public final HashMap<Strain, LinkedList<Organism>> strains = new HashMap<>();
     public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
-    public final HashMap<Strain, LinkedList<Organism>> tombedStrains = new HashMap<>();
 
     int youngestIn = 0;
     int lastStrain = 0;
@@ -134,23 +133,12 @@ public class Environment {
         activeStrains.put(sChar, toAdd);
     }
 
-    private void addToTombedStrains(Organism org) {
-        final Strain sChar = org.strain;
-        final LinkedList<Organism> toAdd = tombedStrains.getOrDefault(sChar, new LinkedList<>());
-        toAdd.add(org);
-        tombedStrains.put(sChar, toAdd);
-    }
-
     public int getStrainSize(Strain strain) {
         return getStrainSize(strains, strain);
     }
 
     public int getActiveStrainSize(Strain strain) {
         return getStrainSize(activeStrains, strain);
-    }
-
-    public int getTombStrainSize(Strain strain) {
-        return getStrainSize(tombedStrains, strain);
     }
 
     private static final int getStrainSize(HashMap<Strain, LinkedList<Organism>> strains,
@@ -178,16 +166,12 @@ public class Environment {
     private void bringOutDead() {
         graveyard.forEach(org -> {
             this.removeFromActiveStrains(org);
-            this.addToTombedStrains(org);
         });
         graveyard.clear();
     }
 
     public void exterminate(Strain str) {
-        if (activeStrains.containsKey(str)) {
-            tombedStrains.put(str, activeStrains.get(str));
-            activeStrains.remove(str);
-        }
+        activeStrains.remove(str);
     }
 
     public boolean orgAt(int r, int c) {
@@ -198,10 +182,6 @@ public class Environment {
 
     public int livingOrgs() {
         return activeStrains.values().stream().mapToInt(List::size).sum();
-    }
-
-    public int tombedOrgs() {
-        return tombedStrains.values().stream().mapToInt(List::size).sum();
     }
 
     public int totalOrgs() {
@@ -255,5 +235,4 @@ public class Environment {
     public void setBlue(int r, int c, int newBlue) {
         ImageUtil.setBlue(r, c, newBlue, image);
     }
-
 }
