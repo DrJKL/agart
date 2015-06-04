@@ -103,13 +103,17 @@ public class Organism implements Comparable<Organism> {
     row = r;
     col = c;
     generation = gen;
+
     energy = cap / 2;
+    energyCap = cap;
+
     mutation = mut;
     mutationX = mutX;
+
     moveCost = met;
+
     reprCost = rpr;
     reprX = rprX;
-    energyCap = cap;
 
     redX = rX;
     greenX = gX;
@@ -180,7 +184,6 @@ public class Organism implements Comparable<Organism> {
     int nX, eX, sX, wX;
 
     mut = mutateTrait(mutation);
-
     mutX = mutateTrait(mutationX);
 
     met = mutateTrait(moveCost);
@@ -279,7 +282,7 @@ public class Organism implements Comparable<Organism> {
   private Map<Direction, Color> setView() {
     final int r = row;
     final int c = col;
-    if (r < 0 || c < 0 || r >= envr.height || c >= envr.width) {
+    if (r < 0 || r >= envr.height || c < 0 || c >= envr.width) {
       throw new RuntimeException();
     }
     final int North = r - 1;
@@ -334,9 +337,9 @@ public class Organism implements Comparable<Organism> {
     }
     final int take = randomInt(1, 20);
     red += take;
+    envr.setRed(col, row, orig - take);
     resourcesGathered += take;
     energy += take;
-    envr.setRed(col, row, orig - take);
   }
 
   public void acquireGreen() {
@@ -346,9 +349,9 @@ public class Organism implements Comparable<Organism> {
     }
     final int take = randomInt(1, 20);
     green += take;
+    envr.setGreen(col, row, orig - take);
     resourcesGathered += take;
     energy += take;
-    envr.setGreen(col, row, orig - take);
   }
 
   public void acquireBlue() {
@@ -358,9 +361,9 @@ public class Organism implements Comparable<Organism> {
     }
     final int take = randomInt(1, 20);
     blue += take;
+    envr.setBlue(col, row, orig - take);
     resourcesGathered += take;
     energy += take;
-    envr.setBlue(col, row, orig - take);
   }
 
   public boolean tooTired() {
