@@ -3,7 +3,11 @@ package core;
 import src.Organism;
 
 public enum Direction {
-    NORTH, EAST, SOUTH, WEST;
+    NORTH {},
+    EAST {},
+    SOUTH {},
+    WEST {};
+
     public static Direction random() {
         return fromInt(Organism.randomInt(0, 3));
     }
