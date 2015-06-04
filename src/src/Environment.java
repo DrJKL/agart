@@ -25,7 +25,6 @@ public class Environment {
   final int height;
   int updates;
 
-  final List<String> strainNames = new LinkedList<>();
   public final HashMap<Strain, LinkedList<Organism>> strains = new HashMap<>();
   public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
 
@@ -92,12 +91,6 @@ public class Environment {
   public Organism addOneAt(Strain str, int r, int c) {
     final Organism next = new Organism(this, new DefaultStrain(), checkBounds(r, height - 1),
         checkBounds(c, width - 1));
-    String strName = str.getStrainName();
-    final int i = 0;
-    String newName = strName;
-    while (strainNames.contains(newName)) {
-      newName = strName += strainNameMods[i];
-    }
     final Strain strainSet = str;
     next.setStrain(strainSet);
     lastStrain++;
@@ -116,7 +109,6 @@ public class Environment {
     final LinkedList<Organism> toAdd = strains.getOrDefault(s, new LinkedList<>());
     toAdd.add(org);
     strains.put(s, toAdd);
-    strainNames.add(s.getStrainName());
   }
 
   private void addToActiveStrains(Organism org) {

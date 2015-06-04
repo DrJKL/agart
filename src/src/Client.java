@@ -119,7 +119,7 @@ class EnvFrame extends JFrame {
     strainDataPane.setMnemonicAt(1, KeyEvent.VK_2);
 
     numOrgLabel = new JLabel("Organisms: " + envr.livingOrgs());
-    numStrainsLabel = new JLabel("Strains: " + envr.strainNames.size());
+    numStrainsLabel = new JLabel("Strains: " + envr.strains.keySet().size());
     numUpdatesLabel = new JLabel("Updates: " + envr.updates);
     visStrainLabel = new JLabel(environmentData.listStrainData());
 
