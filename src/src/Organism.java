@@ -149,7 +149,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   public void replicate() {
-    if (energy < reprCost || !hasSpace()) {
+    if (energy < reprCost || !hasSpace() || !canReplicate()) {
       return;
     }
     Organism child;
@@ -494,6 +494,13 @@ public class Organism implements Comparable<Organism> {
 
   public int getMaxkids() {
     return maxKids;
+  }
+
+  public boolean canReplicate() {
+    return getEnergy() >= getEnergyCap() - 20 //
+        && getGeneration() < getBreedcap() //
+        && getChildrenSpawned() < getMaxkids() //
+        && Math.random() * 100 < getReprX();
   }
 
   @Override

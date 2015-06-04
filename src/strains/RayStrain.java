@@ -39,12 +39,7 @@ public class RayStrain implements Strain {
       org.acquireRand(org.getRedX(), org.getGreenX(), org.getBlueX());
     });
 
-    if (org.getEnergy() >= org.getEnergyCap() - 20 //
-        && org.getGeneration() < org.getBreedcap()
-        && org.getChildrenSpawned() < org.getMaxkids()
-        && Math.random() * 100 < org.getReprX()) {
-      org.replicate();
-    }
+    org.replicate();
 
     final int timesToMove = Organism.randomInt(0, org.getMovesEach());
     for (int i = 0; i < timesToMove; i++) {
