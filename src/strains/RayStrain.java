@@ -38,7 +38,7 @@ public class RayStrain implements Strain {
 
     final int timesToMove = Organism.randomInt(0, org.getMovesEach());
     for (int i = 0; i < timesToMove; i++) {
-      if (org.getEnergy() < org.getMoveCost()) {
+      if (org.tooTired()) {
         break;
       }
       org.move(org.northX, org.eastX, org.southX, org.westX);

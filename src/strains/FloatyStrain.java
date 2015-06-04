@@ -41,7 +41,7 @@ public class FloatyStrain implements Strain {
 
     final int randomInt = Organism.randomInt(0, org.getMovesEach());
     for (int i = 0; i < randomInt; i++) {
-      if (org.getEnergy() < org.getMoveCost()) {
+      if (org.tooTired()) {
         break;
       }
       final Direction max = org.viewMaxAll();

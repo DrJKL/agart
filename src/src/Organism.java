@@ -376,16 +376,8 @@ public class Organism implements Comparable<Organism> {
     envr.setBlue(col, row, orig - take);
   }
 
-  public String getOrganismName() {
-    return orgName;
-  }
-
-  public int getEnergy() {
-    return energy;
-  }
-
-  public int getMoveCost() {
-    return moveCost;
+  public boolean tooTired() {
+    return energy < moveCost;
   }
 
   public int getRow() {
@@ -401,7 +393,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   public boolean canReplicate() {
-    return getEnergy() >= energyCap - 20 //
+    return energy >= energyCap - 20 //
         && generation < breedCap //
         && getChildrenSpawned() < maxKids //
         && Math.random() * 100 < reprX;
