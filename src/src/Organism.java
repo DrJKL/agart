@@ -168,13 +168,12 @@ public class Organism implements Comparable<Organism> {
   public Organism repr() {
     int r = row;
     int c = col;
-    while (r == row || c == col //
-        || !envr.inBounds(r, c)) {
+    while (r == row || c == col || !envr.inBounds(r, c)) {
       r = randomInt(row - 3, row + 3);
       c = randomInt(col - 3, col + 3);
     }
     final int gen = generation + 1;
-    final String str = orgName + getChildrenSpawned();
+    final String str = orgName + childrenSpawned;
     int mut, mutX, met, rpr, rprX, cap;
 
     int rX, gX, bX;
@@ -388,14 +387,10 @@ public class Organism implements Comparable<Organism> {
     return col;
   }
 
-  public int getChildrenSpawned() {
-    return childrenSpawned;
-  }
-
   public boolean canReplicate() {
     return energy >= energyCap - 20 //
         && generation < breedCap //
-        && getChildrenSpawned() < maxKids //
+        && childrenSpawned < maxKids //
         && Math.random() * 100 < reprX;
   }
 
@@ -413,7 +408,7 @@ public class Organism implements Comparable<Organism> {
     builder.append("Organism [strain=").append(orgName);
     builder.append(", causeOfDeath=").append(causeOfDeath);
     builder.append(", generation=").append(generation);
-    builder.append(", childrenSpawned=").append(getChildrenSpawned());
+    builder.append(", childrenSpawned=").append(childrenSpawned);
     builder.append(", movesMade=").append(movesMade);
     builder.append(", updates=").append(updates);
     builder.append(", resourcesGathered=").append(resourcesGathered);
