@@ -122,16 +122,6 @@ public class Organism implements Comparable<Organism> {
         strain.update(this);
     }
 
-    public void updateSpiral() {
-        for (int i = 0; i < updates; i++) {
-            move(Direction.fromInt(updates));
-            for (int j = 0; j < Math.pow(Math.log(updates), 2); j++) {
-                this.acquireRand(redX, greenX, blueX);
-            }
-        }
-        updates++;
-    }
-
     public void check() {
         if (energy <= 0) {
             causeOfDeath = codStarved;
@@ -174,7 +164,11 @@ public class Organism implements Comparable<Organism> {
     public Organism repr() {
         int r = row;
         int c = col;
-        while (r == row || c == col || r < 0 || c < 0 || r >= envr.image.getHeight()
+        while (r == row //
+                || c == col //
+                || r < 0 //
+                || c < 0 //
+                || r >= envr.image.getHeight() //
                 || c >= envr.image.getWidth()) {
             r = randomInt(row - 3, row + 3);
             c = randomInt(col - 3, col + 3);
@@ -187,83 +181,39 @@ public class Organism implements Comparable<Organism> {
 
         int nX, eX, sX, wX;
 
-        if (Math.random() * 100 > mutation) {
-            mut = Math.abs(randomInt(mutation - mutationX, mutation + mutationX));
-        } else {
-            mut = mutation;
-        }
+        mut = mutateTrait(mutation);
 
-        if (Math.random() * 100 > mutation) {
-            mutX = Math.abs(randomInt(mutationX - mutationX, mutationX + mutationX));
-        } else {
-            mutX = mutationX;
-        }
+        mutX = mutateTrait(mutationX);
 
-        if (Math.random() * 100 > mutation) {
-            met = Math.abs(randomInt(moveCost - mutationX, moveCost + mutationX));
-        } else {
-            met = moveCost;
-        }
+        met = mutateTrait(moveCost);
 
-        if (Math.random() * 100 > mutation) {
-            rpr = Math.abs(randomInt(reprCost - mutationX, reprCost + mutationX));
-        } else {
-            rpr = reprCost;
-        }
+        rpr = mutateTrait(reprCost);
+        rprX = mutateTrait(reprX);
 
-        if (Math.random() * 100 > mutation) {
-            rprX = Math.abs(randomInt(reprX - mutationX, reprX + mutationX));
-        } else {
-            rprX = reprX;
-        }
+        cap = mutateTrait(energyCap);
 
-        if (Math.random() * 100 > mutation) {
-            cap = Math.abs(randomInt(energyCap - mutationX, energyCap + mutationX));
-        } else {
-            cap = energyCap;
-        }
+        rX = mutateTrait(redX);
+        gX = mutateTrait(greenX);
+        bX = mutateTrait(blueX);
 
-        if (Math.random() * 100 > mutation) {
-            rX = Math.abs(randomInt(redX - mutationX, redX + mutationX));
-        } else {
-            rX = redX;
-        }
-        if (Math.random() * 100 > mutation) {
-            gX = Math.abs(randomInt(greenX - mutationX, greenX + mutationX));
-        } else {
-            gX = greenX;
-        }
-        if (Math.random() * 100 > mutation) {
-            bX = Math.abs(randomInt(blueX - mutationX, blueX + mutationX));
-        } else {
-            bX = blueX;
-        }
-
-        if (Math.random() * 100 > mutation) {
-            nX = Math.abs(randomInt(northX - mutationX, northX + mutationX));
-        } else {
-            nX = northX;
-        }
-        if (Math.random() * 100 > mutation) {
-            eX = Math.abs(randomInt(eastX - mutationX, eastX + mutationX));
-        } else {
-            eX = eastX;
-        }
-        if (Math.random() * 100 > mutation) {
-            sX = Math.abs(randomInt(southX - mutationX, southX + mutationX));
-        } else {
-            sX = southX;
-        }
-        if (Math.random() * 100 > mutation) {
-            wX = Math.abs(randomInt(westX - mutationX, westX + mutationX));
-        } else {
-            wX = westX;
-        }
+        nX = mutateTrait(northX);
+        eX = mutateTrait(eastX);
+        sX = mutateTrait(southX);
+        wX = mutateTrait(westX);
 
         final Organism spawn = new Organism(envr, str, strain, r, c, gen, mut, mutX, met, rpr,
                 rprX, cap, rX, gX, bX, nX, eX, sX, wX);
 
         return spawn;
+    }
+
+    private int mutateTrait(int original) {
+        return shouldMutate() ? Math.abs(randomInt(original - mutationX, original + mutationX))
+                : original;
+    }
+
+    private boolean shouldMutate() {
+        return Math.random() * 100 > mutation;
     }
 
     public void move() {
@@ -315,11 +265,11 @@ public class Organism implements Comparable<Organism> {
             return;
         }
         final int rand = randomInt(1, totX);
-        if (rand > 0 && rand <= nX) {
+        if (rand <= nX) {
             move(Direction.NORTH);
-        } else if (rand > nX && rand <= (nX + eX)) {
+        } else if (rand <= (nX + eX)) {
             move(Direction.EAST);
-        } else if (rand > (nX + eX) && rand <= (nX + eX + sX)) {
+        } else if (rand <= (nX + eX + sX)) {
             move(Direction.SOUTH);
         } else {
             move(Direction.WEST);
@@ -356,7 +306,6 @@ public class Organism implements Comparable<Organism> {
     }
 
     private Color[] setView() {
-        final Color[] view = new Color[4];
         final int r = row;
         final int c = col;
         if (r < 0 || c < 0 || r >= envr.height || c >= envr.width) {
@@ -366,26 +315,11 @@ public class Organism implements Comparable<Organism> {
         final int East = c + 1;
         final int South = r + 1;
         final int West = c - 1;
-        if (North >= 0) {
-            view[0] = new Color(envr.image.getRGB(c, North));
-        } else {
-            view[0] = Color.BLACK;
-        }
-        if (East < envr.width) {
-            view[1] = new Color(envr.image.getRGB(East, r));
-        } else {
-            view[1] = Color.BLACK;
-        }
-        if (South < envr.height) {
-            view[2] = new Color(envr.image.getRGB(c, South));
-        } else {
-            view[2] = Color.BLACK;
-        }
-        if (West >= 0) {
-            view[3] = new Color(envr.image.getRGB(West, r));
-        } else {
-            view[3] = Color.BLACK;
-        }
+        final Color[] view = new Color[4];
+        view[0] = (North >= 0) ? new Color(envr.image.getRGB(c, North)) : Color.BLACK;
+        view[1] = (East < envr.width) ? new Color(envr.image.getRGB(East, r)) : Color.BLACK;
+        view[2] = (South < envr.height) ? new Color(envr.image.getRGB(c, South)) : Color.BLACK;
+        view[3] = (West >= 0) ? new Color(envr.image.getRGB(West, r)) : Color.BLACK;
         return view;
     }
 
@@ -462,11 +396,11 @@ public class Organism implements Comparable<Organism> {
             return;
         }
         final int rand = randomInt(1, totX);
-        if (rand > 0 && rand <= rX) {
+        if (rand <= rX) {
             acquireRed();
-        } else if (rand >= rX && rand <= (rX + gX)) {
+        } else if (rand <= (rX + gX)) {
             acquireGreen();
-        } else if (rand > (rX + gX) && rand <= totX) {
+        } else if (rand <= totX) {
             acquireBlue();
         }
     }
