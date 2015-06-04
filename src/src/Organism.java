@@ -288,22 +288,6 @@ public class Organism implements Comparable<Organism> {
     });
   }
 
-  public int distanceFromCenter() {
-    final int x = envr.width / 2;
-    final int y = envr.height / 2;
-
-    return distanceFrom(x, y);
-  }
-
-  public int distanceFrom(int x, int y) {
-    final int deltX = (col - x);
-    final int deltY = (row - y);
-
-    final int change = (int) Math.sqrt((deltX * deltX) + (deltY * deltY));
-
-    return change;
-  }
-
   private Map<Direction, Color> setView() {
     final int r = row;
     final int c = col;

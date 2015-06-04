@@ -30,12 +30,6 @@ public class EnvironmentDataFormatter {
         for (int j = 0; j < spaces; j++) {
           str += " ";
         }
-        str += o.distanceFromCenter();
-        final int moreSpaces = 3 - Integer.toString(o.distanceFromCenter()).length();
-        for (int j = 0; j < moreSpaces; j++) {
-          str += " ";
-        }
-        str += "from OP";
         builder.append(str);
         columns += str.length();
         while (columns % spacePer != 0) {
