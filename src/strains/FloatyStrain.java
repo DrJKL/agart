@@ -1,5 +1,7 @@
 package strains;
 
+import java.util.stream.IntStream;
+
 import src.Organism;
 import src.Strain;
 import core.Direction;
@@ -36,10 +38,9 @@ public class FloatyStrain implements Strain {
 
   @Override
   public void update(Organism org) {
-
-    for (int j = 0; j < 15; j++) {
+    IntStream.range(0, 15).forEach(j -> {
       org.acquireRand(org.getRedX(), org.getGreenX(), org.getBlueX());
-    }
+    });
 
     org.replicate();
 
