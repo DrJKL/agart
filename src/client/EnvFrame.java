@@ -24,9 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
 
 import src.Environment;
 import src.ImageFilter;
@@ -35,12 +33,10 @@ import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
 import strains.RayStrain;
-import core.EnvironmentDataFormatter;
 
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
   private Environment envr;
-  private EnvironmentDataFormatter environmentData;
 
   private MyPanel myPanel;
 
@@ -55,7 +51,7 @@ class EnvFrame extends JFrame {
   private JButton multOrgAddButton;
   private JButton exterminateStrainButton;
   private JButton startStopRandomButton;
-  private JButton newImageButton, setImageButton, showLivingData;
+  private JButton newImageButton, setImageButton;
   private final JLabel numOrgLabel, numUpdatesLabel;
   private final JPanel mainControlsPanel, organismControls;
   private final OrgAddPanel orgAddPanel;
@@ -73,11 +69,8 @@ class EnvFrame extends JFrame {
     final JFileChooser fc = new JFileChooser();
     fc.addChoosableFileFilter(new ImageFilter());
     setUpEnvironment();
-    final Strain defStrain = new DefaultStrain();
-    final Strain dripStrain = new DrippyStrain();
-    final Strain floatStrain = new FloatyStrain();
-    final Strain rayStrain = new RayStrain();
-    final List<Strain> strainOptions = Arrays.asList(defStrain, dripStrain, floatStrain, rayStrain);
+    final List<Strain> strainOptions = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
+        new FloatyStrain(), new RayStrain());
     strainOptions.forEach(s -> {
       strToStrain.put(s.getStrainName(), s);
     });
@@ -119,14 +112,12 @@ class EnvFrame extends JFrame {
     createOrgPlaceButton();
     createExterminateStrainButton();
 
-    createShowLivingData();
-
     numOrgLabel.setAlignmentX((float) 0.5);
+    numUpdatesLabel.setAlignmentX((float) 0.5);
+
     orgAddButton.setAlignmentX((float) 0.5);
     orgPlaceButton.setAlignmentX((float) 0.5);
     multOrgAddButton.setAlignmentX((float) 0.5);
-    showLivingData.setAlignmentX((float) 0.5);
-    numUpdatesLabel.setAlignmentX((float) 0.5);
     exterminateStrainButton.setAlignmentX((float) 0.5);
 
     mainControlsPanel.add(newImageButton);
@@ -135,19 +126,21 @@ class EnvFrame extends JFrame {
     mainControlsPanel.add(saveImageButton);
     mainControlsPanel.add(saveNegButton);
     mainControlsPanel.add(setImageButton);
+
     organismControls.add(orgAddPanel);
+
     organismControls.add(numOrgLabel);
     organismControls.add(numUpdatesLabel);
+
     organismControls.add(orgAddButton);
     organismControls.add(orgPlaceButton);
     organismControls.add(multOrgAddButton);
     organismControls.add(exterminateStrainButton);
-    organismControls.add(showLivingData);
+
     orgButtons.add(orgAddButton);
     orgButtons.add(orgPlaceButton);
     orgButtons.add(multOrgAddButton);
     orgButtons.add(exterminateStrainButton);
-    dataButtons.add(showLivingData);
 
     addSpeedSlider();
 
@@ -193,16 +186,6 @@ class EnvFrame extends JFrame {
       }
       envr.addOneAt(str, placeY, placeX);
       updateData();
-    });
-  }
-
-  private void createShowLivingData() {
-    showLivingData = new JButton("Living Data");
-    showLivingData.addActionListener(e -> {
-      final JTextArea strainText = new JTextArea(environmentData.listLiving(), 10, 50);
-      final JScrollPane sText = new JScrollPane(strainText);
-      sText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-      JOptionPane.showMessageDialog(null, sText);
     });
   }
 
@@ -338,7 +321,6 @@ class EnvFrame extends JFrame {
 
   private void setUpEnvironment() {
     envr = new Environment(800, 600, false);
-    environmentData = new EnvironmentDataFormatter(envr);
     myPanel = new MyPanel(envr.image);
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
     final Dimension d = new Dimension(envr.width + 150, envr.height + 100);
