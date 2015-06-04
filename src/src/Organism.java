@@ -119,7 +119,6 @@ public class Organism implements Comparable<Organism> {
     eastX = eX;
     southX = sX;
     westX = wX;
-
   }
 
   public void update() {
@@ -252,12 +251,6 @@ public class Organism implements Comparable<Organism> {
     movesMade++;
   }
 
-  /*
-   * nX = 3 eX = 5 sX = 7 wX = 9 totX = 24 01, 02, 03 = north 04, 05, 06, 07, 08
-   * = east 09, 10, 11, 12, 13, 14, 15 = south 16, 17, 18, 19, 20, 21, 22, 23,
-   * 24 = west north ( >0 , <= nX ) east ( >nX , <= nX+eX ) south ( >nX+eX , <=
-   * nX+eX+sX) west ( >nX+eX+sX, <= totX )
-   */
   public void move(int nX, int eX, int sX, int wX) {
     final int totX = nX + eX + sX + wX;
     if (totX < 1) {
@@ -316,11 +309,6 @@ public class Organism implements Comparable<Organism> {
     IntStream.range(0, 15).forEach(j -> acquireRand(redX, greenX, blueX));
   }
 
-  /*
-   * rX, gX, bX = totalChance 3, 4, 5 = 12 1 2 3 = Red 1 >= r < Green 4 5 6 7 =
-   * Green Green <= r <= Red+Green 8 9 10 11 12 = Blue Red+Green < r <=
-   * totalChance
-   */
   public void acquireRand(int rX, int gX, int bX) {
     final int totX = rX + gX + bX;
     if (envr.getRed(col, row) + envr.getBlue(col, row) + envr.getGreen(col, row) < lowestRGBPer) {
