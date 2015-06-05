@@ -50,12 +50,12 @@ public class Organism implements Comparable<Organism> {
   private static final int ENERGY_CAP_LOW = 200;
   private static final int ENERGY_CAP_HIGH = 500;
 
-  private static final int maxKids = 3;
-  private static final int breedCap = 80;
+  private static final int MAX_KIDS = 3;
+  private static final int BREED_CAP = 80;
 
-  public static final int movesEach = 20;
-  private static final int lifeSpan = 40;
-  private static final int popCap = 100;
+  public static final int MOVES_EACH = 20;
+  private static final int LIFESPAN = 40;
+  private static final int MAX_POPULATION = 100;
 
   private static final int lowestRGBPer = 30;
 
@@ -130,10 +130,11 @@ public class Organism implements Comparable<Organism> {
     if (energy <= 0) {
       causeOfDeath = codStarved;
     }
-    if (updates > lifeSpan) {
+    if (updates > LIFESPAN) {
       causeOfDeath = codOldAge;
     }
-    if (envr.getActiveStrainSize(strain) > popCap && generation + 1 < this.strain.getYoungest()) {
+    if (envr.getActiveStrainSize(strain) > MAX_POPULATION
+        && generation + 1 < this.strain.getYoungest()) {
       causeOfDeath = codGericide;
     }
     if (onEdge()) {
@@ -305,9 +306,6 @@ public class Organism implements Comparable<Organism> {
 
   private void acquireRand() {
     final int totX = colorPreference.total();
-    if (totalNutrition(envr.getColor(col, row)) < lowestRGBPer) {
-      return;
-    }
     if (totX < 1) {
       return;
     }
@@ -322,7 +320,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   private void acquireRed() {
-    final int orig = envr.getRed(col, row);
+    final int orig = envr.getColor(col, row).getRed();
     if (orig <= lowestRGBPer) {
       return;
     }
@@ -334,7 +332,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   private void acquireGreen() {
-    final int orig = envr.getGreen(col, row);
+    final int orig = envr.getColor(col, row).getGreen();
     if (orig <= lowestRGBPer) {
       return;
     }
@@ -346,7 +344,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   private void acquireBlue() {
-    final int orig = envr.getBlue(col, row);
+    final int orig = envr.getColor(col, row).getBlue();
     if (orig <= lowestRGBPer) {
       return;
     }
@@ -371,8 +369,8 @@ public class Organism implements Comparable<Organism> {
 
   private boolean canReplicate() {
     return energy >= energyCap - 20 //
-        && generation < breedCap //
-        && childrenSpawned < maxKids //
+        && generation < BREED_CAP //
+        && childrenSpawned < MAX_KIDS //
         && Math.random() * 100 < reproductionChance;
   }
 

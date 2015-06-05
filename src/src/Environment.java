@@ -114,12 +114,7 @@ public class Environment {
   }
 
   public int getActiveStrainSize(Strain strain) {
-    return getStrainSize(activeStrains, strain);
-  }
-
-  private static final int getStrainSize(HashMap<Strain, LinkedList<Organism>> strains,
-      Strain strain) {
-    return strains.containsKey(strain) ? strains.get(strain).size() : 0;
+    return activeStrains.getOrDefault(strain, new LinkedList<>()).size();
   }
 
   public void update() {
@@ -190,18 +185,6 @@ public class Environment {
 
   public Color getColor(int r, int c) {
     return new Color(image.getRGB(r, c));
-  }
-
-  public int getRed(int r, int c) {
-    return ImageUtil.getRed(r, c, image);
-  }
-
-  public int getGreen(int r, int c) {
-    return ImageUtil.getGreen(r, c, image);
-  }
-
-  public int getBlue(int r, int c) {
-    return ImageUtil.getBlue(r, c, image);
   }
 
   public void setRed(int r, int c, int newRed) {
