@@ -6,27 +6,16 @@ import core.Direction;
 
 public class DrippyStrain implements Strain {
 
-  final String strainName;
   int youngest = -1;
-
-  public DrippyStrain(String str) {
-    strainName = str;
-  }
-
-  public DrippyStrain() {
-    strainName = "Drippy VIRUS ";
-  }
 
   @Override
   public String getStrainName() {
-    return strainName;
+    return "Drippy VIRUS ";
   }
 
   @Override
   public void youngest(int orgGen) {
-    if (orgGen > youngest) {
-      youngest = orgGen;
-    }
+    youngest = Math.max(orgGen, youngest);
   }
 
   @Override

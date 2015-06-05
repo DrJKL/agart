@@ -5,20 +5,11 @@ import src.Strain;
 
 public class RayStrain implements Strain {
 
-  final String strainName;
   int youngest = -1;
-
-  public RayStrain(String str) {
-    strainName = str;
-  }
-
-  public RayStrain() {
-    strainName = "Ray VIRUS ";
-  }
 
   @Override
   public String getStrainName() {
-    return strainName;
+    return "Ray VIRUS ";
   }
 
   @Override

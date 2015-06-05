@@ -6,27 +6,16 @@ import core.Direction;
 
 public class FloatyStrain implements Strain {
 
-  final String strainName;
   int youngest = -1;
-
-  public FloatyStrain(String str) {
-    strainName = str;
-  }
-
-  public FloatyStrain() {
-    strainName = "Floaty VIRUS ";
-  }
 
   @Override
   public String getStrainName() {
-    return strainName;
+    return "Floaty VIRUS ";
   }
 
   @Override
   public void youngest(int orgGen) {
-    if (orgGen > youngest) {
-      youngest = orgGen;
-    }
+    youngest = Math.max(orgGen, youngest);
   }
 
   @Override

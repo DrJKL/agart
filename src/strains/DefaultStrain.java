@@ -5,27 +5,16 @@ import src.Strain;
 
 public class DefaultStrain implements Strain {
 
-  final String strainName;
   int youngest = -1;
-
-  public DefaultStrain(String str) {
-    strainName = str;
-  }
-
-  public DefaultStrain() {
-    strainName = "Default VIRUS ";
-  }
 
   @Override
   public String getStrainName() {
-    return strainName;
+    return "Default VIRUS ";
   }
 
   @Override
   public void youngest(int orgGen) {
-    if (orgGen > youngest) {
-      youngest = orgGen;
-    }
+    youngest = Math.max(orgGen, youngest);
   }
 
   @Override
