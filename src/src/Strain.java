@@ -7,7 +7,7 @@ public interface Strain {
   String getStrainName();
 
   /** Sets the youngest generation for check methods. */
-  void youngest(int orgGen);
+  void updateYoungest(int orgGen);
 
   /** Sets the youngest generation for check methods. */
   int getYoungest();

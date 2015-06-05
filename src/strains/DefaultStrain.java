@@ -13,7 +13,7 @@ public class DefaultStrain implements Strain {
   }
 
   @Override
-  public void youngest(int orgGen) {
+  public void updateYoungest(int orgGen) {
     youngest = Math.max(orgGen, youngest);
   }
 

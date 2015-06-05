@@ -14,7 +14,7 @@ public class DrippyStrain implements Strain {
   }
 
   @Override
-  public void youngest(int orgGen) {
+  public void updateYoungest(int orgGen) {
     youngest = Math.max(orgGen, youngest);
   }
 

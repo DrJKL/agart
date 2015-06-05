@@ -66,7 +66,7 @@ public class Organism implements Comparable<Organism> {
     orgName = str.getStrainName();
     causeOfDeath = CauseOfDeath.LIVING;
     generation = 0;
-    strain.youngest(0);
+    strain.updateYoungest(0);
 
     energyCap = randomInt(TraitLimit.ENERGY_CAP);
     energy = energyCap / 2;
@@ -150,7 +150,7 @@ public class Organism implements Comparable<Organism> {
     energy /= 2;
     childrenSpawned++;
     envr.addKid(child);
-    strain.youngest(generation + 1);
+    strain.updateYoungest(generation + 1);
   }
 
   // Creates new Virus with mutated attributes

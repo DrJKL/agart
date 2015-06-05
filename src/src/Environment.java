@@ -87,7 +87,7 @@ public class Environment {
         checkBounds(c, width - 1));
     final Strain strainSet = str;
     next.setStrain(strainSet);
-    str.youngest(0);
+    str.updateYoungest(0);
     addToActiveStrains(next);
     return next;
   }
