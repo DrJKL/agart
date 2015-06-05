@@ -6,34 +6,34 @@ import java.awt.image.RescaleOp;
 
 public class ImageUtil {
 
-  public static int getRed(int y, int x, BufferedImage image) {
-    return new Color(image.getRGB(y, x)).getRed();
+  public static int getRed(int r, int c, BufferedImage image) {
+    return new Color(image.getRGB(r, c)).getRed();
   }
 
-  public static int getGreen(int y, int x, BufferedImage image) {
-    return new Color(image.getRGB(y, x)).getGreen();
+  public static int getGreen(int r, int c, BufferedImage image) {
+    return new Color(image.getRGB(r, c)).getGreen();
   }
 
-  public static int getBlue(int y, int x, BufferedImage image) {
-    return new Color(image.getRGB(y, x)).getBlue();
+  public static int getBlue(int r, int c, BufferedImage image) {
+    return new Color(image.getRGB(r, c)).getBlue();
   }
 
-  public static void setRed(int y, int x, int newRed, BufferedImage image) {
-    final Color color = new Color(image.getRGB(y, x));
+  public static void setRed(int r, int c, int newRed, BufferedImage image) {
+    final Color color = new Color(image.getRGB(r, c));
     final Color newColor = new Color(newRed, color.getGreen(), color.getBlue());
-    image.setRGB(y, x, newColor.getRGB());
+    image.setRGB(r, c, newColor.getRGB());
   }
 
-  public static void setGreen(int y, int x, int newGreen, BufferedImage image) {
-    final Color color = new Color(image.getRGB(y, x));
+  public static void setGreen(int r, int c, int newGreen, BufferedImage image) {
+    final Color color = new Color(image.getRGB(r, c));
     final Color newColor = new Color(color.getRed(), newGreen, color.getBlue());
-    image.setRGB(y, x, newColor.getRGB());
+    image.setRGB(r, c, newColor.getRGB());
   }
 
-  public static void setBlue(int y, int x, int newBlue, BufferedImage image) {
-    final Color color = new Color(image.getRGB(y, x));
+  public static void setBlue(int r, int c, int newBlue, BufferedImage image) {
+    final Color color = new Color(image.getRGB(r, c));
     final Color newColor = new Color(color.getRed(), color.getGreen(), newBlue);
-    image.setRGB(y, x, newColor.getRGB());
+    image.setRGB(r, c, newColor.getRGB());
   }
 
   public static BufferedImage negative(BufferedImage image) {
