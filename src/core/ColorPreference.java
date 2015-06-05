@@ -17,4 +17,16 @@ public class ColorPreference {
     return new ColorPreference(organism.mutateTrait(redChance), organism.mutateTrait(greenChance),
         organism.mutateTrait(blueChance));
   }
+
+  public int total() {
+    return redChance + greenChance + blueChance;
+  }
+
+  public int inRed() {
+    return redChance;
+  }
+
+  public int inGreen() {
+    return redChance + greenChance;
+  }
 }

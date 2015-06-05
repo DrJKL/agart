@@ -53,7 +53,7 @@ public class Organism implements Comparable<Organism> {
   private static final int maxKids = 3;
   private static final int breedCap = 80;
 
-  private static final int movesEach = 20;
+  public static final int movesEach = 20;
   private static final int lifeSpan = 40;
   private static final int popCap = 100;
 
@@ -148,7 +148,7 @@ public class Organism implements Comparable<Organism> {
     return row == 0 || col == 0 || col == envr.width - 1 || row == envr.height - 1;
   }
 
-  public void passOn() {
+  private void passOn() {
     envr.graveyard.add(this);
   }
 
@@ -165,7 +165,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   // Creates new Virus with mutated attributes
-  public Organism repr() {
+  private Organism repr() {
     int r = row;
     int c = col;
     while (r == row || c == col || !envr.inBounds(r, c)) {
@@ -303,11 +303,8 @@ public class Organism implements Comparable<Organism> {
     IntStream.range(0, 15).forEach(j -> acquireRand());
   }
 
-  public void acquireRand() {
-    final int rX = colorPreference.redChance;
-    final int gX = colorPreference.greenChance;
-    final int bX = colorPreference.blueChance;
-    final int totX = rX + gX + bX;
+  private void acquireRand() {
+    final int totX = colorPreference.total();
     if (envr.getRed(col, row) + envr.getBlue(col, row) + envr.getGreen(col, row) < lowestRGBPer) {
       return;
     }
@@ -315,16 +312,16 @@ public class Organism implements Comparable<Organism> {
       return;
     }
     final int rand = randomInt(1, totX);
-    if (rand <= rX) {
+    if (rand <= colorPreference.inRed()) {
       acquireRed();
-    } else if (rand <= (rX + gX)) {
+    } else if (rand <= colorPreference.inGreen()) {
       acquireGreen();
-    } else if (rand <= totX) {
+    } else {
       acquireBlue();
     }
   }
 
-  public void acquireRed() {
+  private void acquireRed() {
     final int orig = envr.getRed(col, row);
     if (orig <= lowestRGBPer) {
       return;
@@ -336,7 +333,7 @@ public class Organism implements Comparable<Organism> {
     energy += take;
   }
 
-  public void acquireGreen() {
+  private void acquireGreen() {
     final int orig = envr.getGreen(col, row);
     if (orig <= lowestRGBPer) {
       return;
@@ -348,7 +345,7 @@ public class Organism implements Comparable<Organism> {
     energy += take;
   }
 
-  public void acquireBlue() {
+  private void acquireBlue() {
     final int orig = envr.getBlue(col, row);
     if (orig <= lowestRGBPer) {
       return;
@@ -372,7 +369,7 @@ public class Organism implements Comparable<Organism> {
     return col;
   }
 
-  public boolean canReplicate() {
+  private boolean canReplicate() {
     return energy >= energyCap - 20 //
         && generation < breedCap //
         && childrenSpawned < maxKids //
@@ -416,10 +413,6 @@ public class Organism implements Comparable<Organism> {
     final String newName = strainSet.getStrainName()
         + orgName.substring(strain.getStrainName().length() - 1);
     orgName = newName;
-  }
-
-  public int getMovesEach() {
-    return movesEach;
   }
 
 }

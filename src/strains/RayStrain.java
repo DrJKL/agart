@@ -36,7 +36,7 @@ public class RayStrain implements Strain {
     org.feast();
     org.replicate();
 
-    final int timesToMove = Organism.randomInt(0, org.getMovesEach());
+    final int timesToMove = Organism.randomInt(0, Organism.movesEach);
     for (int i = 0; i < timesToMove; i++) {
       if (org.tooTired()) {
         break;

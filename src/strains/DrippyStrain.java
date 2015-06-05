@@ -39,7 +39,7 @@ public class DrippyStrain implements Strain {
     org.feast();
     org.replicate();
 
-    final int randomInt = Organism.randomInt(0, org.getMovesEach());
+    final int randomInt = Organism.randomInt(0, Organism.movesEach);
     for (int i = 0; i < randomInt; i++) {
       if (org.tooTired()) {
         break;
