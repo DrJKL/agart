@@ -10,7 +10,7 @@ public class DrippyStrain implements Strain {
 
   @Override
   public String getStrainName() {
-    return "Drippy VIRUS ";
+    return "Drippy VIRUS";
   }
 
   @Override

@@ -17,10 +17,10 @@ import javax.swing.JRadioButton;
 @SuppressWarnings("serial")
 class OrgAddPanel extends JPanel implements ActionListener {
 
-  static String defaultStrain = "Default VIRUS ";
-  static String dripStrain = "Drippy VIRUS ";
-  static String floatStrain = "Floaty VIRUS ";
-  static String rayStrain = "Ray VIRUS ";
+  static String defaultStrain = "Default VIRUS";
+  static String dripStrain = "Drippy VIRUS";
+  static String floatStrain = "Floaty VIRUS";
+  static String rayStrain = "Ray VIRUS";
 
   String chosenStrain;
 
@@ -54,7 +54,7 @@ class OrgAddPanel extends JPanel implements ActionListener {
   }
 
   private static JRadioButton makeStrainButton(String name, int mnemonic) {
-    final JRadioButton strainButton = new JRadioButton(name.substring(0, name.length() - 1));
+    final JRadioButton strainButton = new JRadioButton(name);
     strainButton.setMnemonic(mnemonic);
     strainButton.setActionCommand(name);
     return strainButton;
