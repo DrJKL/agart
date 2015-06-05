@@ -14,7 +14,6 @@ import java.util.stream.IntStream;
 
 import javax.imageio.ImageIO;
 
-import strains.DefaultStrain;
 import core.ImageUtil;
 
 public class Environment {
@@ -83,11 +82,8 @@ public class Environment {
   }
 
   public Organism addOneAt(Strain str, int r, int c) {
-    final Organism next = new Organism(this, new DefaultStrain(), checkBounds(r, height - 1),
-        checkBounds(c, width - 1));
-    final Strain strainSet = str;
-    next.setStrain(strainSet);
-    str.updateYoungest(0);
+    final Organism next = new Organism(this, str, //
+        checkBounds(r, height - 1), checkBounds(c, width - 1));
     addToActiveStrains(next);
     return next;
   }

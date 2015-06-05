@@ -14,7 +14,7 @@ import core.TraitLimit;
 
 public class Organism implements Comparable<Organism> {
 
-  private String orgName;
+  private final String orgName;
   private CauseOfDeath causeOfDeath = CauseOfDeath.LIVING;
   Strain strain;
   private final Environment envr;
@@ -396,13 +396,6 @@ public class Organism implements Comparable<Organism> {
     builder.append(", col=").append(col);
     builder.append("]");
     return builder.toString();
-  }
-
-  public void setStrain(Strain strainSet) {
-    strain = strainSet;
-    final String newName = strainSet.getStrainName()
-        + orgName.substring(strain.getStrainName().length() - 1);
-    orgName = newName;
   }
 
 }
