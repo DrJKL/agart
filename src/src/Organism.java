@@ -305,7 +305,7 @@ public class Organism implements Comparable<Organism> {
 
   private void acquireRand() {
     final int totX = colorPreference.total();
-    if (envr.getRed(col, row) + envr.getBlue(col, row) + envr.getGreen(col, row) < lowestRGBPer) {
+    if (totalNutrition(envr.getColor(col, row)) < lowestRGBPer) {
       return;
     }
     if (totX < 1) {
