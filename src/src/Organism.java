@@ -10,6 +10,7 @@ import core.CauseOfDeath;
 import core.ColorPreference;
 import core.Direction;
 import core.DirectionPreference;
+import core.TraitLimit;
 
 public class Organism implements Comparable<Organism> {
 
@@ -32,19 +33,6 @@ public class Organism implements Comparable<Organism> {
   public final ColorPreference colorPreference;
   public final DirectionPreference directionPreference;
 
-  private static final int MUTATION_CHANCE_LOW = 0;
-  private static final int MUTATION_CHANCE_HIGH = 33;
-  private static final int MUTATION_DEGREE_LOW = 2;
-  private static final int MUTATION_DEGREE_HIGH = 8;
-  private static final int MOVE_COST_LOW = 20;
-  private static final int MOVE_COST_HIGH = 50;
-  private static final int REPRODUCTION_COST_LOW = 20;
-  private static final int REPRODUCTION_COST_HIGH = 50;
-  private static final int REPRODUCTION_CHANCE_LOW = 40;
-  private static final int REPRODUCTION_CHANCE_HIGH = 60;
-  private static final int ENERGY_CAP_LOW = 200;
-  private static final int ENERGY_CAP_HIGH = 500;
-
   private static final int MAX_KIDS = 3;
   private static final int BREED_CAP = 80;
 
@@ -58,10 +46,9 @@ public class Organism implements Comparable<Organism> {
     return low + (int) (Math.random() * (high - low + 1));
   }
 
-  /*
-   * public static int randomInt(TraitLimit trait) { return randomInt(trait.low,
-   * trait.high); }
-   */
+  public static int randomInt(TraitLimit trait) {
+    return randomInt(trait.low, trait.high);
+  }
 
   // New organism with random attributes at random location
   public Organism(Environment env, Strain str) {
@@ -80,14 +67,14 @@ public class Organism implements Comparable<Organism> {
     generation = 0;
     strain.youngest(0);
 
-    energyCap = randomInt(ENERGY_CAP_LOW, ENERGY_CAP_HIGH);
+    energyCap = randomInt(TraitLimit.ENERGY_CAP);
     energy = energyCap / 2;
 
-    moveCost = randomInt(MOVE_COST_LOW, MOVE_COST_HIGH);
-    reproductionCost = randomInt(REPRODUCTION_COST_LOW, REPRODUCTION_COST_HIGH);
-    reproductionChance = randomInt(REPRODUCTION_CHANCE_LOW, REPRODUCTION_CHANCE_HIGH);
-    mutationChance = randomInt(MUTATION_CHANCE_LOW, MUTATION_CHANCE_HIGH);
-    mutationDegree = randomInt(MUTATION_DEGREE_LOW, MUTATION_DEGREE_HIGH);
+    moveCost = randomInt(TraitLimit.MOVE_COST);
+    reproductionCost = randomInt(TraitLimit.REPRODUCTION_COST);
+    reproductionChance = randomInt(TraitLimit.REPRODUCTION_CHANCE);
+    mutationChance = randomInt(TraitLimit.MUTATION_CHANCE);
+    mutationDegree = randomInt(TraitLimit.MUTATION_DEGREE);
 
     colorPreference = new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
     directionPreference = new DirectionPreference(randomInt(0, 3), randomInt(0, 3),
