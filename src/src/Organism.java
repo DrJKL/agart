@@ -258,8 +258,6 @@ public class Organism implements Comparable<Organism> {
     });
   }
 
-  private final int newThing = 0;
-
   private Map<Direction, Color> setView() {
     final int r = row;
     final int c = col;
