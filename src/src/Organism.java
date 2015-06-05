@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 
 import core.ColorPreference;
 import core.Direction;
+import core.DirectionPreference;
 
 public class Organism implements Comparable<Organism> {
 
@@ -27,7 +28,7 @@ public class Organism implements Comparable<Organism> {
   private int row, col;
 
   public final ColorPreference colorPreference;
-  public int northX, eastX, southX, westX;
+  public final DirectionPreference directionPreference;
 
   private static final String codDef = "Living";
   private static final String codStarved = "Starvation";
@@ -88,13 +89,15 @@ public class Organism implements Comparable<Organism> {
     mutationX = randomInt(mutXLow, mutXHigh);
 
     colorPreference = new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
+    directionPreference = new DirectionPreference(randomInt(0, 3), randomInt(0, 3),
+        randomInt(0, 3), randomInt(0, 3));
 
   }
 
   // New Virus with non-random attributes
   public Organism(Environment env, String str, Strain xStrain, int r, int c, int gen, int mut,
-      int mutX, int met, int rpr, int rprX, int cap, ColorPreference colorPreference, int nX,
-      int eX, int sX, int wX) {
+      int mutX, int met, int rpr, int rprX, int cap, ColorPreference colorPreference,
+      DirectionPreference directionPreference) {
     orgName = str;
     strain = xStrain;
     causeOfDeath = codDef;
@@ -115,11 +118,7 @@ public class Organism implements Comparable<Organism> {
     reprX = rprX;
 
     this.colorPreference = colorPreference;
-
-    northX = nX;
-    eastX = eX;
-    southX = sX;
-    westX = wX;
+    this.directionPreference = directionPreference;
   }
 
   public void update() {
@@ -176,8 +175,6 @@ public class Organism implements Comparable<Organism> {
     final String str = orgName + childrenSpawned;
     int mut, mutX, met, rpr, rprX, cap;
 
-    int nX, eX, sX, wX;
-
     mut = mutateTrait(mutation);
     mutX = mutateTrait(mutationX);
 
@@ -189,14 +186,10 @@ public class Organism implements Comparable<Organism> {
     cap = mutateTrait(energyCap);
 
     final ColorPreference newColorPreference = colorPreference.mutate(this);
-
-    nX = mutateTrait(northX);
-    eX = mutateTrait(eastX);
-    sX = mutateTrait(southX);
-    wX = mutateTrait(westX);
+    final DirectionPreference newDirectionPreference = directionPreference.mutate(this);
 
     final Organism spawn = new Organism(envr, str, strain, r, c, gen, mut, mutX, met, rpr, rprX,
-        cap, newColorPreference, nX, eX, sX, wX);
+        cap, newColorPreference, newDirectionPreference);
 
     return spawn;
   }
@@ -247,7 +240,11 @@ public class Organism implements Comparable<Organism> {
     movesMade++;
   }
 
-  public void move(int nX, int eX, int sX, int wX) {
+  public void movePreferentially() {
+    final int nX = directionPreference.northChance;
+    final int eX = directionPreference.eastChance;
+    final int sX = directionPreference.southChance;
+    final int wX = directionPreference.westChance;
     final int totX = nX + eX + sX + wX;
     if (totX < 1) {
       return;

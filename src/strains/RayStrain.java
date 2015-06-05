@@ -41,7 +41,7 @@ public class RayStrain implements Strain {
       if (org.tooTired()) {
         break;
       }
-      org.move(org.northX, org.eastX, org.southX, org.westX);
+      org.movePreferentially();
     }
 
     org.updates++;
