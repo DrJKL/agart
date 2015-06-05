@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.IntStream;
 
+import core.CauseOfDeath;
 import core.ColorPreference;
 import core.Direction;
 import core.DirectionPreference;
@@ -13,7 +14,7 @@ import core.DirectionPreference;
 public class Organism implements Comparable<Organism> {
 
   public String orgName;
-  public String causeOfDeath = "";
+  public CauseOfDeath causeOfDeath = CauseOfDeath.LIVING;
   Strain strain;
   private final Environment envr;
   private final int generation;
@@ -30,12 +31,6 @@ public class Organism implements Comparable<Organism> {
 
   public final ColorPreference colorPreference;
   public final DirectionPreference directionPreference;
-
-  private static final String codDef = "Living";
-  private static final String codStarved = "Starvation";
-  private static final String codOldAge = "Old Age";
-  private static final String codGericide = "Gericide";
-  private static final String codHereBeDragons = "Dragons";
 
   private static final int MUTATION_CHANCE_LOW = 0;
   private static final int MUTATION_CHANCE_HIGH = 33;
@@ -57,11 +52,16 @@ public class Organism implements Comparable<Organism> {
   private static final int LIFESPAN = 40;
   private static final int MAX_POPULATION = 100;
 
-  private static final int lowestRGBPer = 30;
+  private static final int MINIMUM_COLOR_VALUE = 30;
 
   public static int randomInt(int low, int high) {
     return low + (int) (Math.random() * (high - low + 1));
   }
+
+  /*
+   * public static int randomInt(TraitLimit trait) { return randomInt(trait.low,
+   * trait.high); }
+   */
 
   // New organism with random attributes at random location
   public Organism(Environment env, Strain str) {
@@ -76,7 +76,7 @@ public class Organism implements Comparable<Organism> {
     envr = env;
     strain = str;
     orgName = str.getStrainName();
-    causeOfDeath = codDef;
+    causeOfDeath = CauseOfDeath.LIVING;
     generation = 0;
     strain.youngest(0);
 
@@ -101,7 +101,7 @@ public class Organism implements Comparable<Organism> {
       DirectionPreference directionPreference) {
     orgName = str;
     strain = xStrain;
-    causeOfDeath = codDef;
+    causeOfDeath = CauseOfDeath.LIVING;
     envr = env;
     row = r;
     col = c;
@@ -128,19 +128,19 @@ public class Organism implements Comparable<Organism> {
 
   public void check() {
     if (energy <= 0) {
-      causeOfDeath = codStarved;
+      causeOfDeath = CauseOfDeath.STARVED;
     }
     if (updates > LIFESPAN) {
-      causeOfDeath = codOldAge;
+      causeOfDeath = CauseOfDeath.OLD_AGE;
     }
     if (envr.getActiveStrainSize(strain) > MAX_POPULATION
         && generation + 1 < this.strain.getYoungest()) {
-      causeOfDeath = codGericide;
+      causeOfDeath = CauseOfDeath.GERICIDE;
     }
     if (onEdge()) {
-      causeOfDeath = codHereBeDragons;
+      causeOfDeath = CauseOfDeath.DRAGONS;
     }
-    if (!causeOfDeath.equals("Living")) {
+    if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {
       passOn();
     }
   }
@@ -321,7 +321,7 @@ public class Organism implements Comparable<Organism> {
 
   private void acquireRed() {
     final int orig = envr.getColor(col, row).getRed();
-    if (orig <= lowestRGBPer) {
+    if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }
     final int take = randomInt(1, 20);
@@ -333,7 +333,7 @@ public class Organism implements Comparable<Organism> {
 
   private void acquireGreen() {
     final int orig = envr.getColor(col, row).getGreen();
-    if (orig <= lowestRGBPer) {
+    if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }
     final int take = randomInt(1, 20);
@@ -345,7 +345,7 @@ public class Organism implements Comparable<Organism> {
 
   private void acquireBlue() {
     final int orig = envr.getColor(col, row).getBlue();
-    if (orig <= lowestRGBPer) {
+    if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }
     final int take = randomInt(1, 20);
