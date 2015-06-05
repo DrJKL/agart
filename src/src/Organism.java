@@ -26,7 +26,7 @@ public class Organism implements Comparable<Organism> {
   private final int mutationChance, mutationDegree, moveCost, reproductionCost, reproductionChance,
       energyCap;
 
-  private int row, col;
+  private int y, x;
 
   public final ColorPreference colorPreference;
   public final DirectionPreference directionPreference;
@@ -69,9 +69,9 @@ public class Organism implements Comparable<Organism> {
   }
 
   // New virus with random attributes at a set location
-  public Organism(Environment env, Strain str, int r, int c) {
-    row = r;
-    col = c;
+  public Organism(Environment env, Strain str, int y, int x) {
+    this.y = y;
+    this.x = x;
 
     envr = env;
     strain = str;
@@ -96,15 +96,15 @@ public class Organism implements Comparable<Organism> {
   }
 
   // New Virus with non-random attributes
-  public Organism(Environment env, String str, Strain xStrain, int r, int c, int gen, int mut,
+  public Organism(Environment env, String str, Strain xStrain, int y, int x, int gen, int mut,
       int mutX, int met, int rpr, int rprX, int cap, ColorPreference colorPreference,
       DirectionPreference directionPreference) {
     orgName = str;
     strain = xStrain;
     causeOfDeath = codDef;
     envr = env;
-    row = r;
-    col = c;
+    this.y = y;
+    this.x = x;
     generation = gen;
 
     energy = cap / 2;
@@ -145,7 +145,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   private boolean onEdge() {
-    return row == 0 || col == 0 || col == envr.width - 1 || row == envr.height - 1;
+    return y == 0 || x == 0 || x == envr.width - 1 || y == envr.height - 1;
   }
 
   private void passOn() {
@@ -166,11 +166,11 @@ public class Organism implements Comparable<Organism> {
 
   // Creates new Virus with mutated attributes
   private Organism repr() {
-    int r = row;
-    int c = col;
-    while (r == row || c == col || !envr.inBounds(r, c)) {
-      r = randomInt(row - 3, row + 3);
-      c = randomInt(col - 3, col + 3);
+    int newY = y;
+    int newX = x;
+    while (newY == y || newX == x || !envr.inBounds(newY, newX)) {
+      newY = randomInt(y - 3, y + 3);
+      newX = randomInt(x - 3, x + 3);
     }
     final int gen = generation + 1;
     final String str = orgName + childrenSpawned;
@@ -189,8 +189,8 @@ public class Organism implements Comparable<Organism> {
     final ColorPreference newColorPreference = colorPreference.mutate(this);
     final DirectionPreference newDirectionPreference = directionPreference.mutate(this);
 
-    final Organism spawn = new Organism(envr, str, strain, r, c, gen, mut, mutX, met, rpr, rprX,
-        cap, newColorPreference, newDirectionPreference);
+    final Organism spawn = new Organism(envr, str, strain, newY, newX, gen, mut, mutX, met, rpr,
+        rprX, cap, newColorPreference, newDirectionPreference);
 
     return spawn;
   }
@@ -212,26 +212,26 @@ public class Organism implements Comparable<Organism> {
   public void move(Direction dir) {
     switch (dir) {
     case NORTH:
-      if (row > 0) {
-        row--;
+      if (y > 0) {
+        y--;
         break;
       }
       return;
     case EAST:
-      if (col < envr.width - 1) {
-        col++;
+      if (x < envr.width - 1) {
+        x++;
         break;
       }
       return;
     case SOUTH:
-      if (row < envr.height - 1) {
-        row++;
+      if (y < envr.height - 1) {
+        y++;
         break;
       }
       return;
     case WEST:
-      if (col > 0) {
-        col--;
+      if (x > 0) {
+        x--;
         break;
       }
       return;
@@ -263,28 +263,28 @@ public class Organism implements Comparable<Organism> {
   }
 
   private boolean hasSpace() {
-    return IntStream.rangeClosed(row - 3, row + 3).anyMatch(i -> {
-      return IntStream.rangeClosed(col - 3, col + 3).anyMatch(j -> {
+    return IntStream.rangeClosed(y - 3, y + 3).anyMatch(i -> {
+      return IntStream.rangeClosed(x - 3, x + 3).anyMatch(j -> {
         return !envr.orgAt(i, j);
       });
     });
   }
 
   private Map<Direction, Color> setView() {
-    final int r = row;
-    final int c = col;
-    if (r < 0 || r >= envr.height || c < 0 || c >= envr.width) {
+    final int newY = y;
+    final int newX = x;
+    if (newY < 0 || newY >= envr.height || newX < 0 || newX >= envr.width) {
       throw new RuntimeException();
     }
-    final int North = r - 1;
-    final int East = c + 1;
-    final int South = r + 1;
-    final int West = c - 1;
+    final int North = newY - 1;
+    final int East = newX + 1;
+    final int South = newY + 1;
+    final int West = newX - 1;
     final Map<Direction, Color> view = new HashMap<>();
-    view.put(Direction.NORTH, (North >= 0) ? envr.getColor(c, North) : Color.BLACK);
-    view.put(Direction.EAST, (East < envr.width) ? envr.getColor(East, r) : Color.BLACK);
-    view.put(Direction.SOUTH, (South < envr.height) ? envr.getColor(c, South) : Color.BLACK);
-    view.put(Direction.WEST, (West >= 0) ? envr.getColor(West, r) : Color.BLACK);
+    view.put(Direction.NORTH, (North >= 0) ? envr.getColor(newX, North) : Color.BLACK);
+    view.put(Direction.EAST, (East < envr.width) ? envr.getColor(East, newY) : Color.BLACK);
+    view.put(Direction.SOUTH, (South < envr.height) ? envr.getColor(newX, South) : Color.BLACK);
+    view.put(Direction.WEST, (West >= 0) ? envr.getColor(West, newY) : Color.BLACK);
     return view;
   }
 
@@ -305,7 +305,7 @@ public class Organism implements Comparable<Organism> {
 
   private void acquireRand() {
     final int totX = colorPreference.total();
-    if (totalNutrition(envr.getColor(col, row)) < lowestRGBPer) {
+    if (totalNutrition(envr.getColor(x, y)) < lowestRGBPer) {
       return;
     }
     if (totX < 1) {
@@ -322,37 +322,37 @@ public class Organism implements Comparable<Organism> {
   }
 
   private void acquireRed() {
-    final int orig = envr.getRed(col, row);
+    final int orig = envr.getRed(x, y);
     if (orig <= lowestRGBPer) {
       return;
     }
     final int take = randomInt(1, 20);
     red += take;
-    envr.setRed(col, row, orig - take);
+    envr.setRed(x, y, orig - take);
     resourcesGathered += take;
     energy += take;
   }
 
   private void acquireGreen() {
-    final int orig = envr.getGreen(col, row);
+    final int orig = envr.getGreen(x, y);
     if (orig <= lowestRGBPer) {
       return;
     }
     final int take = randomInt(1, 20);
     green += take;
-    envr.setGreen(col, row, orig - take);
+    envr.setGreen(x, y, orig - take);
     resourcesGathered += take;
     energy += take;
   }
 
   private void acquireBlue() {
-    final int orig = envr.getBlue(col, row);
+    final int orig = envr.getBlue(x, y);
     if (orig <= lowestRGBPer) {
       return;
     }
     final int take = randomInt(1, 20);
     blue += take;
-    envr.setBlue(col, row, orig - take);
+    envr.setBlue(x, y, orig - take);
     resourcesGathered += take;
     energy += take;
   }
@@ -362,11 +362,11 @@ public class Organism implements Comparable<Organism> {
   }
 
   public int getRow() {
-    return row;
+    return y;
   }
 
   public int getCol() {
-    return col;
+    return x;
   }
 
   private boolean canReplicate() {
@@ -402,8 +402,8 @@ public class Organism implements Comparable<Organism> {
     builder.append(", moveCost=").append(moveCost);
     builder.append(", reprCost=").append(reproductionCost);
     builder.append(", energyCap=").append(energyCap);
-    builder.append(", row=").append(row);
-    builder.append(", col=").append(col);
+    builder.append(", y=").append(y);
+    builder.append(", x=").append(x);
     builder.append("]");
     return builder.toString();
   }
