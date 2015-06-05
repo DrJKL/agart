@@ -39,7 +39,7 @@ public class FloatyStrain implements Strain {
     org.feast();
     org.replicate();
 
-    final int randomInt = Organism.randomInt(0, Organism.MOVES_EACH);
+    final int randomInt = org.timesToMove();
     for (int i = 0; i < randomInt; i++) {
       if (org.tooTired()) {
         break;
@@ -52,7 +52,6 @@ public class FloatyStrain implements Strain {
       }
     }
 
-    org.updates++;
     org.check();
   }
 }

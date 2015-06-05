@@ -38,14 +38,13 @@ public class DefaultStrain implements Strain {
     org.feast();
     org.replicate();
 
-    final int randomInt = Organism.randomInt(0, Organism.MOVES_EACH);
+    final int randomInt = org.timesToMove();
     for (int i = 0; i < randomInt; i++) {
       if (org.tooTired()) {
         break;
       }
       org.move();
     }
-    org.updates++;
     org.check();
   }
 }

@@ -14,14 +14,14 @@ import core.TraitLimit;
 
 public class Organism implements Comparable<Organism> {
 
-  public String orgName;
-  public CauseOfDeath causeOfDeath = CauseOfDeath.LIVING;
+  private String orgName;
+  private CauseOfDeath causeOfDeath = CauseOfDeath.LIVING;
   Strain strain;
   private final Environment envr;
   private final int generation;
   private int childrenSpawned, movesMade;
 
-  public int updates;
+  private int updates;
 
   private int resourcesGathered, energy, red, blue, green;
 
@@ -30,13 +30,13 @@ public class Organism implements Comparable<Organism> {
 
   private int row, col;
 
-  public final ColorPreference colorPreference;
-  public final DirectionPreference directionPreference;
+  private final ColorPreference colorPreference;
+  private final DirectionPreference directionPreference;
 
   private static final int MAX_KIDS = 3;
   private static final int BREED_CAP = 80;
 
-  public static final int MOVES_EACH = 20;
+  private static final int MOVES_EACH = 20;
   private static final int LIFESPAN = 40;
   private static final int MAX_POPULATION = 100;
 
@@ -117,7 +117,7 @@ public class Organism implements Comparable<Organism> {
     if (energy <= 0) {
       causeOfDeath = CauseOfDeath.STARVED;
     }
-    if (updates > LIFESPAN) {
+    if (++updates > LIFESPAN) {
       causeOfDeath = CauseOfDeath.OLD_AGE;
     }
     if (envr.getActiveStrainSize(strain) > MAX_POPULATION
@@ -289,6 +289,10 @@ public class Organism implements Comparable<Organism> {
 
   public void feast() {
     IntStream.range(0, 15).forEach(j -> acquireRand());
+  }
+
+  public int timesToMove() {
+    return randomInt(0, MOVES_EACH);
   }
 
   private void acquireRand() {
