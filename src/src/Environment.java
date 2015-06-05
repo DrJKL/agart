@@ -27,9 +27,6 @@ public class Environment {
 
   public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
 
-  String[] strainNameMods = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
-      "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
-
   ArrayList<Organism> graveyard = new ArrayList<>();
   ArrayList<Organism> kids = new ArrayList<>();
 
