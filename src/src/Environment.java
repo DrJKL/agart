@@ -27,8 +27,6 @@ public class Environment {
 
   public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
 
-  int youngestIn = 0;
-  int lastStrain = 0;
   String[] strainNameMods = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
       "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
@@ -92,7 +90,6 @@ public class Environment {
         checkBounds(c, width - 1));
     final Strain strainSet = str;
     next.setStrain(strainSet);
-    lastStrain++;
     str.youngest(0);
     addToActiveStrains(next);
     return next;
