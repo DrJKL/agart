@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.IntStream;
 
+import core.ColorPreference;
 import core.Direction;
 
 public class Organism implements Comparable<Organism> {
@@ -25,7 +26,7 @@ public class Organism implements Comparable<Organism> {
 
   private int row, col;
 
-  public final int redX, greenX, blueX;
+  public final ColorPreference colorPreference;
   public int northX, eastX, southX, westX;
 
   private static final String codDef = "Living";
@@ -86,16 +87,14 @@ public class Organism implements Comparable<Organism> {
     mutation = randomInt(mutLow, mutHigh);
     mutationX = randomInt(mutXLow, mutXHigh);
 
-    redX = randomInt(1, 100);
-    greenX = randomInt(1, 100);
-    blueX = randomInt(1, 100);
+    colorPreference = new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
 
   }
 
   // New Virus with non-random attributes
   public Organism(Environment env, String str, Strain xStrain, int r, int c, int gen, int mut,
-      int mutX, int met, int rpr, int rprX, int cap, int rX, int gX, int bX, int nX, int eX,
-      int sX, int wX) {
+      int mutX, int met, int rpr, int rprX, int cap, ColorPreference colorPreference, int nX,
+      int eX, int sX, int wX) {
     orgName = str;
     strain = xStrain;
     causeOfDeath = codDef;
@@ -115,9 +114,7 @@ public class Organism implements Comparable<Organism> {
     reprCost = rpr;
     reprX = rprX;
 
-    redX = rX;
-    greenX = gX;
-    blueX = bX;
+    this.colorPreference = colorPreference;
 
     northX = nX;
     eastX = eX;
@@ -179,8 +176,6 @@ public class Organism implements Comparable<Organism> {
     final String str = orgName + childrenSpawned;
     int mut, mutX, met, rpr, rprX, cap;
 
-    int rX, gX, bX;
-
     int nX, eX, sX, wX;
 
     mut = mutateTrait(mutation);
@@ -193,9 +188,7 @@ public class Organism implements Comparable<Organism> {
 
     cap = mutateTrait(energyCap);
 
-    rX = mutateTrait(redX);
-    gX = mutateTrait(greenX);
-    bX = mutateTrait(blueX);
+    final ColorPreference newColorPreference = colorPreference.mutate(this);
 
     nX = mutateTrait(northX);
     eX = mutateTrait(eastX);
@@ -203,12 +196,12 @@ public class Organism implements Comparable<Organism> {
     wX = mutateTrait(westX);
 
     final Organism spawn = new Organism(envr, str, strain, r, c, gen, mut, mutX, met, rpr, rprX,
-        cap, rX, gX, bX, nX, eX, sX, wX);
+        cap, newColorPreference, nX, eX, sX, wX);
 
     return spawn;
   }
 
-  private int mutateTrait(int original) {
+  public int mutateTrait(int original) {
     return shouldMutate() ? Math.abs(randomInt(original - mutationX, original + mutationX))
         : original;
   }
@@ -309,10 +302,13 @@ public class Organism implements Comparable<Organism> {
   }
 
   public void feast() {
-    IntStream.range(0, 15).forEach(j -> acquireRand(redX, greenX, blueX));
+    IntStream.range(0, 15).forEach(j -> acquireRand());
   }
 
-  public void acquireRand(int rX, int gX, int bX) {
+  public void acquireRand() {
+    final int rX = colorPreference.redChance;
+    final int gX = colorPreference.greenChance;
+    final int bX = colorPreference.blueChance;
     final int totX = rX + gX + bX;
     if (envr.getRed(col, row) + envr.getBlue(col, row) + envr.getGreen(col, row) < lowestRGBPer) {
       return;
