@@ -23,7 +23,8 @@ public class Organism implements Comparable<Organism> {
 
   private int resourcesGathered, energy, red, blue, green;
 
-  private final int mutation, mutationX, moveCost, reprCost, reprX, energyCap;
+  private final int mutationChance, mutationDegree, moveCost, reproductionCost, reproductionChance,
+      energyCap;
 
   private int row, col;
 
@@ -36,18 +37,18 @@ public class Organism implements Comparable<Organism> {
   private static final String codGericide = "Gericide";
   private static final String codHereBeDragons = "Dragons";
 
-  private static final int mutLow = 0;
-  private static final int mutHigh = 33;
-  private static final int mutXLow = 2;
-  private static final int mutXHigh = 8;
-  private static final int moveLow = 20;
-  private static final int moveHigh = 50;
-  private static final int rprLow = 20;
-  private static final int rprHigh = 50;
-  private static final int rprXLow = 40;
-  private static final int rprXHigh = 60;
-  private static final int capLow = 200;
-  private static final int capHigh = 500;
+  private static final int MUTATION_CHANCE_LOW = 0;
+  private static final int MUTATION_CHANCE_HIGH = 33;
+  private static final int MUTATION_DEGREE_LOW = 2;
+  private static final int MUTATION_DEGREE_HIGH = 8;
+  private static final int MOVE_COST_LOW = 20;
+  private static final int MOVE_COST_HIGH = 50;
+  private static final int REPRODUCTION_COST_LOW = 20;
+  private static final int REPRODUCTION_COST_HIGH = 50;
+  private static final int REPRODUCTION_CHANCE_LOW = 40;
+  private static final int REPRODUCTION_CHANCE_HIGH = 60;
+  private static final int ENERGY_CAP_LOW = 200;
+  private static final int ENERGY_CAP_HIGH = 500;
 
   private static final int maxKids = 3;
   private static final int breedCap = 80;
@@ -79,14 +80,14 @@ public class Organism implements Comparable<Organism> {
     generation = 0;
     strain.youngest(0);
 
-    energyCap = randomInt(capLow, capHigh);
+    energyCap = randomInt(ENERGY_CAP_LOW, ENERGY_CAP_HIGH);
     energy = energyCap / 2;
 
-    moveCost = randomInt(moveLow, moveHigh);
-    reprCost = randomInt(rprLow, rprHigh);
-    reprX = randomInt(rprXLow, rprXHigh);
-    mutation = randomInt(mutLow, mutHigh);
-    mutationX = randomInt(mutXLow, mutXHigh);
+    moveCost = randomInt(MOVE_COST_LOW, MOVE_COST_HIGH);
+    reproductionCost = randomInt(REPRODUCTION_COST_LOW, REPRODUCTION_COST_HIGH);
+    reproductionChance = randomInt(REPRODUCTION_CHANCE_LOW, REPRODUCTION_CHANCE_HIGH);
+    mutationChance = randomInt(MUTATION_CHANCE_LOW, MUTATION_CHANCE_HIGH);
+    mutationDegree = randomInt(MUTATION_DEGREE_LOW, MUTATION_DEGREE_HIGH);
 
     colorPreference = new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
     directionPreference = new DirectionPreference(randomInt(0, 3), randomInt(0, 3),
@@ -109,13 +110,13 @@ public class Organism implements Comparable<Organism> {
     energy = cap / 2;
     energyCap = cap;
 
-    mutation = mut;
-    mutationX = mutX;
+    mutationChance = mut;
+    mutationDegree = mutX;
 
     moveCost = met;
 
-    reprCost = rpr;
-    reprX = rprX;
+    reproductionCost = rpr;
+    reproductionChance = rprX;
 
     this.colorPreference = colorPreference;
     this.directionPreference = directionPreference;
@@ -152,7 +153,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   public void replicate() {
-    if (energy < reprCost || !hasSpace() || !canReplicate()) {
+    if (energy < reproductionCost || !hasSpace() || !canReplicate()) {
       return;
     }
     Organism child;
@@ -175,13 +176,13 @@ public class Organism implements Comparable<Organism> {
     final String str = orgName + childrenSpawned;
     int mut, mutX, met, rpr, rprX, cap;
 
-    mut = mutateTrait(mutation);
-    mutX = mutateTrait(mutationX);
+    mut = mutateTrait(mutationChance);
+    mutX = mutateTrait(mutationDegree);
 
     met = mutateTrait(moveCost);
 
-    rpr = mutateTrait(reprCost);
-    rprX = mutateTrait(reprX);
+    rpr = mutateTrait(reproductionCost);
+    rprX = mutateTrait(reproductionChance);
 
     cap = mutateTrait(energyCap);
 
@@ -195,12 +196,12 @@ public class Organism implements Comparable<Organism> {
   }
 
   public int mutateTrait(int original) {
-    return shouldMutate() ? Math.abs(randomInt(original - mutationX, original + mutationX))
-        : original;
+    return shouldMutate() ? Math
+        .abs(randomInt(original - mutationDegree, original + mutationDegree)) : original;
   }
 
   private boolean shouldMutate() {
-    return Math.random() * 100 > mutation;
+    return Math.random() * 100 > mutationChance;
   }
 
   public void move() {
@@ -375,7 +376,7 @@ public class Organism implements Comparable<Organism> {
     return energy >= energyCap - 20 //
         && generation < breedCap //
         && childrenSpawned < maxKids //
-        && Math.random() * 100 < reprX;
+        && Math.random() * 100 < reproductionChance;
   }
 
   @Override
@@ -400,9 +401,9 @@ public class Organism implements Comparable<Organism> {
     builder.append(", red=").append(red);
     builder.append(", blue=").append(blue);
     builder.append(", green=").append(green);
-    builder.append(", mutation=").append(mutation);
+    builder.append(", mutation=").append(mutationChance);
     builder.append(", moveCost=").append(moveCost);
-    builder.append(", reprCost=").append(reprCost);
+    builder.append(", reprCost=").append(reproductionCost);
     builder.append(", energyCap=").append(energyCap);
     builder.append(", row=").append(row);
     builder.append(", col=").append(col);
