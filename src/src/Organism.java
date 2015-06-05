@@ -25,8 +25,9 @@ public class Organism implements Comparable<Organism> {
 
   private int resourcesGathered, energy, red, blue, green;
 
-  private final int mutationChance, mutationDegree, moveCost, reproductionCost, reproductionChance,
-      energyCap;
+  private final int mutationChance, reproductionChance;
+  private final int mutationDegree, reproductionCost;
+  private final int moveCost, energyCap;
 
   private int row, col;
 
