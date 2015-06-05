@@ -118,19 +118,19 @@ public class Environment {
     activeStrains.values().stream().flatMap(List::stream).forEach(o -> {
       o.update();
     });
-    bringOutDead();
-    addKids();
+    buryTheDead();
+    raiseTheKids();
     updates++;
   }
 
-  private void addKids() {
+  private void raiseTheKids() {
     kids.forEach(o -> {
       this.addToActiveStrains(o);
     });
     kids.clear();
   }
 
-  private void bringOutDead() {
+  private void buryTheDead() {
     graveyard.forEach(org -> {
       this.removeFromActiveStrains(org);
     });
