@@ -66,10 +66,6 @@ public class Environment {
     return bimage;
   }
 
-  public void add(Strain str) {
-    this.add(1, str);
-  }
-
   public void add(int number, Strain str) {
     IntStream.range(0, number).forEach(i -> {
       int placeX, placeY;

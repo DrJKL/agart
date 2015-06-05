@@ -174,9 +174,7 @@ class EnvFrame extends JFrame {
     multOrgAddButton = new JButton("Add Organisms");
     multOrgAddButton.addActionListener(e -> {
       final int num = Integer.parseInt(JOptionPane.showInputDialog("Number of Organisms?"));
-      final String strChoice = orgAddPanel.getChosenStrain();
-      final Strain str = strToStrain.get(strChoice);
-      envr.add(num, str);
+      envr.add(num, strToStrain.get(orgAddPanel.getChosenStrain()));
       updateData();
     });
   }
@@ -184,9 +182,7 @@ class EnvFrame extends JFrame {
   private void createOrgAddButton() {
     orgAddButton = new JButton("Add Organism");
     orgAddButton.addActionListener(e -> {
-      final String strChoice = (orgAddPanel).getChosenStrain();
-      final Strain str = strToStrain.get(strChoice);
-      envr.add(str);
+      envr.add(1, strToStrain.get(orgAddPanel.getChosenStrain()));
       updateData();
     });
   }
@@ -325,9 +321,7 @@ class EnvFrame extends JFrame {
   private void addRandomTimer() {
     final ActionListener updater = e -> {
       if (envr.livingOrgs() == 0) {
-        final String strChoice = orgAddPanel.getChosenStrain();
-        final Strain strain = strToStrain.get(strChoice);
-        envr.add(strain);
+        envr.add(1, strToStrain.get(orgAddPanel.getChosenStrain()));
       }
       envr.update();
       updateData();
