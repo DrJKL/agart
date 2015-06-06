@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -153,6 +154,10 @@ public class Environment {
 
   public Color getColor(int r, int c) {
     return inBounds(c, r) ? new Color(image.getRGB(r, c)) : Color.BLACK;
+  }
+
+  public Color getColor(Point point) {
+    return inBounds(point.x, point.y) ? new Color(image.getRGB(point.y, point.x)) : Color.BLACK;
   }
 
   public void setRed(int r, int c, int newRed) {
