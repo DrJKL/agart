@@ -20,4 +20,21 @@ public class DirectionPreference {
         organism.mutateTrait(eastChance), organism.mutateTrait(southChance),
         organism.mutateTrait(westChance));
   }
+
+  public int total() {
+    return northChance + eastChance + southChance + westChance;
+  }
+
+  public int goNorth() {
+    return northChance;
+  }
+
+  public int goEast() {
+    return northChance + eastChance;
+  }
+
+  public int goSouth() {
+    return northChance + eastChance + southChance;
+  }
+
 }

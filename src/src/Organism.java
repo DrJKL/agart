@@ -231,20 +231,16 @@ public class Organism implements Comparable<Organism> {
   }
 
   public void movePreferentially() {
-    final int nX = directionPreference.northChance;
-    final int eX = directionPreference.eastChance;
-    final int sX = directionPreference.southChance;
-    final int wX = directionPreference.westChance;
-    final int totX = nX + eX + sX + wX;
+    final int totX = directionPreference.total();
     if (totX < 1) {
       return;
     }
     final int rand = randomInt(1, totX);
-    if (rand <= nX) {
+    if (rand <= directionPreference.goNorth()) {
       move(Direction.NORTH);
-    } else if (rand <= (nX + eX)) {
+    } else if (rand <= directionPreference.goEast()) {
       move(Direction.EAST);
-    } else if (rand <= (nX + eX + sX)) {
+    } else if (rand <= directionPreference.goSouth()) {
       move(Direction.SOUTH);
     } else {
       move(Direction.WEST);
