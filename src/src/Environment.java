@@ -172,7 +172,7 @@ public class Environment {
   }
 
   public Color getColor(int r, int c) {
-    return new Color(image.getRGB(r, c));
+    return inBounds(c, r) ? new Color(image.getRGB(r, c)) : Color.BLACK;
   }
 
   public void setRed(int r, int c, int newRed) {
