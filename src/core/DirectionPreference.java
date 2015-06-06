@@ -9,10 +9,10 @@ public class DirectionPreference {
   public final int westChance;
 
   public DirectionPreference(int northChance, int eastChance, int southChance, int westChance) {
-    this.northChance = northChance;
-    this.eastChance = eastChance;
-    this.southChance = southChance;
-    this.westChance = westChance;
+    this.northChance = fix(northChance);
+    this.eastChance = fix(eastChance);
+    this.southChance = fix(southChance);
+    this.westChance = fix(westChance);
   }
 
   public DirectionPreference mutate(Organism organism) {
@@ -35,6 +35,10 @@ public class DirectionPreference {
 
   public int goSouth() {
     return northChance + eastChance + southChance;
+  }
+
+  private static int fix(int value) {
+    return Math.max(value, 0);
   }
 
 }
