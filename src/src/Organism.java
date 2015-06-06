@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,6 +31,7 @@ public class Organism implements Comparable<Organism> {
   private final int moveCost, energyCap;
 
   private int row, col;
+  private final Point location;
 
   private final ColorPreference colorPreference;
   private final DirectionPreference directionPreference;
@@ -60,6 +62,7 @@ public class Organism implements Comparable<Organism> {
   public Organism(Environment env, Strain str, int r, int c) {
     row = r;
     col = c;
+    location = new Point(c, r);
 
     envr = env;
     strain = str;
@@ -93,6 +96,7 @@ public class Organism implements Comparable<Organism> {
     envr = env;
     row = r;
     col = c;
+    location = new Point(c, r);
     generation = gen;
 
     energy = cap / 2;
