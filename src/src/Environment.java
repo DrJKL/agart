@@ -18,9 +18,13 @@ import core.ImageUtil;
 
 public class Environment {
 
-  public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
   public final BufferedImage image;
+
+  public final int width;
+  public final int height;
   public int updates;
+
+  public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
 
   ArrayList<Organism> graveyard = new ArrayList<>();
   ArrayList<Organism> kids = new ArrayList<>();
@@ -35,11 +39,15 @@ public class Environment {
 
   public Environment(BufferedImage bimage) {
     image = bimage;
+    width = image.getWidth();
+    height = image.getHeight();
     updates = 0;
   }
 
   public Environment(int w, int h, boolean rand) {
     image = setEnvironment(w, h, rand);
+    width = w;
+    height = h;
     updates = 0;
   }
 
@@ -58,20 +66,12 @@ public class Environment {
     return bimage;
   }
 
-  public int getWidth() {
-    return image.getWidth();
-  }
-
-  public int getHeight() {
-    return image.getHeight();
-  }
-
   public void add(int number, Strain str) {
     IntStream.range(0, number).forEach(i -> {
       int placeX, placeY;
       do {
-        placeX = randomInt(0, this.getWidth());
-        placeY = randomInt(0, this.getHeight());
+        placeX = randomInt(0, this.width);
+        placeY = randomInt(0, this.height);
       } while (this.orgAt(placeY, placeX));
       this.addOneAt(str, placeY, placeX);
     });
@@ -79,7 +79,7 @@ public class Environment {
 
   public Organism addOneAt(Strain str, int r, int c) {
     final Organism next = new Organism(this, str, //
-        checkBounds(r, getHeight() - 1), checkBounds(c, getWidth() - 1));
+        checkBounds(r, height - 1), checkBounds(c, width - 1));
     addToActiveStrains(next);
     return next;
   }
@@ -168,7 +168,8 @@ public class Environment {
   }
 
   public boolean inBounds(int r, int c) {
-    return r >= 0 && r < getHeight() && c >= 0 && c < getWidth();
+    return r >= 0 && r < height //
+        && c >= 0 && c < width;
   }
 
   public Color getColor(int r, int c) {
