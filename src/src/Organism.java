@@ -53,7 +53,7 @@ public class Organism implements Comparable<Organism> {
 
   // New organism with random attributes at random location
   public Organism(Environment env, Strain str) {
-    this(env, str, randomInt(0, env.height), randomInt(0, env.width));
+    this(env, str, randomInt(0, env.getHeight()), randomInt(0, env.getWidth()));
   }
 
   // New virus with random attributes at a set location
@@ -134,7 +134,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   private boolean onEdge() {
-    return row == 0 || col == 0 || col == envr.width - 1 || row == envr.height - 1;
+    return row == 0 || col == 0 || col == envr.getWidth() - 1 || row == envr.getHeight() - 1;
   }
 
   private void passOn() {
@@ -207,13 +207,13 @@ public class Organism implements Comparable<Organism> {
       }
       return;
     case EAST:
-      if (col < envr.width - 1) {
+      if (col < envr.getWidth() - 1) {
         col++;
         break;
       }
       return;
     case SOUTH:
-      if (row < envr.height - 1) {
+      if (row < envr.getHeight() - 1) {
         row++;
         break;
       }
@@ -262,7 +262,7 @@ public class Organism implements Comparable<Organism> {
   private Map<Direction, Color> setView() {
     final int r = row;
     final int c = col;
-    if (r < 0 || r >= envr.height || c < 0 || c >= envr.width) {
+    if (r < 0 || r >= envr.getHeight() || c < 0 || c >= envr.getWidth()) {
       throw new RuntimeException();
     }
     final int North = r - 1;
@@ -271,8 +271,8 @@ public class Organism implements Comparable<Organism> {
     final int West = c - 1;
     final Map<Direction, Color> view = new HashMap<>();
     view.put(Direction.NORTH, (North >= 0) ? envr.getColor(c, North) : Color.BLACK);
-    view.put(Direction.EAST, (East < envr.width) ? envr.getColor(East, r) : Color.BLACK);
-    view.put(Direction.SOUTH, (South < envr.height) ? envr.getColor(c, South) : Color.BLACK);
+    view.put(Direction.EAST, (East < envr.getWidth()) ? envr.getColor(East, r) : Color.BLACK);
+    view.put(Direction.SOUTH, (South < envr.getHeight()) ? envr.getColor(c, South) : Color.BLACK);
     view.put(Direction.WEST, (West >= 0) ? envr.getColor(West, r) : Color.BLACK);
     return view;
   }
