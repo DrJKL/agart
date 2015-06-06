@@ -19,7 +19,6 @@ public class DefaultStrain implements Strain {
 
   @Override
   public void updateYoungest(int orgGen) {
-    System.out.printf("%s %d -> %d\n", getStrainName(), youngest, orgGen);
     youngest = Math.max(orgGen, youngest);
   }
 
