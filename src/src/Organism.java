@@ -129,7 +129,7 @@ public class Organism implements Comparable<Organism> {
         && generation + 1 < this.strain.getYoungest()) {
       causeOfDeath = CauseOfDeath.GERICIDE;
     }
-    if (onEdge()) {
+    if (overTheEdge()) {
       causeOfDeath = CauseOfDeath.DRAGONS;
     }
     if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {
@@ -137,8 +137,8 @@ public class Organism implements Comparable<Organism> {
     }
   }
 
-  private boolean onEdge() {
-    return row == 0 || col == 0 || col == envr.getWidth() - 1 || row == envr.getHeight() - 1;
+  private boolean overTheEdge() {
+    return row < 0 || col < 0 || col >= envr.getWidth() || row >= envr.getHeight();
   }
 
   private void passOn() {
@@ -189,7 +189,7 @@ public class Organism implements Comparable<Organism> {
   private Point findChildPoint() {
     int r = row;
     int c = col;
-    while (r == row || c == col || !envr.inBounds(r, c)) {
+    while (r == row && c == col) {
       r = randomInt(row - 3, row + 3);
       c = randomInt(col - 3, col + 3);
     }
@@ -213,29 +213,17 @@ public class Organism implements Comparable<Organism> {
   public void move(Direction dir) {
     switch (dir) {
     case NORTH:
-      if (row > 0) {
-        row--;
-        break;
-      }
-      return;
+      row--;
+      break;
     case EAST:
-      if (col < envr.getWidth() - 1) {
-        col++;
-        break;
-      }
-      return;
+      col++;
+      break;
     case SOUTH:
-      if (row < envr.getHeight() - 1) {
-        row++;
-        break;
-      }
-      return;
+      row++;
+      break;
     case WEST:
-      if (col > 0) {
-        col--;
-        break;
-      }
-      return;
+      col--;
+      break;
     }
 
     energy -= moveCost;
