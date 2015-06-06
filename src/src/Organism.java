@@ -20,7 +20,7 @@ public class Organism implements Comparable<Organism> {
   Strain strain;
   private final Environment envr;
   private final int generation;
-  private int childrenSpawned, movesMade;
+  private int childrenSpawned;
 
   private int updates;
 
@@ -231,7 +231,6 @@ public class Organism implements Comparable<Organism> {
     }
 
     energy -= moveCost;
-    movesMade++;
   }
 
   public void movePreferentially() {
@@ -372,7 +371,6 @@ public class Organism implements Comparable<Organism> {
     builder.append(", causeOfDeath=").append(causeOfDeath);
     builder.append(", generation=").append(generation);
     builder.append(", childrenSpawned=").append(childrenSpawned);
-    builder.append(", movesMade=").append(movesMade);
     builder.append(", updates=").append(updates);
     builder.append(", resourcesGathered=").append(resourcesGathered);
     builder.append(", energy=").append(energy);
