@@ -314,7 +314,7 @@ class EnvFrame extends JFrame {
     myPanel.repaint();
   }
 
-  private BufferedImage getImage(File img) {
+  private static BufferedImage getImage(File img) {
     BufferedImage bmg = null;
     try {
       bmg = ImageIO.read(img);
@@ -336,7 +336,9 @@ class EnvFrame extends JFrame {
   private Timer addRandomTimer() {
     final ActionListener updater = e -> {
       if (envr.livingOrgs() == 0) {
-        envr.add(1, strToStrain.get(orgAddPanel.getChosenStrain()));
+        final Strain strain = strToStrain.get(orgAddPanel.getChosenStrain());
+        strain.resetYoungest();
+        envr.add(1, strain);
       }
       envr.update();
       updateData();
