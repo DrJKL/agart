@@ -25,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.Timer;
 
 import src.Environment;
 import src.ImageFilter;
@@ -33,6 +34,7 @@ import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
 import strains.RayStrain;
+import core.ImageUtil;
 
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
@@ -40,17 +42,19 @@ class EnvFrame extends JFrame {
 
   private MyPanel myPanel;
 
-  private javax.swing.Timer myTimer;
-  private javax.swing.Timer randTimer;
+  private final Timer myTimer;
+  private final Timer randTimer;
 
-  private JButton startStopButton, singleStepButton;
+  private final JButton startStopButton, singleStepButton;
   private final JButton saveImageButton;
   private final JButton saveNegButton;
-  private JButton orgAddButton;
-  private JButton multOrgAddButton;
-  private JButton exterminateStrainButton;
-  private JButton startStopRandomButton;
-  private JButton newImageButton, setImageButton;
+  private final JButton orgAddButton;
+  private final JButton multOrgAddButton;
+  private final JButton exterminateStrainButton;
+  private final JButton startStopRandomButton;
+  private final JButton newImageButton;
+
+  private final JButton setImageButton;
   private final JLabel numOrgLabel, numUpdatesLabel;
   private final JPanel mainControlsPanel, organismControls;
   private final OrgAddPanel orgAddPanel;
@@ -78,8 +82,8 @@ class EnvFrame extends JFrame {
 
     contentPane.add(myPanel, "Center");
 
-    addTimer();
-    addRandomTimer();
+    myTimer = addTimer();
+    randTimer = addRandomTimer();
 
     mainControlsPanel = new JPanel();
     organismControls = new JPanel();
@@ -92,13 +96,13 @@ class EnvFrame extends JFrame {
     numOrgLabel = new JLabel("Organisms: " + envr.livingOrgs());
     numUpdatesLabel = new JLabel("Updates: " + envr.updates);
 
-    createNewImageButton(contentPane);
-    createSetImageButton(contentPane, fc);
-    createStartStopRandomButton();
+    newImageButton = createNewImageButton(contentPane);
+    setImageButton = createSetImageButton(contentPane, fc);
+    startStopRandomButton = createStartStopRandomButton();
 
-    createStartStopButton();
+    startStopButton = createStartStopButton();
 
-    createSingleStepButton();
+    singleStepButton = createSingleStepButton();
 
     saveImageButton = new JButton("Save Image");
     saveImageButton.addActionListener(e -> envr.saveImage());
@@ -106,9 +110,9 @@ class EnvFrame extends JFrame {
     saveNegButton = new JButton("Save Negative");
     saveNegButton.addActionListener(e -> envr.saveNegative());
 
-    createOrgAddButton();
-    createMultOrgAddButton();
-    createExterminateStrainButton();
+    orgAddButton = createOrgAddButton();
+    multOrgAddButton = createMultOrgAddButton();
+    exterminateStrainButton = createExterminateStrainButton();
 
     numOrgLabel.setAlignmentX((float) 0.5);
     numUpdatesLabel.setAlignmentX((float) 0.5);
@@ -158,8 +162,8 @@ class EnvFrame extends JFrame {
     mainControlsPanel.add(new JLabel("Fast "));
   }
 
-  private void createExterminateStrainButton() {
-    exterminateStrainButton = new JButton("Exterminate Strain");
+  private JButton createExterminateStrainButton() {
+    final JButton exterminateStrainButton = new JButton("Exterminate Strain");
     exterminateStrainButton.addActionListener(arg0 -> {
       final Strain strChoice = (Strain) JOptionPane.showInputDialog(new JFrame(), "Strain?",
           "Strain Choice", JOptionPane.PLAIN_MESSAGE, null, envr.activeStrains.keySet().toArray(),
@@ -168,36 +172,40 @@ class EnvFrame extends JFrame {
       envr.exterminate(strToStrain.get(strX));
       updateData();
     });
+    return exterminateStrainButton;
   }
 
-  private void createMultOrgAddButton() {
-    multOrgAddButton = new JButton("Add Organisms");
+  private JButton createMultOrgAddButton() {
+    final JButton multOrgAddButton = new JButton("Add Organisms");
     multOrgAddButton.addActionListener(e -> {
       final int num = Integer.parseInt(JOptionPane.showInputDialog("Number of Organisms?"));
       envr.add(num, strToStrain.get(orgAddPanel.getChosenStrain()));
       updateData();
     });
+    return multOrgAddButton;
   }
 
-  private void createOrgAddButton() {
-    orgAddButton = new JButton("Add Organism");
+  private JButton createOrgAddButton() {
+    final JButton orgAddButton = new JButton("Add Organism");
     orgAddButton.addActionListener(e -> {
       envr.add(1, strToStrain.get(orgAddPanel.getChosenStrain()));
       updateData();
     });
+    return orgAddButton;
   }
 
-  private void createSingleStepButton() {
-    singleStepButton = new JButton("Step");
+  private JButton createSingleStepButton() {
+    final JButton singleStepButton = new JButton("Step");
     singleStepButton.addActionListener(e -> {
       envr.update();
       updateData();
       myPanel.repaint();
     });
+    return singleStepButton;
   }
 
-  private void createStartStopRandomButton() {
-    startStopRandomButton = new JButton("Start Random");
+  private JButton createStartStopRandomButton() {
+    final JButton startStopRandomButton = new JButton("Start Random");
     startStopRandomButton.addActionListener(e -> {
       if (myTimer.isRunning()) {
         myTimer.stop();
@@ -213,10 +221,11 @@ class EnvFrame extends JFrame {
       toggleRandomButtons();
       toggleRunningButtons();
     });
+    return startStopRandomButton;
   }
 
-  private void createSetImageButton(final Container contentPane, final JFileChooser fc) {
-    setImageButton = new JButton("Set Image");
+  private JButton createSetImageButton(final Container contentPane, final JFileChooser fc) {
+    final JButton setImageButton = new JButton("Set Image");
     setImageButton.addActionListener(e -> {
       fc.showOpenDialog(null);
       final File img = fc.getSelectedFile();
@@ -228,10 +237,11 @@ class EnvFrame extends JFrame {
       contentPane.add(myPanel, "Center");
       contentPane.validate();
     });
+    return setImageButton;
   }
 
-  private void createNewImageButton(final Container contentPane) {
-    newImageButton = new JButton("Reset");
+  private JButton createNewImageButton(final Container contentPane) {
+    final JButton newImageButton = new JButton("Reset");
     newImageButton.addActionListener(e -> {
       if (myTimer.isRunning()) {
         myTimer.stop();
@@ -248,10 +258,11 @@ class EnvFrame extends JFrame {
       contentPane.add(myPanel, "Center");
       myPanel.repaint();
     });
+    return newImageButton;
   }
 
-  private void createStartStopButton() {
-    startStopButton = new JButton("Start");
+  private JButton createStartStopButton() {
+    final JButton startStopButton = new JButton("Start");
     startStopButton.addActionListener(e -> {
       if (randTimer.isRunning()) {
         randTimer.stop();
@@ -267,6 +278,7 @@ class EnvFrame extends JFrame {
       toggleRandomButtons();
       toggleRunningButtons();
     });
+    return startStopButton;
   }
 
   private void toggleRandomButtons() {
@@ -285,7 +297,15 @@ class EnvFrame extends JFrame {
   }
 
   private void setUpEnvironment() {
-    envr = new Environment(800, 600, false);
+    setUpEnvironment(ImageUtil.newImage(800, 600, false));
+  }
+
+  private void setUpEnvironment(File img) {
+    setUpEnvironment(getImage(img));
+  }
+
+  private void setUpEnvironment(BufferedImage image) {
+    envr = new Environment(image);
     myPanel = new MyPanel(envr.image);
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
     final Dimension d = new Dimension(envr.width + 150, envr.height + 100);
@@ -294,31 +314,26 @@ class EnvFrame extends JFrame {
     myPanel.repaint();
   }
 
-  private void setUpEnvironment(File img) {
+  private BufferedImage getImage(File img) {
     BufferedImage bmg = null;
     try {
       bmg = ImageIO.read(img);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
-    envr = new Environment(bmg);
-    myPanel = new MyPanel(envr.image);
-    final Dimension d = new Dimension(envr.width + 150, envr.height + 100);
-    setPreferredSize(d);
-    this.pack();
-
+    return bmg;
   }
 
-  private void addTimer() {
+  private Timer addTimer() {
     final ActionListener updater = e -> {
       envr.update();
       updateData();
       myPanel.repaint();
     };
-    myTimer = new javax.swing.Timer(MAX_DELAY / 2, updater);
+    return new Timer(MAX_DELAY / 2, updater);
   }
 
-  private void addRandomTimer() {
+  private Timer addRandomTimer() {
     final ActionListener updater = e -> {
       if (envr.livingOrgs() == 0) {
         envr.add(1, strToStrain.get(orgAddPanel.getChosenStrain()));
@@ -327,7 +342,7 @@ class EnvFrame extends JFrame {
       updateData();
       myPanel.repaint();
     };
-    randTimer = new javax.swing.Timer(MAX_DELAY / 2, updater);
+    return new Timer(MAX_DELAY / 2, updater);
   }
 
   private void updateData() {

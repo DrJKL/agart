@@ -29,14 +29,6 @@ public class Environment {
   ArrayList<Organism> graveyard = new ArrayList<>();
   ArrayList<Organism> kids = new ArrayList<>();
 
-  private static int randomInt(int low, int high) {
-    return low + (int) (Math.random() * (high - low + 1));
-  }
-
-  static int checkBounds(int c, int max) {
-    return Math.min(Math.max(c, 0), max);
-  }
-
   public Environment(BufferedImage bimage) {
     image = bimage;
     width = image.getWidth();
@@ -44,26 +36,12 @@ public class Environment {
     updates = 0;
   }
 
-  public Environment(int w, int h, boolean rand) {
-    image = setEnvironment(w, h, rand);
-    width = w;
-    height = h;
-    updates = 0;
+  private static int randomInt(int low, int high) {
+    return low + (int) (Math.random() * (high - low + 1));
   }
 
-  private static BufferedImage setEnvironment(int w, int h, boolean rand) {
-    // Create buffered image that does not support transparency
-    final BufferedImage bimage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-    IntStream.range(0, w).forEach(x -> {
-      IntStream.range(0, h).forEach(y -> {
-        final int R = rand ? (int) (Math.random() * 256) : 255;
-        final int G = rand ? (int) (Math.random() * 256) : 255;
-        final int B = rand ? (int) (Math.random() * 256) : 255;
-        final Color color = new Color(R, G, B);
-        bimage.setRGB(x, y, color.getRGB());
-      });
-    });
-    return bimage;
+  static int checkBounds(int c, int max) {
+    return Math.min(Math.max(c, 0), max);
   }
 
   public void add(int number, Strain str) {
