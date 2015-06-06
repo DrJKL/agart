@@ -260,11 +260,20 @@ public class Organism implements Comparable<Organism> {
   }
 
   private Map<Direction, Color> setView() {
+    final int r = row;
+    final int c = col;
+    if (r < 0 || r >= envr.height || c < 0 || c >= envr.width) {
+      throw new RuntimeException();
+    }
+    final int North = r - 1;
+    final int East = c + 1;
+    final int South = r + 1;
+    final int West = c - 1;
     final Map<Direction, Color> view = new HashMap<>();
-    view.put(Direction.NORTH, envr.getColor(col, row - 1));
-    view.put(Direction.EAST, envr.getColor(col + 1, row));
-    view.put(Direction.SOUTH, envr.getColor(col, row + 1));
-    view.put(Direction.WEST, envr.getColor(col - 1, row));
+    view.put(Direction.NORTH, (North >= 0) ? envr.getColor(c, North) : Color.BLACK);
+    view.put(Direction.EAST, (East < envr.width) ? envr.getColor(East, r) : Color.BLACK);
+    view.put(Direction.SOUTH, (South < envr.height) ? envr.getColor(c, South) : Color.BLACK);
+    view.put(Direction.WEST, (West >= 0) ? envr.getColor(West, r) : Color.BLACK);
     return view;
   }
 
