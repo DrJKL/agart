@@ -159,12 +159,9 @@ public class Organism implements Comparable<Organism> {
 
   // Creates new Virus with mutated attributes
   private Organism repr() {
-    int r = row;
-    int c = col;
-    while (r == row || c == col || !envr.inBounds(r, c)) {
-      r = randomInt(row - 3, row + 3);
-      c = randomInt(col - 3, col + 3);
-    }
+    final Point childPoint = findChildPoint();
+    final int r = childPoint.y;
+    final int c = childPoint.x;
     final int gen = generation + 1;
     final String str = orgName + childrenSpawned;
     int mut, mutX, met, rpr, rprX, cap;
@@ -188,13 +185,24 @@ public class Organism implements Comparable<Organism> {
     return spawn;
   }
 
+  // I'm pretty sure this is bugged.
+  private Point findChildPoint() {
+    int r = row;
+    int c = col;
+    while (r == row || c == col || !envr.inBounds(r, c)) {
+      r = randomInt(row - 3, row + 3);
+      c = randomInt(col - 3, col + 3);
+    }
+    return new Point(c, r);
+  }
+
   public int mutateTrait(int original) {
     return shouldMutate() ? Math
         .abs(randomInt(original - mutationDegree, original + mutationDegree)) : original;
   }
 
   private boolean shouldMutate() {
-    return Math.random() * 100 > mutationChance;
+    return Math.random() * 100 < mutationChance;
   }
 
   public void move() {
