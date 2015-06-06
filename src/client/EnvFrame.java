@@ -33,6 +33,7 @@ import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
 import strains.RayStrain;
+import core.ImageUtil;
 
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
@@ -285,7 +286,7 @@ class EnvFrame extends JFrame {
   }
 
   private void setUpEnvironment() {
-    envr = new Environment(800, 600, false);
+    envr = new Environment(ImageUtil.setEnvironment(800, 600, false));
     myPanel = new MyPanel(envr.image);
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
     final Dimension d = new Dimension(envr.getWidth() + 150, envr.getHeight() + 100);

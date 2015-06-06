@@ -38,26 +38,6 @@ public class Environment {
     updates = 0;
   }
 
-  public Environment(int w, int h, boolean rand) {
-    image = setEnvironment(w, h, rand);
-    updates = 0;
-  }
-
-  private static BufferedImage setEnvironment(int w, int h, boolean rand) {
-    // Create buffered image that does not support transparency
-    final BufferedImage bimage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-    IntStream.range(0, w).forEach(x -> {
-      IntStream.range(0, h).forEach(y -> {
-        final int R = rand ? (int) (Math.random() * 256) : 255;
-        final int G = rand ? (int) (Math.random() * 256) : 255;
-        final int B = rand ? (int) (Math.random() * 256) : 255;
-        final Color color = new Color(R, G, B);
-        bimage.setRGB(x, y, color.getRGB());
-      });
-    });
-    return bimage;
-  }
-
   public int getWidth() {
     return image.getWidth();
   }
