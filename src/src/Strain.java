@@ -6,6 +6,8 @@ public interface Strain {
   /** Returns the Strain's Name as a String. */
   String getStrainName();
 
+  void resetYoungest();
+
   /** Sets the youngest generation for check methods. */
   void updateYoungest(int orgGen);
 
@@ -14,4 +16,5 @@ public interface Strain {
 
   /** This method defines the 'AI' of the organisms in this strain. */
   void update(Organism org);
+
 }
