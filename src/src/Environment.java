@@ -134,10 +134,6 @@ public class Environment {
     return inBounds(point.y, point.x);
   }
 
-  public Color getColor(int r, int c) {
-    return inBounds(c, r) ? new Color(image.getRGB(r, c)) : Color.BLACK;
-  }
-
   public Color getColor(Point point) {
     return inBounds(point) ? new Color(image.getRGB(point.x, point.y)) : Color.BLACK;
   }

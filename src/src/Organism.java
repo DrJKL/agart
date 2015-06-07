@@ -255,10 +255,9 @@ public class Organism implements Comparable<Organism> {
 
   private Map<Direction, Color> setView() {
     final Map<Direction, Color> view = new HashMap<>();
-    view.put(Direction.NORTH, envr.getColor(col, row - 1));
-    view.put(Direction.EAST, envr.getColor(col + 1, row));
-    view.put(Direction.SOUTH, envr.getColor(col, row + 1));
-    view.put(Direction.WEST, envr.getColor(col - 1, row));
+    for (final Direction dir : Direction.values()) {
+      view.put(dir, envr.getColor(dir.transform(location)));
+    }
     return view;
   }
 
