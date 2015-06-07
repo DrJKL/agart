@@ -51,8 +51,8 @@ public class Organism implements Comparable<Organism> {
   }
 
   // New virus with random attributes at a set location
-  public Organism(Environment env, Strain str, int r, int c) {
-    location = new Point(c, r);
+  public Organism(Environment env, Strain str, Point point) {
+    location = point;
 
     envr = env;
     strain = str;

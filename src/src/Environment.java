@@ -6,9 +6,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,10 +23,6 @@ public class Environment {
   ArrayList<Organism> graveyard = new ArrayList<>();
   ArrayList<Organism> kids = new ArrayList<>();
 
-  static int checkBounds(int c, int max) {
-    return Math.min(Math.max(c, 0), max);
-  }
-
   public Environment(BufferedImage bimage) {
     image = bimage;
     updates = 0;
@@ -43,19 +37,19 @@ public class Environment {
   }
 
   public void add(int number, Strain str) {
-    IntStream.range(0, number).forEach(i -> {
-      int placeX, placeY;
-      do {
-        placeX = randomInt(0, this.getWidth());
-        placeY = randomInt(0, this.getHeight());
-      } while (this.orgAt(placeY, placeX));
-      this.addOneAt(str, placeY, placeX);
-    });
+    IntStream.range(0, number).forEach(
+        i -> {
+          final Point potentialLocation = new Point();
+          do {
+            potentialLocation.move(randomInt(0, this.getWidth() - 1),
+                randomInt(0, this.getHeight() - 1));
+          } while (this.orgAt(potentialLocation));
+          this.addOneAt(str, potentialLocation);
+        });
   }
 
-  public Organism addOneAt(Strain str, int r, int c) {
-    final Organism next = new Organism(this, str, //
-        checkBounds(r, getHeight() - 1), checkBounds(c, getWidth() - 1));
+  private Organism addOneAt(Strain str, Point point) {
+    final Organism next = new Organism(this, str, point);
     addToActiveStrains(next);
     return next;
   }
@@ -108,12 +102,12 @@ public class Environment {
         .anyMatch(o -> o.getRow() == r && o.getCol() == c);
   }
 
-  public int livingOrgs() {
-    return activeStrains.values().stream().mapToInt(List::size).sum();
+  public boolean orgAt(Point point) {
+    return orgAt(point.y, point.x);
   }
 
-  public static String getDateTime() {
-    return new SimpleDateFormat("MM-dd-HHmmss").format(new Date());
+  public int livingOrgs() {
+    return activeStrains.values().stream().mapToInt(List::size).sum();
   }
 
   public void saveImage() {
