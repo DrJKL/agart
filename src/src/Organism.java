@@ -52,11 +52,6 @@ public class Organism implements Comparable<Organism> {
     return randomInt(trait.low, trait.high);
   }
 
-  // New organism with random attributes at random location
-  public Organism(Environment env, Strain str) {
-    this(env, str, randomInt(0, env.getHeight()), randomInt(0, env.getWidth()));
-  }
-
   // New virus with random attributes at a set location
   public Organism(Environment env, Strain str, int r, int c) {
     location = new Point(c, r);
@@ -84,14 +79,14 @@ public class Organism implements Comparable<Organism> {
   }
 
   // New Virus with non-random attributes
-  public Organism(Environment env, String str, Strain xStrain, int r, int c, int gen, int mut,
+  private Organism(Environment env, String str, Strain xStrain, Point loc, int gen, int mut,
       int mutX, int met, int rpr, int rprX, int cap, ColorPreference colorPreference,
       DirectionPreference directionPreference) {
     orgName = str;
     strain = xStrain;
     causeOfDeath = CauseOfDeath.LIVING;
     envr = env;
-    location = new Point(c, r);
+    location = loc;
     generation = gen;
 
     energy = cap / 2;
@@ -147,8 +142,6 @@ public class Organism implements Comparable<Organism> {
   // Creates new Virus with mutated attributes
   private Organism repr() {
     final Point childPoint = findChildPoint();
-    final int r = childPoint.y;
-    final int c = childPoint.x;
     final int gen = generation + 1;
     final String str = orgName + childrenSpawned;
     int mut, mutX, met, rpr, rprX, cap;
@@ -166,8 +159,8 @@ public class Organism implements Comparable<Organism> {
     final ColorPreference newColorPreference = colorPreference.mutate(this);
     final DirectionPreference newDirectionPreference = directionPreference.mutate(this);
 
-    final Organism spawn = new Organism(envr, str, strain, r, c, gen, mut, mutX, met, rpr, rprX,
-        cap, newColorPreference, newDirectionPreference);
+    final Organism spawn = new Organism(envr, str, strain, childPoint, gen, mut, mutX, met, rpr,
+        rprX, cap, newColorPreference, newDirectionPreference);
 
     return spawn;
   }
