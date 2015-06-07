@@ -70,17 +70,15 @@ public class Environment {
   }
 
   private void addToActiveStrains(Organism org) {
-    final Strain s = org.strain;
-    final LinkedList<Organism> toAdd = activeStrains.getOrDefault(s, new LinkedList<>());
+    final LinkedList<Organism> toAdd = activeStrains.getOrDefault(org.strain, new LinkedList<>());
     toAdd.add(org);
-    activeStrains.put(s, toAdd);
+    activeStrains.put(org.strain, toAdd);
   }
 
   private void removeFromActiveStrains(Organism org) {
-    final Strain sChar = org.strain;
-    final LinkedList<Organism> toAdd = activeStrains.getOrDefault(sChar, new LinkedList<>());
+    final LinkedList<Organism> toAdd = activeStrains.getOrDefault(org.strain, new LinkedList<>());
     toAdd.remove(org);
-    activeStrains.put(sChar, toAdd);
+    activeStrains.put(org.strain, toAdd);
   }
 
   public int getActiveStrainSize(Strain strain) {
@@ -88,25 +86,19 @@ public class Environment {
   }
 
   public void update() {
-    activeStrains.values().stream().flatMap(List::stream).forEach(o -> {
-      o.update();
-    });
+    activeStrains.values().stream().flatMap(List::stream).forEach(o -> o.update());
     buryTheDead();
     raiseTheKids();
     updates++;
   }
 
   private void raiseTheKids() {
-    kids.forEach(o -> {
-      this.addToActiveStrains(o);
-    });
+    kids.forEach(o -> this.addToActiveStrains(o));
     kids.clear();
   }
 
   private void buryTheDead() {
-    graveyard.forEach(org -> {
-      this.removeFromActiveStrains(org);
-    });
+    graveyard.forEach(org -> this.removeFromActiveStrains(org));
     graveyard.clear();
   }
 
