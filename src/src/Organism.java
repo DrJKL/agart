@@ -130,6 +130,9 @@ public class Organism implements Comparable<Organism> {
       causeOfDeath = CauseOfDeath.GERICIDE;
     }
     if (overTheEdge()) {
+      if (!overTheEdge_()) {
+        throw new RuntimeException();
+      }
       causeOfDeath = CauseOfDeath.DRAGONS;
     }
     if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {
@@ -138,7 +141,13 @@ public class Organism implements Comparable<Organism> {
   }
 
   private boolean overTheEdge() {
-    return row < 0 || col < 0 || col >= envr.getWidth() || row >= envr.getHeight();
+    return col < 0 || col >= envr.getWidth() //
+        || row < 0 || row >= envr.getHeight();
+  }
+
+  private boolean overTheEdge_() {
+    return location.x < 0 || location.x >= envr.getWidth() //
+        || location.y < 0 || location.y >= envr.getHeight();
   }
 
   private void passOn() {
@@ -214,15 +223,19 @@ public class Organism implements Comparable<Organism> {
     switch (dir) {
     case NORTH:
       row--;
+      location.translate(0, -1);
       break;
     case EAST:
       col++;
+      location.translate(1, 0);
       break;
     case SOUTH:
       row++;
+      location.translate(0, 1);
       break;
     case WEST:
       col--;
+      location.translate(-1, 0);
       break;
     }
 
