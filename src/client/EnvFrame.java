@@ -27,7 +27,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 import src.Environment;
-import src.ImageFilter;
 import src.Strain;
 import strains.DefaultStrain;
 import strains.DrippyStrain;

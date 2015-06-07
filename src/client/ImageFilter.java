@@ -1,8 +1,10 @@
-package src;
+package client;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
+
+import src.Utils;
 
 /* ImageFilter.java is used by FileChooserDemo2.java. */
 public class ImageFilter extends FileFilter {
