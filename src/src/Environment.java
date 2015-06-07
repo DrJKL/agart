@@ -65,6 +65,10 @@ public class Environment {
     kids.add(org);
   }
 
+  public void prepareForDeath(Organism org) {
+    graveyard.add(org);
+  }
+
   private void addToActiveStrains(Organism org) {
     activeStrains.computeIfAbsent(org.strain, k -> new LinkedList<>());
     activeStrains.get(org.strain).add(org);

@@ -133,16 +133,12 @@ public class Organism implements Comparable<Organism> {
       causeOfDeath = CauseOfDeath.DRAGONS;
     }
     if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {
-      passOn();
+      envr.prepareForDeath(this);
     }
   }
 
-  private void passOn() {
-    envr.graveyard.add(this);
-  }
-
   public void replicate() {
-    if (energy < reproductionCost || !hasSpace() || !canReplicate()) {
+    if (!hasSpace() || !canReplicate()) {
       return;
     }
     Organism child;
@@ -347,6 +343,7 @@ public class Organism implements Comparable<Organism> {
 
   private boolean canReplicate() {
     return energy >= energyCap - 20 //
+        && energy >= reproductionCost //
         && generation < BREED_CAP //
         && childrenSpawned < MAX_KIDS //
         && Math.random() * 100 < reproductionChance;
