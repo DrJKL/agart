@@ -16,10 +16,14 @@ public enum Direction {
     this.point = new Point(dx, dy);
   }
 
-  public Point transform(Point other) {
+  public Point translatedCopy(Point other) {
     final Point newPoint = other.getLocation();
     newPoint.translate(point.x, point.y);
     return newPoint;
+  }
+
+  public void tranlate(Point other) {
+    other.translate(point.x, point.y);
   }
 
   public static Direction random() {

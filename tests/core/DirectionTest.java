@@ -11,7 +11,7 @@ public class DirectionTest {
   public void translateTest() {
     final Point original = new Point(0, 0);
     Assert.assertEquals(new Point(0, 0), original);
-    final Point northOfOriginal = Direction.NORTH.transform(original);
+    final Point northOfOriginal = Direction.NORTH.translatedCopy(original);
     Assert.assertEquals(new Point(0, 0), original);
 
     Assert.assertEquals(new Point(0, -1), northOfOriginal);

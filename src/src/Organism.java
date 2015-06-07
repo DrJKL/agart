@@ -30,7 +30,6 @@ public class Organism implements Comparable<Organism> {
   private final int mutationDegree, reproductionCost;
   private final int moveCost, energyCap;
 
-  private int row, col;
   private final Point location;
 
   private final ColorPreference colorPreference;
@@ -60,8 +59,6 @@ public class Organism implements Comparable<Organism> {
 
   // New virus with random attributes at a set location
   public Organism(Environment env, Strain str, int r, int c) {
-    row = r;
-    col = c;
     location = new Point(c, r);
 
     envr = env;
@@ -94,8 +91,6 @@ public class Organism implements Comparable<Organism> {
     strain = xStrain;
     causeOfDeath = CauseOfDeath.LIVING;
     envr = env;
-    row = r;
-    col = c;
     location = new Point(c, r);
     generation = gen;
 
@@ -203,25 +198,7 @@ public class Organism implements Comparable<Organism> {
 
   /** dir >= 0 and dir <4 */
   public void move(Direction dir) {
-    switch (dir) {
-    case NORTH:
-      row--;
-      location.translate(0, -1);
-      break;
-    case EAST:
-      col++;
-      location.translate(1, 0);
-      break;
-    case SOUTH:
-      row++;
-      location.translate(0, 1);
-      break;
-    case WEST:
-      col--;
-      location.translate(-1, 0);
-      break;
-    }
-
+    dir.tranlate(location);
     energy -= moveCost;
   }
 
@@ -253,7 +230,7 @@ public class Organism implements Comparable<Organism> {
   private Map<Direction, Color> setView() {
     final Map<Direction, Color> view = new HashMap<>();
     for (final Direction dir : Direction.values()) {
-      view.put(dir, envr.getColor(dir.transform(location)));
+      view.put(dir, envr.getColor(dir.translatedCopy(location)));
     }
     return view;
   }
@@ -333,11 +310,11 @@ public class Organism implements Comparable<Organism> {
   }
 
   public int getRow() {
-    return row;
+    return location.y;
   }
 
   public int getCol() {
-    return col;
+    return location.x;
   }
 
   private boolean canReplicate() {
@@ -373,8 +350,7 @@ public class Organism implements Comparable<Organism> {
     builder.append(", moveCost=").append(moveCost);
     builder.append(", reprCost=").append(reproductionCost);
     builder.append(", energyCap=").append(energyCap);
-    builder.append(", row=").append(row);
-    builder.append(", col=").append(col);
+    builder.append(", location=").append(location);
     builder.append("]");
     return builder.toString();
   }
