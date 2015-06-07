@@ -1,6 +1,7 @@
 package core;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.File;
@@ -25,22 +26,22 @@ public class ImageUtil {
     return new Color(image.getRGB(r, c)).getBlue();
   }
 
-  public static void setRed(int r, int c, int newRed, BufferedImage image) {
-    final Color color = new Color(image.getRGB(r, c));
+  public static void setRed(Point point, int newRed, BufferedImage image) {
+    final Color color = new Color(image.getRGB(point.x, point.y));
     final Color newColor = new Color(newRed, color.getGreen(), color.getBlue());
-    image.setRGB(r, c, newColor.getRGB());
+    image.setRGB(point.x, point.y, newColor.getRGB());
   }
 
-  public static void setGreen(int r, int c, int newGreen, BufferedImage image) {
-    final Color color = new Color(image.getRGB(r, c));
+  public static void setGreen(Point point, int newGreen, BufferedImage image) {
+    final Color color = new Color(image.getRGB(point.x, point.y));
     final Color newColor = new Color(color.getRed(), newGreen, color.getBlue());
-    image.setRGB(r, c, newColor.getRGB());
+    image.setRGB(point.x, point.y, newColor.getRGB());
   }
 
-  public static void setBlue(int r, int c, int newBlue, BufferedImage image) {
-    final Color color = new Color(image.getRGB(r, c));
+  public static void setBlue(Point point, int newBlue, BufferedImage image) {
+    final Color color = new Color(image.getRGB(point.x, point.y));
     final Color newColor = new Color(color.getRed(), color.getGreen(), newBlue);
-    image.setRGB(r, c, newColor.getRGB());
+    image.setRGB(point.x, point.y, newColor.getRGB());
   }
 
   public static BufferedImage negative(BufferedImage image) {

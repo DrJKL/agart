@@ -179,11 +179,11 @@ public class Organism implements Comparable<Organism> {
 
   // I'm pretty sure this is bugged.
   private Point findChildPoint() {
-    int r = row;
-    int c = col;
-    while (r == row && c == col) {
-      r = randomInt(row - 3, row + 3);
-      c = randomInt(col - 3, col + 3);
+    int r = location.y;
+    int c = location.x;
+    while (r == location.y && c == location.x) {
+      r = randomInt(location.y - 3, location.y + 3);
+      c = randomInt(location.x - 3, location.x + 3);
     }
     return new Point(c, r);
   }
@@ -243,8 +243,8 @@ public class Organism implements Comparable<Organism> {
   }
 
   private boolean hasSpace() {
-    return IntStream.rangeClosed(row - 3, row + 3).anyMatch(i -> {
-      return IntStream.rangeClosed(col - 3, col + 3).anyMatch(j -> {
+    return IntStream.rangeClosed(location.y - 3, location.y + 3).anyMatch(i -> {
+      return IntStream.rangeClosed(location.x - 3, location.x + 3).anyMatch(j -> {
         return !envr.orgAt(i, j);
       });
     });
@@ -299,7 +299,7 @@ public class Organism implements Comparable<Organism> {
     }
     final int take = randomInt(1, 20);
     red += take;
-    envr.setRed(col, row, orig - take);
+    envr.setRed(location, orig - take);
     resourcesGathered += take;
     energy += take;
   }
@@ -311,7 +311,7 @@ public class Organism implements Comparable<Organism> {
     }
     final int take = randomInt(1, 20);
     green += take;
-    envr.setGreen(col, row, orig - take);
+    envr.setGreen(location, orig - take);
     resourcesGathered += take;
     energy += take;
   }
@@ -323,7 +323,7 @@ public class Organism implements Comparable<Organism> {
     }
     final int take = randomInt(1, 20);
     blue += take;
-    envr.setBlue(col, row, orig - take);
+    envr.setBlue(location, orig - take);
     resourcesGathered += take;
     energy += take;
   }
