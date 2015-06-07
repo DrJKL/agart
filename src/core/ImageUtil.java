@@ -3,7 +3,13 @@ package core;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
+import java.io.File;
+import java.io.IOException;
 import java.util.stream.IntStream;
+
+import javax.imageio.ImageIO;
+
+import src.Environment;
 
 public class ImageUtil {
 
@@ -56,5 +62,17 @@ public class ImageUtil {
       });
     });
     return bimage;
+  }
+
+  public static void saveImage(String suffix, BufferedImage image) {
+    final File file = new File(System.getProperty("user.home"), String.format(
+        "/outputImages/%s%s.png", Environment.getDateTime(), suffix));
+    try {
+      file.getParentFile().mkdirs();
+      file.createNewFile();
+      ImageIO.write(image, "png", file);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

@@ -3,8 +3,6 @@ package src;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,8 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
-
-import javax.imageio.ImageIO;
 
 import core.ImageUtil;
 
@@ -70,15 +66,13 @@ public class Environment {
   }
 
   private void addToActiveStrains(Organism org) {
-    final LinkedList<Organism> toAdd = activeStrains.getOrDefault(org.strain, new LinkedList<>());
-    toAdd.add(org);
-    activeStrains.put(org.strain, toAdd);
+    activeStrains.computeIfAbsent(org.strain, k -> new LinkedList<>());
+    activeStrains.get(org.strain).add(org);
   }
 
   private void removeFromActiveStrains(Organism org) {
-    final LinkedList<Organism> toAdd = activeStrains.getOrDefault(org.strain, new LinkedList<>());
-    toAdd.remove(org);
-    activeStrains.put(org.strain, toAdd);
+    activeStrains.computeIfAbsent(org.strain, k -> new LinkedList<>());
+    activeStrains.get(org.strain).remove(org);
   }
 
   public int getActiveStrainSize(Strain strain) {
@@ -93,12 +87,12 @@ public class Environment {
   }
 
   private void raiseTheKids() {
-    kids.forEach(o -> this.addToActiveStrains(o));
+    kids.forEach(this::addToActiveStrains);
     kids.clear();
   }
 
   private void buryTheDead() {
-    graveyard.forEach(org -> this.removeFromActiveStrains(org));
+    graveyard.forEach(this::removeFromActiveStrains);
     graveyard.clear();
   }
 
@@ -116,28 +110,16 @@ public class Environment {
     return activeStrains.values().stream().mapToInt(List::size).sum();
   }
 
-  private static String getDateTime() {
+  public static String getDateTime() {
     return new SimpleDateFormat("MM-dd-HHmmss").format(new Date());
   }
 
   public void saveImage() {
-    saveImage("", image);
+    ImageUtil.saveImage("", image);
   }
 
   public void saveNegative() {
-    saveImage("Negative", ImageUtil.negative(image));
-  }
-
-  private static void saveImage(String suffix, BufferedImage image) {
-    final File file = new File(System.getProperty("user.home"), String.format(
-        "/outputImages/%s%s.png", getDateTime(), suffix));
-    try {
-      file.getParentFile().mkdirs();
-      file.createNewFile();
-      ImageIO.write(image, "png", file);
-    } catch (final IOException e) {
-      throw new RuntimeException(e);
-    }
+    ImageUtil.saveImage("Negative", ImageUtil.negative(image));
   }
 
   public boolean inBounds(int r, int c) {
