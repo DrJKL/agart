@@ -126,6 +126,10 @@ public class Environment {
     return r >= 0 && r < getHeight() && c >= 0 && c < getWidth();
   }
 
+  public boolean inBounds(Point point) {
+    return inBounds(point.y, point.x);
+  }
+
   public Color getColor(int r, int c) {
     return inBounds(c, r) ? new Color(image.getRGB(r, c)) : Color.BLACK;
   }

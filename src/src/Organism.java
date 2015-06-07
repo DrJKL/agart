@@ -129,25 +129,12 @@ public class Organism implements Comparable<Organism> {
         && generation + 1 < this.strain.getYoungest()) {
       causeOfDeath = CauseOfDeath.GERICIDE;
     }
-    if (overTheEdge()) {
-      if (!overTheEdge_()) {
-        throw new RuntimeException();
-      }
+    if (!envr.inBounds(row, col)) {
       causeOfDeath = CauseOfDeath.DRAGONS;
     }
     if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {
       passOn();
     }
-  }
-
-  private boolean overTheEdge() {
-    return col < 0 || col >= envr.getWidth() //
-        || row < 0 || row >= envr.getHeight();
-  }
-
-  private boolean overTheEdge_() {
-    return location.x < 0 || location.x >= envr.getWidth() //
-        || location.y < 0 || location.y >= envr.getHeight();
   }
 
   private void passOn() {
