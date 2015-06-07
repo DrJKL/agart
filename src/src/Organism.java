@@ -1,5 +1,7 @@
 package src;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.util.HashMap;
@@ -129,7 +131,8 @@ public class Organism implements Comparable<Organism> {
         && generation + 1 < this.strain.getYoungest()) {
       causeOfDeath = CauseOfDeath.GERICIDE;
     }
-    if (!envr.inBounds(row, col)) {
+    if (!envr.inBounds(location)) {
+      checkState(!envr.inBounds(row, col));
       causeOfDeath = CauseOfDeath.DRAGONS;
     }
     if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {
@@ -294,7 +297,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   private void acquireRed() {
-    final int orig = envr.getColor(col, row).getRed();
+    final int orig = envr.getColor(location).getRed();
     if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }
@@ -306,7 +309,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   private void acquireGreen() {
-    final int orig = envr.getColor(col, row).getGreen();
+    final int orig = envr.getColor(location).getGreen();
     if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }
@@ -318,7 +321,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   private void acquireBlue() {
-    final int orig = envr.getColor(col, row).getBlue();
+    final int orig = envr.getColor(location).getBlue();
     if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }

@@ -139,7 +139,7 @@ public class Environment {
   }
 
   public Color getColor(Point point) {
-    return inBounds(point.x, point.y) ? new Color(image.getRGB(point.y, point.x)) : Color.BLACK;
+    return inBounds(point) ? new Color(image.getRGB(point.x, point.y)) : Color.BLACK;
   }
 
   public void setRed(int r, int c, int newRed) {
