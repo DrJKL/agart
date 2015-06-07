@@ -1,7 +1,5 @@
 package src;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import java.awt.Color;
 import java.awt.Point;
 import java.util.HashMap;
@@ -132,7 +130,6 @@ public class Organism implements Comparable<Organism> {
       causeOfDeath = CauseOfDeath.GERICIDE;
     }
     if (!envr.inBounds(location)) {
-      checkState(!envr.inBounds(row, col));
       causeOfDeath = CauseOfDeath.DRAGONS;
     }
     if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {

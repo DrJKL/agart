@@ -2,6 +2,7 @@ package src;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import com.google.common.base.Preconditions;
 
 import core.ImageUtil;
 
@@ -126,12 +129,13 @@ public class Environment {
     ImageUtil.saveImage("Negative", ImageUtil.negative(image));
   }
 
-  public boolean inBounds(int r, int c) {
-    return r >= 0 && r < getHeight() && c >= 0 && c < getWidth();
-  }
-
   public boolean inBounds(Point point) {
-    return inBounds(point.y, point.x);
+    final boolean newMethod = new Rectangle(getWidth(), getHeight()).contains(point);
+    final int r = point.y;
+    final int c = point.x;
+    final boolean oldMethod = r >= 0 && r < getHeight() && c >= 0 && c < getWidth();
+    Preconditions.checkState(newMethod == oldMethod);
+    return oldMethod;
   }
 
   public Color getColor(Point point) {
