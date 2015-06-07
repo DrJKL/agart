@@ -26,7 +26,7 @@ public class Organism implements Comparable<Organism> {
 
   private int updates;
 
-  private int resourcesGathered, energy, red, blue, green;
+  private int resourcesGathered, energy;
 
   private final int mutationChance, reproductionChance;
   private final int mutationDegree, reproductionCost;
@@ -261,7 +261,6 @@ public class Organism implements Comparable<Organism> {
       return;
     }
     final int take = randomInt(1, 20);
-    red += take;
     envr.setRed(location, orig - take);
     resourcesGathered += take;
     energy += take;
@@ -273,7 +272,6 @@ public class Organism implements Comparable<Organism> {
       return;
     }
     final int take = randomInt(1, 20);
-    green += take;
     envr.setGreen(location, orig - take);
     resourcesGathered += take;
     energy += take;
@@ -285,7 +283,6 @@ public class Organism implements Comparable<Organism> {
       return;
     }
     final int take = randomInt(1, 20);
-    blue += take;
     envr.setBlue(location, orig - take);
     resourcesGathered += take;
     energy += take;
@@ -325,9 +322,6 @@ public class Organism implements Comparable<Organism> {
     builder.append(", updates=").append(updates);
     builder.append(", resourcesGathered=").append(resourcesGathered);
     builder.append(", energy=").append(energy);
-    builder.append(", red=").append(red);
-    builder.append(", blue=").append(blue);
-    builder.append(", green=").append(green);
     builder.append(", mutation=").append(mutationChance);
     builder.append(", moveCost=").append(moveCost);
     builder.append(", reprCost=").append(reproductionCost);
