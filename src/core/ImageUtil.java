@@ -14,18 +14,6 @@ import javax.imageio.ImageIO;
 
 public class ImageUtil {
 
-  public static int getRed(int r, int c, BufferedImage image) {
-    return new Color(image.getRGB(r, c)).getRed();
-  }
-
-  public static int getGreen(int r, int c, BufferedImage image) {
-    return new Color(image.getRGB(r, c)).getGreen();
-  }
-
-  public static int getBlue(int r, int c, BufferedImage image) {
-    return new Color(image.getRGB(r, c)).getBlue();
-  }
-
   public static void setRed(Point point, int newRed, BufferedImage image) {
     final Color color = new Color(image.getRGB(point.x, point.y));
     final Color newColor = new Color(newRed, color.getGreen(), color.getBlue());
@@ -50,7 +38,7 @@ public class ImageUtil {
     return negative;
   }
 
-  public static BufferedImage setEnvironment(int w, int h, boolean rand) {
+  public static BufferedImage setupNewEnvironment(int w, int h, boolean rand) {
     // Create buffered image that does not support transparency
     final BufferedImage bimage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
     IntStream.range(0, w).forEach(x -> {

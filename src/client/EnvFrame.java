@@ -285,7 +285,7 @@ class EnvFrame extends JFrame {
   }
 
   private void setUpEnvironment() {
-    envr = new Environment(ImageUtil.setEnvironment(800, 600, false));
+    envr = new Environment(ImageUtil.setupNewEnvironment(800, 600, false));
     myPanel = new MyPanel(envr.image);
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
     final Dimension d = new Dimension(envr.getWidth() + 150, envr.getHeight() + 100);

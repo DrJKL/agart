@@ -4,7 +4,6 @@ import static java.awt.Color.BLACK;
 import static java.awt.Color.WHITE;
 
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import org.junit.Assert;
@@ -31,19 +30,9 @@ public class ImageUtilTest {
   }
 
   @Test
-  public void testSetAndGet_Red() {
-    Assert.assertEquals(WHITE.getRGB(), image.getRGB(0, 0));
-    Assert.assertEquals(WHITE.getRed(), ImageUtil.getRed(0, 0, image));
-    ImageUtil.setRed(new Point(), 0, image);
-    Assert.assertEquals(0, ImageUtil.getRed(0, 0, image));
-  }
-
-  @Test
   public void testNegative() {
     Assert.assertEquals(WHITE.getRGB(), image.getRGB(0, 0));
-    Assert.assertEquals(WHITE.getRed(), ImageUtil.getRed(0, 0, image));
     image = ImageUtil.negative(image);
     Assert.assertEquals(BLACK.getRGB(), image.getRGB(0, 0));
-    Assert.assertEquals(BLACK.getRed(), ImageUtil.getRed(0, 0, image));
   }
 }
