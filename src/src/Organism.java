@@ -1,5 +1,7 @@
 package src;
 
+import static core.Randomness.randomInt;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.util.HashMap;
@@ -44,11 +46,7 @@ public class Organism implements Comparable<Organism> {
 
   private static final int MINIMUM_COLOR_VALUE = 30;
 
-  public static int randomInt(int low, int high) {
-    return low + (int) (Math.random() * (high - low + 1));
-  }
-
-  public static int randomInt(TraitLimit trait) {
+  public static int randomIntForTrait(TraitLimit trait) {
     return randomInt(trait.low, trait.high);
   }
 
@@ -63,14 +61,14 @@ public class Organism implements Comparable<Organism> {
     generation = 0;
     strain.updateYoungest(0);
 
-    energyCap = randomInt(TraitLimit.ENERGY_CAP);
+    energyCap = randomIntForTrait(TraitLimit.ENERGY_CAP);
     energy = energyCap / 2;
 
-    moveCost = randomInt(TraitLimit.MOVE_COST);
-    reproductionCost = randomInt(TraitLimit.REPRODUCTION_COST);
-    reproductionChance = randomInt(TraitLimit.REPRODUCTION_CHANCE);
-    mutationChance = randomInt(TraitLimit.MUTATION_CHANCE);
-    mutationDegree = randomInt(TraitLimit.MUTATION_DEGREE);
+    moveCost = randomIntForTrait(TraitLimit.MOVE_COST);
+    reproductionCost = randomIntForTrait(TraitLimit.REPRODUCTION_COST);
+    reproductionChance = randomIntForTrait(TraitLimit.REPRODUCTION_CHANCE);
+    mutationChance = randomIntForTrait(TraitLimit.MUTATION_CHANCE);
+    mutationDegree = randomIntForTrait(TraitLimit.MUTATION_DEGREE);
 
     colorPreference = new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
     directionPreference = new DirectionPreference(randomInt(0, 3), randomInt(0, 3),
@@ -196,20 +194,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   public void movePreferentially() {
-    final int totX = directionPreference.total();
-    if (totX < 1) {
-      return;
-    }
-    final int rand = randomInt(1, totX);
-    if (rand <= directionPreference.goNorth()) {
-      move(Direction.NORTH);
-    } else if (rand <= directionPreference.goEast()) {
-      move(Direction.EAST);
-    } else if (rand <= directionPreference.goSouth()) {
-      move(Direction.SOUTH);
-    } else {
-      move(Direction.WEST);
-    }
+    move(directionPreference.getWeightedRandomDirection());
   }
 
   private boolean hasSpace() {

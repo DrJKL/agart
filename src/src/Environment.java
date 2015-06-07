@@ -1,5 +1,7 @@
 package src;
 
+import static core.Randomness.randomInt;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -22,10 +24,6 @@ public class Environment {
 
   ArrayList<Organism> graveyard = new ArrayList<>();
   ArrayList<Organism> kids = new ArrayList<>();
-
-  private static int randomInt(int low, int high) {
-    return low + (int) (Math.random() * (high - low + 1));
-  }
 
   static int checkBounds(int c, int max) {
     return Math.min(Math.max(c, 0), max);

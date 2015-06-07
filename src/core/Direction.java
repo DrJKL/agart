@@ -2,8 +2,6 @@ package core;
 
 import java.awt.Point;
 
-import src.Organism;
-
 public enum Direction {
   NORTH(0, -1),
   EAST(-1, 0),
@@ -27,7 +25,7 @@ public enum Direction {
   }
 
   public static Direction random() {
-    return fromInt(Organism.randomInt(0, 3));
+    return fromInt(Randomness.randomInt(0, 3));
   }
 
   public static Direction fromInt(int dir) {

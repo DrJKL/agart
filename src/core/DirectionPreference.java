@@ -9,15 +9,20 @@ public class DirectionPreference {
   public final int westChance;
 
   public DirectionPreference(int northChance, int eastChance, int southChance, int westChance) {
-    this.northChance = fix(northChance);
-    this.eastChance = fix(eastChance);
-    this.southChance = fix(southChance);
-    this.westChance = fix(westChance);
+    final boolean noPreference = //
+    fix(northChance) + fix(eastChance) + fix(southChance) + fix(westChance) == 0;
+    this.northChance = noPreference ? 1 : fix(northChance);
+    this.eastChance = noPreference ? 1 : fix(eastChance);
+    this.southChance = noPreference ? 1 : fix(southChance);
+    this.westChance = noPreference ? 1 : fix(westChance);
+
   }
 
   public DirectionPreference mutate(Organism organism) {
-    return new DirectionPreference(organism.mutateTrait(northChance),
-        organism.mutateTrait(eastChance), organism.mutateTrait(southChance),
+    return new DirectionPreference(//
+        organism.mutateTrait(northChance), //
+        organism.mutateTrait(eastChance), //
+        organism.mutateTrait(southChance), //
         organism.mutateTrait(westChance));
   }
 
@@ -35,6 +40,19 @@ public class DirectionPreference {
 
   public int goSouth() {
     return northChance + eastChance + southChance;
+  }
+
+  public Direction getWeightedRandomDirection() {
+    final int rand = Randomness.randomInt(1, total());
+    if (rand <= goNorth()) {
+      return Direction.NORTH;
+    } else if (rand <= goEast()) {
+      return Direction.EAST;
+    } else if (rand <= goSouth()) {
+      return Direction.SOUTH;
+    } else {
+      return Direction.WEST;
+    }
   }
 
   private static int fix(int value) {
