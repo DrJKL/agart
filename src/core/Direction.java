@@ -1,5 +1,7 @@
 package core;
 
+import static core.Randomness.randomInt;
+
 import java.awt.Point;
 
 public enum Direction {
@@ -25,21 +27,6 @@ public enum Direction {
   }
 
   public static Direction random() {
-    return fromInt(Randomness.randomInt(0, 3));
-  }
-
-  public static Direction fromInt(int dir) {
-    switch (dir % 4) {
-    case 0:
-      return NORTH;
-    case 1:
-      return EAST;
-    case 2:
-      return SOUTH;
-    case 3:
-      return WEST;
-    default:
-      throw new RuntimeException();
-    }
+    return values()[randomInt(0, 3)];
   }
 }
