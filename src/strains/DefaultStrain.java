@@ -34,9 +34,6 @@ public class DefaultStrain implements Strain {
 
     final int randomInt = org.timesToMove();
     for (int i = 0; i < randomInt; i++) {
-      if (org.tooTired()) {
-        break;
-      }
       org.move();
     }
     org.check();

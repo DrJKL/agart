@@ -34,9 +34,6 @@ public class RayStrain implements Strain {
 
     final int timesToMove = org.timesToMove();
     for (int i = 0; i < timesToMove; i++) {
-      if (org.tooTired()) {
-        break;
-      }
       org.movePreferentially();
     }
 

@@ -35,9 +35,6 @@ public class FloatyStrain implements Strain {
 
     final int randomInt = org.timesToMove();
     for (int i = 0; i < randomInt; i++) {
-      if (org.tooTired()) {
-        break;
-      }
       final Direction max = org.viewMaxAll();
       if (max == Direction.NORTH) {
         org.move(max);

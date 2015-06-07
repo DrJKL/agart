@@ -189,6 +189,9 @@ public class Organism implements Comparable<Organism> {
 
   /** dir >= 0 and dir <4 */
   public void move(Direction dir) {
+    if (tooTired()) {
+      return;
+    }
     dir.tranlate(location);
     energy -= moveCost;
   }
@@ -220,7 +223,8 @@ public class Organism implements Comparable<Organism> {
   public Direction viewMaxAll() {
     final Map<Direction, Color> view = setView();
     final Entry<Direction, Color> max = view.entrySet().stream()
-        .max((a, b) -> totalNutrition(a.getValue()).compareTo(totalNutrition(b.getValue()))).get();
+        .max((a, b) -> Integer.compare(totalNutrition(a.getValue()), totalNutrition(b.getValue())))
+        .get();
     return max.getKey();
   }
 
