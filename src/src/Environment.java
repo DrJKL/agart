@@ -12,8 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.google.common.base.Preconditions;
-
 import core.ImageUtil;
 
 public class Environment {
@@ -108,9 +106,8 @@ public class Environment {
   }
 
   public boolean orgAt(int r, int c) {
-    return activeStrains.values().stream().flatMap(List::stream).anyMatch(o -> {
-      return o.getRow() == r && o.getCol() == c;
-    });
+    return activeStrains.values().stream().flatMap(List::stream)
+        .anyMatch(o -> o.getRow() == r && o.getCol() == c);
   }
 
   public int livingOrgs() {
@@ -130,12 +127,7 @@ public class Environment {
   }
 
   public boolean inBounds(Point point) {
-    final boolean newMethod = new Rectangle(getWidth(), getHeight()).contains(point);
-    final int r = point.y;
-    final int c = point.x;
-    final boolean oldMethod = r >= 0 && r < getHeight() && c >= 0 && c < getWidth();
-    Preconditions.checkState(newMethod == oldMethod);
-    return oldMethod;
+    return new Rectangle(getWidth(), getHeight()).contains(point);
   }
 
   public Color getColor(Point point) {
