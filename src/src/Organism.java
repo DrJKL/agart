@@ -107,7 +107,7 @@ public class Organism implements Comparable<Organism> {
   }
 
   public void check() {
-    if (energy <= 0) {
+    if (outOfEnergy()) {
       causeOfDeath = CauseOfDeath.STARVED;
     }
     if (++updates > LIFESPAN) {
@@ -123,6 +123,10 @@ public class Organism implements Comparable<Organism> {
     if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {
       envr.prepareForDeath(this);
     }
+  }
+
+  private boolean outOfEnergy() {
+    return energy <= 0;
   }
 
   public void replicate() {
@@ -291,12 +295,8 @@ public class Organism implements Comparable<Organism> {
     return energy < moveCost;
   }
 
-  public int getRow() {
-    return location.y;
-  }
-
-  public int getCol() {
-    return location.x;
+  public Point getLocation() {
+    return location;
   }
 
   private boolean canReplicate() {

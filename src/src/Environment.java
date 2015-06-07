@@ -99,7 +99,7 @@ public class Environment {
 
   public boolean orgAt(int r, int c) {
     return activeStrains.values().stream().flatMap(List::stream)
-        .anyMatch(o -> o.getRow() == r && o.getCol() == c);
+        .anyMatch(o -> o.getLocation().equals(new Point(c, r)));
   }
 
   public boolean orgAt(Point point) {
