@@ -16,6 +16,12 @@ public enum Direction {
     this.point = new Point(dx, dy);
   }
 
+  public Point transform(Point other) {
+    final Point newPoint = other.getLocation();
+    newPoint.translate(point.x, point.y);
+    return newPoint;
+  }
+
   public static Direction random() {
     return fromInt(Organism.randomInt(0, 3));
   }
