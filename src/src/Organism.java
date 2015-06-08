@@ -17,7 +17,6 @@ import core.TraitLimit;
 
 public class Organism {
 
-  private CauseOfDeath causeOfDeath = CauseOfDeath.LIVING;
   Strain strain;
   private final Environment envr;
   private final int generation;
@@ -40,32 +39,26 @@ public class Organism {
   private static final int MOVES_EACH = 20;
   private static final int LIFESPAN = 40;
 
-  public static int randomIntForTrait(TraitLimit trait) {
-    return randomInt(trait.low, trait.high);
-  }
-
   // New virus with random attributes at a set location
   public Organism(Environment env, Strain str, Point point) {
-    location = point;
-
     envr = env;
     strain = str;
-    causeOfDeath = CauseOfDeath.LIVING;
+    location = point;
     generation = 0;
     strain.updateYoungest(0);
 
-    energyCap = randomIntForTrait(TraitLimit.ENERGY_CAP);
+    energyCap = TraitLimit.ENERGY_CAP.randomValue();
     energy = energyCap / 2;
 
-    moveCost = randomIntForTrait(TraitLimit.MOVE_COST);
-    reproductionCost = randomIntForTrait(TraitLimit.REPRODUCTION_COST);
-    reproductionChance = randomIntForTrait(TraitLimit.REPRODUCTION_CHANCE);
-    mutationChance = randomIntForTrait(TraitLimit.MUTATION_CHANCE);
-    mutationDegree = randomIntForTrait(TraitLimit.MUTATION_DEGREE);
+    moveCost = TraitLimit.MOVE_COST.randomValue();
+    reproductionChance = TraitLimit.REPRODUCTION_CHANCE.randomValue();
+    reproductionCost = TraitLimit.REPRODUCTION_COST.randomValue();
+    mutationChance = TraitLimit.MUTATION_CHANCE.randomValue();
+    mutationDegree = TraitLimit.MUTATION_DEGREE.randomValue();
 
     colorPreference = new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
-    directionPreference = new DirectionPreference(randomInt(0, 3), randomInt(0, 3),
-        randomInt(0, 3), randomInt(0, 3));
+    directionPreference = new DirectionPreference( //
+        randomInt(0, 3), randomInt(0, 3), randomInt(0, 3), randomInt(0, 3));
 
   }
 
@@ -73,22 +66,20 @@ public class Organism {
   private Organism(Environment env, Strain xStrain, Point loc, int gen, int mut, int mutX, int met,
       int rpr, int rprX, int cap, ColorPreference colorPreference,
       DirectionPreference directionPreference) {
-    strain = xStrain;
-    causeOfDeath = CauseOfDeath.LIVING;
     envr = env;
+    strain = xStrain;
     location = loc;
     generation = gen;
+    strain.updateYoungest(generation);
 
-    energy = cap / 2;
     energyCap = cap;
-
-    mutationChance = mut;
-    mutationDegree = mutX;
+    energy = cap / 2;
 
     moveCost = met;
-
     reproductionCost = rpr;
     reproductionChance = rprX;
+    mutationChance = mut;
+    mutationDegree = mutX;
 
     this.colorPreference = colorPreference;
     this.directionPreference = directionPreference;
@@ -130,7 +121,6 @@ public class Organism {
     energy /= 2;
     childrenSpawned++;
     envr.addKid(child);
-    strain.updateYoungest(generation + 1);
   }
 
   // Creates new Virus with mutated attributes
@@ -278,7 +268,6 @@ public class Organism {
   public String toString() {
     final StringBuilder builder = new StringBuilder();
     builder.append("Organism [strain=").append(strain.getStrainName());
-    builder.append(", causeOfDeath=").append(causeOfDeath);
     builder.append(", generation=").append(generation);
     builder.append(", childrenSpawned=").append(childrenSpawned);
     builder.append(", updates=").append(updates);
