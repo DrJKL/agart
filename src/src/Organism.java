@@ -44,8 +44,6 @@ public class Organism implements Comparable<Organism> {
   private static final int LIFESPAN = 40;
   private static final int MAX_POPULATION = 100;
 
-  private static final int MINIMUM_COLOR_VALUE = 30;
-
   public static int randomIntForTrait(TraitLimit trait) {
     return randomInt(trait.low, trait.high);
   }
@@ -256,26 +254,14 @@ public class Organism implements Comparable<Organism> {
   }
 
   private void acquireRed() {
-    final int orig = envr.getColor(location).getRed();
-    if (orig <= MINIMUM_COLOR_VALUE) {
-      return;
-    }
     energy += envr.takeRed(location, -randomInt(1, 20));
   }
 
   private void acquireGreen() {
-    final int orig = envr.getColor(location).getGreen();
-    if (orig <= MINIMUM_COLOR_VALUE) {
-      return;
-    }
     energy += envr.takeGreen(location, -randomInt(1, 20));
   }
 
   private void acquireBlue() {
-    final int orig = envr.getColor(location).getBlue();
-    if (orig <= MINIMUM_COLOR_VALUE) {
-      return;
-    }
     energy += envr.takeBlue(location, -randomInt(1, 20));
   }
 

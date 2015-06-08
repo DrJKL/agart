@@ -4,7 +4,6 @@ import static core.Randomness.randomInt;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,7 +118,7 @@ public class Environment {
   }
 
   public boolean inBounds(Point point) {
-    return new Rectangle(getWidth(), getHeight()).contains(point);
+    return ImageUtil.inBounds(image, point);
   }
 
   public Color getColor(Point point) {

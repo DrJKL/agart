@@ -2,6 +2,7 @@ package core;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.File;
@@ -14,28 +15,47 @@ import javax.imageio.ImageIO;
 
 public class ImageUtil {
 
+  private static final int MINIMUM_COLOR_VALUE = 30;
+
   public static int takeRed(BufferedImage image, Point point, int delta) {
-    final Color color = new Color(image.getRGB(point.x, point.y));
+    final Color color = getColor(image, point);
     final int original = color.getRed();
+    if (original < MINIMUM_COLOR_VALUE) {
+      return 0;
+    }
     final int newValue = Math.max(0, original + delta);
     image.setRGB(point.x, point.y, new Color(newValue, color.getGreen(), color.getBlue()).getRGB());
     return original - newValue;
   }
 
   public static int takeGreen(BufferedImage image, Point point, int delta) {
-    final Color color = new Color(image.getRGB(point.x, point.y));
+    final Color color = getColor(image, point);
     final int original = color.getGreen();
+    if (original < MINIMUM_COLOR_VALUE) {
+      return 0;
+    }
     final int newValue = Math.max(0, original + delta);
     image.setRGB(point.x, point.y, new Color(color.getRed(), newValue, color.getBlue()).getRGB());
     return original - newValue;
   }
 
   public static int takeBlue(BufferedImage image, Point point, int delta) {
-    final Color color = new Color(image.getRGB(point.x, point.y));
+    final Color color = getColor(image, point);
     final int original = color.getBlue();
+    if (original < MINIMUM_COLOR_VALUE) {
+      return 0;
+    }
     final int newValue = Math.max(0, original + delta);
     image.setRGB(point.x, point.y, new Color(color.getRed(), color.getGreen(), newValue).getRGB());
     return original - newValue;
+  }
+
+  public static boolean inBounds(BufferedImage image, Point point) {
+    return new Rectangle(image.getWidth(), image.getHeight()).contains(point);
+  }
+
+  public static Color getColor(BufferedImage image, Point point) {
+    return inBounds(image, point) ? new Color(image.getRGB(point.x, point.y)) : Color.BLACK;
   }
 
   public static BufferedImage negative(BufferedImage image) {
