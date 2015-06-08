@@ -18,7 +18,7 @@ import core.TraitLimit;
 public class Organism {
 
   Strain strain;
-  private final Environment envr;
+  private final Environment environment;
   private final int generation;
   private int childrenSpawned;
 
@@ -40,9 +40,8 @@ public class Organism {
   private static final int LIFESPAN = 40;
 
   // New virus with random attributes at a set location
-  public Organism(Environment env, Strain str, Point point) {
-    this(env, str, point,
-        0, //
+  public Organism(Environment environment, Strain strain, Point location) {
+    this(environment, strain, location, 0,
         TraitLimit.MUTATION_CHANCE.randomValue(), //
         TraitLimit.MUTATION_DEGREE.randomValue(), //
         TraitLimit.MOVE_COST.randomValue(), //
@@ -54,23 +53,24 @@ public class Organism {
   }
 
   // New Virus with non-random attributes
-  private Organism(Environment env, Strain xStrain, Point loc, int gen, int mut, int mutX, int met,
-      int rpr, int rprX, int cap, ColorPreference colorPreference,
+  private Organism(Environment environment, Strain strain, Point location, int generation,
+      int mutationChance, int mutationDegree, int moveCost, int reproductionCost,
+      int reproductionChance, int energyCap, ColorPreference colorPreference,
       DirectionPreference directionPreference) {
-    envr = env;
-    strain = xStrain;
-    location = loc;
-    generation = gen;
-    strain.updateYoungest(generation);
+    this.environment = environment;
+    this.strain = strain;
+    this.location = location;
+    this.generation = generation;
+    this.strain.updateYoungest(generation);
 
-    energyCap = cap;
-    energy = cap / 2;
+    this.energyCap = energyCap;
+    this.energy = energyCap / 2;
 
-    moveCost = met;
-    reproductionCost = rpr;
-    reproductionChance = rprX;
-    mutationChance = mut;
-    mutationDegree = mutX;
+    this.moveCost = moveCost;
+    this.reproductionCost = reproductionCost;
+    this.reproductionChance = reproductionChance;
+    this.mutationChance = mutationChance;
+    this.mutationDegree = mutationDegree;
 
     this.colorPreference = colorPreference;
     this.directionPreference = directionPreference;
@@ -83,16 +83,16 @@ public class Organism {
   public void check() {
     updates++;
     if (CauseOfDeath.isItDead(this)) {
-      envr.prepareForDeath(this);
+      environment.prepareForDeath(this);
     }
   }
 
   public boolean forcedOutByTheYouth() {
-    return envr.overPopulated(strain) && generation + 1 < strain.getYoungest();
+    return environment.overPopulated(strain) && generation + 1 < strain.getYoungest();
   }
 
   public boolean outOfBounds() {
-    return !envr.inBounds(location);
+    return !environment.inBounds(location);
   }
 
   public boolean tooOld() {
@@ -109,29 +109,30 @@ public class Organism {
     }
     energy /= 2;
     childrenSpawned++;
-    envr.addKid(repr());
+    environment.addKid(repr());
   }
 
   // Creates new Virus with mutated attributes
   private Organism repr() {
-    final Point childPoint = findChildPoint();
-    final int gen = generation + 1;
+    final Point xLocation = findChildPoint();
+    final int xGeneration = generation + 1;
 
-    final int mut = mutateTrait(mutationChance);
-    final int mutX = mutateTrait(mutationDegree);
+    final int xMutationChance = mutateTrait(mutationChance);
+    final int xMutationDegree = mutateTrait(mutationDegree);
 
-    final int met = mutateTrait(moveCost);
+    final int xMoveCost = mutateTrait(moveCost);
 
-    final int rpr = mutateTrait(reproductionCost);
-    final int rprX = mutateTrait(reproductionChance);
+    final int xReproductionCost = mutateTrait(reproductionCost);
+    final int xReproductionChance = mutateTrait(reproductionChance);
 
-    final int cap = mutateTrait(energyCap);
+    final int xEnergyCap = mutateTrait(energyCap);
 
-    final ColorPreference newColorPreference = colorPreference.mutate(this);
-    final DirectionPreference newDirectionPreference = directionPreference.mutate(this);
+    final ColorPreference xColorPreference = colorPreference.mutate(this);
+    final DirectionPreference xDirectionPreference = directionPreference.mutate(this);
 
-    return new Organism(envr, strain, childPoint, gen, mut, mutX, met, rpr, rprX, cap,
-        newColorPreference, newDirectionPreference);
+    return new Organism(environment, strain, xLocation, xGeneration, xMutationChance,
+        xMutationDegree, xMoveCost, xReproductionCost, xReproductionChance, xEnergyCap,
+        xColorPreference, xDirectionPreference);
   }
 
   // I'm pretty sure this is bugged.
@@ -174,7 +175,7 @@ public class Organism {
   private boolean hasSpace() {
     return IntStream.rangeClosed(location.y - 3, location.y + 3).anyMatch(i -> {
       return IntStream.rangeClosed(location.x - 3, location.x + 3).anyMatch(j -> {
-        return !envr.orgAt(i, j);
+        return !environment.orgAt(i, j);
       });
     });
   }
@@ -182,7 +183,7 @@ public class Organism {
   private Map<Direction, Color> setView() {
     final Map<Direction, Color> view = new HashMap<>();
     for (final Direction dir : Direction.values()) {
-      view.put(dir, envr.getColor(dir.translatedCopy(location)));
+      view.put(dir, environment.getColor(dir.translatedCopy(location)));
     }
     return view;
   }
@@ -223,15 +224,15 @@ public class Organism {
   }
 
   private void acquireRed() {
-    energy += envr.takeRed(location, -randomInt(1, 20));
+    energy += environment.takeRed(location, -randomInt(1, 20));
   }
 
   private void acquireGreen() {
-    energy += envr.takeGreen(location, -randomInt(1, 20));
+    energy += environment.takeGreen(location, -randomInt(1, 20));
   }
 
   private void acquireBlue() {
-    energy += envr.takeBlue(location, -randomInt(1, 20));
+    energy += environment.takeBlue(location, -randomInt(1, 20));
   }
 
   public boolean tooTired() {

@@ -21,7 +21,7 @@ public class Environment {
   public int updates;
 
   ArrayList<Organism> graveyard = new ArrayList<>();
-  ArrayList<Organism> kids = new ArrayList<>();
+  ArrayList<Organism> nursery = new ArrayList<>();
 
   public Environment(BufferedImage bimage) {
     image = bimage;
@@ -55,7 +55,7 @@ public class Environment {
   }
 
   public void addKid(Organism org) {
-    kids.add(org);
+    nursery.add(org);
   }
 
   public void prepareForDeath(Organism org) {
@@ -88,8 +88,8 @@ public class Environment {
   }
 
   private void raiseTheKids() {
-    kids.forEach(this::addToActiveStrains);
-    kids.clear();
+    nursery.forEach(this::addToActiveStrains);
+    nursery.clear();
   }
 
   private void buryTheDead() {
