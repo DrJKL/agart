@@ -41,25 +41,16 @@ public class Organism {
 
   // New virus with random attributes at a set location
   public Organism(Environment env, Strain str, Point point) {
-    envr = env;
-    strain = str;
-    location = point;
-    generation = 0;
-    strain.updateYoungest(0);
-
-    energyCap = TraitLimit.ENERGY_CAP.randomValue();
-    energy = energyCap / 2;
-
-    moveCost = TraitLimit.MOVE_COST.randomValue();
-    reproductionChance = TraitLimit.REPRODUCTION_CHANCE.randomValue();
-    reproductionCost = TraitLimit.REPRODUCTION_COST.randomValue();
-    mutationChance = TraitLimit.MUTATION_CHANCE.randomValue();
-    mutationDegree = TraitLimit.MUTATION_DEGREE.randomValue();
-
-    colorPreference = new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
-    directionPreference = new DirectionPreference( //
-        randomInt(0, 3), randomInt(0, 3), randomInt(0, 3), randomInt(0, 3));
-
+    this(env, str, point,
+        0, //
+        TraitLimit.MUTATION_CHANCE.randomValue(), //
+        TraitLimit.MUTATION_DEGREE.randomValue(), //
+        TraitLimit.MOVE_COST.randomValue(), //
+        TraitLimit.REPRODUCTION_COST.randomValue(), //
+        TraitLimit.REPRODUCTION_CHANCE.randomValue(),
+        TraitLimit.ENERGY_CAP.randomValue(), //
+        new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100)),
+        new DirectionPreference(randomInt(0, 3), randomInt(0, 3), randomInt(0, 3), randomInt(0, 3)));
   }
 
   // New Virus with non-random attributes
@@ -116,36 +107,31 @@ public class Organism {
     if (!hasSpace() || !canReplicate()) {
       return;
     }
-    Organism child;
-    child = repr();
     energy /= 2;
     childrenSpawned++;
-    envr.addKid(child);
+    envr.addKid(repr());
   }
 
   // Creates new Virus with mutated attributes
   private Organism repr() {
     final Point childPoint = findChildPoint();
     final int gen = generation + 1;
-    int mut, mutX, met, rpr, rprX, cap;
 
-    mut = mutateTrait(mutationChance);
-    mutX = mutateTrait(mutationDegree);
+    final int mut = mutateTrait(mutationChance);
+    final int mutX = mutateTrait(mutationDegree);
 
-    met = mutateTrait(moveCost);
+    final int met = mutateTrait(moveCost);
 
-    rpr = mutateTrait(reproductionCost);
-    rprX = mutateTrait(reproductionChance);
+    final int rpr = mutateTrait(reproductionCost);
+    final int rprX = mutateTrait(reproductionChance);
 
-    cap = mutateTrait(energyCap);
+    final int cap = mutateTrait(energyCap);
 
     final ColorPreference newColorPreference = colorPreference.mutate(this);
     final DirectionPreference newDirectionPreference = directionPreference.mutate(this);
 
-    final Organism spawn = new Organism(envr, strain, childPoint, gen, mut, mutX, met, rpr, rprX,
-        cap, newColorPreference, newDirectionPreference);
-
-    return spawn;
+    return new Organism(envr, strain, childPoint, gen, mut, mutX, met, rpr, rprX, cap,
+        newColorPreference, newDirectionPreference);
   }
 
   // I'm pretty sure this is bugged.
