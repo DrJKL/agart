@@ -9,26 +9,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.IntStream;
 
-import com.google.common.collect.ComparisonChain;
-
 import core.CauseOfDeath;
 import core.ColorPreference;
 import core.Direction;
 import core.DirectionPreference;
 import core.TraitLimit;
 
-public class Organism implements Comparable<Organism> {
+public class Organism {
 
-  private final String orgName;
   private CauseOfDeath causeOfDeath = CauseOfDeath.LIVING;
   Strain strain;
   private final Environment envr;
   private final int generation;
   private int childrenSpawned;
 
-  private int updates;
-
-  private int energy;
+  private int updates, energy;
 
   private final int mutationChance, reproductionChance;
   private final int mutationDegree, reproductionCost;
@@ -55,7 +50,6 @@ public class Organism implements Comparable<Organism> {
 
     envr = env;
     strain = str;
-    orgName = str.getStrainName();
     causeOfDeath = CauseOfDeath.LIVING;
     generation = 0;
     strain.updateYoungest(0);
@@ -76,10 +70,9 @@ public class Organism implements Comparable<Organism> {
   }
 
   // New Virus with non-random attributes
-  private Organism(Environment env, String str, Strain xStrain, Point loc, int gen, int mut,
-      int mutX, int met, int rpr, int rprX, int cap, ColorPreference colorPreference,
+  private Organism(Environment env, Strain xStrain, Point loc, int gen, int mut, int mutX, int met,
+      int rpr, int rprX, int cap, ColorPreference colorPreference,
       DirectionPreference directionPreference) {
-    orgName = str;
     strain = xStrain;
     causeOfDeath = CauseOfDeath.LIVING;
     envr = env;
@@ -144,7 +137,6 @@ public class Organism implements Comparable<Organism> {
   private Organism repr() {
     final Point childPoint = findChildPoint();
     final int gen = generation + 1;
-    final String str = orgName + childrenSpawned;
     int mut, mutX, met, rpr, rprX, cap;
 
     mut = mutateTrait(mutationChance);
@@ -160,8 +152,8 @@ public class Organism implements Comparable<Organism> {
     final ColorPreference newColorPreference = colorPreference.mutate(this);
     final DirectionPreference newDirectionPreference = directionPreference.mutate(this);
 
-    final Organism spawn = new Organism(envr, str, strain, childPoint, gen, mut, mutX, met, rpr,
-        rprX, cap, newColorPreference, newDirectionPreference);
+    final Organism spawn = new Organism(envr, strain, childPoint, gen, mut, mutX, met, rpr, rprX,
+        cap, newColorPreference, newDirectionPreference);
 
     return spawn;
   }
@@ -283,15 +275,9 @@ public class Organism implements Comparable<Organism> {
   }
 
   @Override
-  public int compareTo(Organism org) {
-    return ComparisonChain.start().compare(orgName.length(), org.orgName.length())
-        .compare(orgName, org.orgName).result();
-  }
-
-  @Override
   public String toString() {
     final StringBuilder builder = new StringBuilder();
-    builder.append("Organism [strain=").append(orgName);
+    builder.append("Organism [strain=").append(strain.getStrainName());
     builder.append(", causeOfDeath=").append(causeOfDeath);
     builder.append(", generation=").append(generation);
     builder.append(", childrenSpawned=").append(childrenSpawned);
