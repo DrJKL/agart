@@ -1,8 +1,40 @@
 package core;
 
+import java.util.Arrays;
+
+import src.Organism;
+
 public enum CauseOfDeath {
-  LIVING("Living"), STARVED("Starvation"), OLD_AGE("Old Age"), GERICIDE("Gericide"), DRAGONS(
-      "Dragons");
+  LIVING("Living") {
+    @Override
+    public boolean rollTheDice(Organism organism) {
+      return false;
+    }
+  },
+  STARVED("Starvation") {
+    @Override
+    public boolean rollTheDice(Organism organism) {
+      return organism.outOfEnergy();
+    }
+  },
+  OLD_AGE("Old Age") {
+    @Override
+    public boolean rollTheDice(Organism organism) {
+      return organism.tooOld();
+    }
+  },
+  GERICIDE("Gericide") {
+    @Override
+    public boolean rollTheDice(Organism organism) {
+      return organism.forcedOutByTheYouth();
+    }
+  },
+  DRAGONS("Dragons") {
+    @Override
+    public boolean rollTheDice(Organism organism) {
+      return organism.outOfBounds();
+    }
+  };
 
   public final String description;
 
@@ -10,9 +42,9 @@ public enum CauseOfDeath {
     this.description = description;
   }
 
-  public static final String codDef = "Living";
-  public static final String codStarved = "Starvation";
-  public static final String codOldAge = "Old Age";
-  public static final String codGericide = "Gericide";
-  public static final String codHereBeDragons = "Dragons";
+  public abstract boolean rollTheDice(Organism organism);
+
+  public static boolean isItDead(Organism organism) {
+    return Arrays.stream(values()).anyMatch(cod -> cod.rollTheDice(organism));
+  }
 }

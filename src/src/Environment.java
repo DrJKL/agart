@@ -15,6 +15,7 @@ import core.ImageUtil;
 
 public class Environment {
 
+  private static final int MAX_POPULATION = 100;
   public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
   public final BufferedImage image;
   public int updates;
@@ -36,15 +37,15 @@ public class Environment {
   }
 
   public void add(int number, Strain str) {
-    IntStream.range(0, number).forEach(
-        i -> {
-          final Point potentialLocation = new Point();
-          do {
-            potentialLocation.move(randomInt(0, this.getWidth() - 1),
-                randomInt(0, this.getHeight() - 1));
-          } while (this.orgAt(potentialLocation));
-          this.addOneAt(str, potentialLocation);
-        });
+    IntStream.range(0, number).forEach(i -> {
+      final Point potentialLocation = new Point();
+      do {
+        potentialLocation.move( //
+            randomInt(0, this.getWidth() - 1), //
+            randomInt(0, this.getHeight() - 1));
+      } while (this.orgAt(potentialLocation));
+      this.addOneAt(str, potentialLocation);
+    });
   }
 
   private Organism addOneAt(Strain str, Point point) {
@@ -73,6 +74,10 @@ public class Environment {
 
   public int getActiveStrainSize(Strain strain) {
     return activeStrains.getOrDefault(strain, new LinkedList<>()).size();
+  }
+
+  public boolean overPopulated(Strain strain) {
+    return getActiveStrainSize(strain) > MAX_POPULATION;
   }
 
   public void update() {

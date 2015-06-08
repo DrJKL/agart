@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.IntStream;
 
+import com.google.common.collect.ComparisonChain;
+
 import core.CauseOfDeath;
 import core.ColorPreference;
 import core.Direction;
@@ -42,7 +44,6 @@ public class Organism implements Comparable<Organism> {
 
   private static final int MOVES_EACH = 20;
   private static final int LIFESPAN = 40;
-  private static final int MAX_POPULATION = 100;
 
   public static int randomIntForTrait(TraitLimit trait) {
     return randomInt(trait.low, trait.high);
@@ -105,25 +106,25 @@ public class Organism implements Comparable<Organism> {
   }
 
   public void check() {
-    if (outOfEnergy()) {
-      causeOfDeath = CauseOfDeath.STARVED;
-    }
-    if (++updates > LIFESPAN) {
-      causeOfDeath = CauseOfDeath.OLD_AGE;
-    }
-    if (envr.getActiveStrainSize(strain) > MAX_POPULATION
-        && generation + 1 < this.strain.getYoungest()) {
-      causeOfDeath = CauseOfDeath.GERICIDE;
-    }
-    if (!envr.inBounds(location)) {
-      causeOfDeath = CauseOfDeath.DRAGONS;
-    }
-    if (!causeOfDeath.equals(CauseOfDeath.LIVING)) {
+    updates++;
+    if (CauseOfDeath.isItDead(this)) {
       envr.prepareForDeath(this);
     }
   }
 
-  private boolean outOfEnergy() {
+  public boolean forcedOutByTheYouth() {
+    return envr.overPopulated(strain) && generation + 1 < strain.getYoungest();
+  }
+
+  public boolean outOfBounds() {
+    return !envr.inBounds(location);
+  }
+
+  public boolean tooOld() {
+    return updates > LIFESPAN;
+  }
+
+  public boolean outOfEnergy() {
     return energy <= 0;
   }
 
@@ -283,10 +284,8 @@ public class Organism implements Comparable<Organism> {
 
   @Override
   public int compareTo(Organism org) {
-    if (orgName.length() == org.orgName.length()) {
-      return orgName.compareTo(org.orgName);
-    }
-    return orgName.length() - org.orgName.length();
+    return ComparisonChain.start().compare(orgName.length(), org.orgName.length())
+        .compare(orgName, org.orgName).result();
   }
 
   @Override
