@@ -126,15 +126,15 @@ public class Environment {
     return inBounds(point) ? new Color(image.getRGB(point.x, point.y)) : Color.BLACK;
   }
 
-  public void setRed(Point point, int newRed) {
-    ImageUtil.setRed(point, newRed, image);
+  public int takeRed(Point point, int newRed) {
+    return ImageUtil.takeRed(image, point, newRed);
   }
 
-  public void setGreen(Point point, int newGreen) {
-    ImageUtil.setGreen(point, newGreen, image);
+  public int takeGreen(Point point, int newGreen) {
+    return ImageUtil.takeGreen(image, point, newGreen);
   }
 
-  public void setBlue(Point point, int newBlue) {
-    ImageUtil.setBlue(point, newBlue, image);
+  public int takeBlue(Point point, int newBlue) {
+    return ImageUtil.takeBlue(image, point, newBlue);
   }
 }

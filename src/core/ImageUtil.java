@@ -14,22 +14,28 @@ import javax.imageio.ImageIO;
 
 public class ImageUtil {
 
-  public static void setRed(Point point, int newRed, BufferedImage image) {
+  public static int takeRed(BufferedImage image, Point point, int delta) {
     final Color color = new Color(image.getRGB(point.x, point.y));
-    final Color newColor = new Color(newRed, color.getGreen(), color.getBlue());
-    image.setRGB(point.x, point.y, newColor.getRGB());
+    final int original = color.getRed();
+    final int newValue = Math.max(0, original + delta);
+    image.setRGB(point.x, point.y, new Color(newValue, color.getGreen(), color.getBlue()).getRGB());
+    return original - newValue;
   }
 
-  public static void setGreen(Point point, int newGreen, BufferedImage image) {
+  public static int takeGreen(BufferedImage image, Point point, int delta) {
     final Color color = new Color(image.getRGB(point.x, point.y));
-    final Color newColor = new Color(color.getRed(), newGreen, color.getBlue());
-    image.setRGB(point.x, point.y, newColor.getRGB());
+    final int original = color.getGreen();
+    final int newValue = Math.max(0, original + delta);
+    image.setRGB(point.x, point.y, new Color(color.getRed(), newValue, color.getBlue()).getRGB());
+    return original - newValue;
   }
 
-  public static void setBlue(Point point, int newBlue, BufferedImage image) {
+  public static int takeBlue(BufferedImage image, Point point, int delta) {
     final Color color = new Color(image.getRGB(point.x, point.y));
-    final Color newColor = new Color(color.getRed(), color.getGreen(), newBlue);
-    image.setRGB(point.x, point.y, newColor.getRGB());
+    final int original = color.getBlue();
+    final int newValue = Math.max(0, original + delta);
+    image.setRGB(point.x, point.y, new Color(color.getRed(), color.getGreen(), newValue).getRGB());
+    return original - newValue;
   }
 
   public static BufferedImage negative(BufferedImage image) {

@@ -260,9 +260,7 @@ public class Organism implements Comparable<Organism> {
     if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }
-    final int take = randomInt(1, 20);
-    envr.setRed(location, orig - take);
-    energy += take;
+    energy += envr.takeRed(location, -randomInt(1, 20));
   }
 
   private void acquireGreen() {
@@ -270,9 +268,7 @@ public class Organism implements Comparable<Organism> {
     if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }
-    final int take = randomInt(1, 20);
-    envr.setGreen(location, orig - take);
-    energy += take;
+    energy += envr.takeGreen(location, -randomInt(1, 20));
   }
 
   private void acquireBlue() {
@@ -280,9 +276,7 @@ public class Organism implements Comparable<Organism> {
     if (orig <= MINIMUM_COLOR_VALUE) {
       return;
     }
-    final int take = randomInt(1, 20);
-    envr.setBlue(location, orig - take);
-    energy += take;
+    energy += envr.takeBlue(location, -randomInt(1, 20));
   }
 
   public boolean tooTired() {
