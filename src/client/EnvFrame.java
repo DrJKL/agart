@@ -161,9 +161,12 @@ class EnvFrame extends JFrame {
   private void createExterminateStrainButton() {
     exterminateStrainButton = new JButton("Exterminate Strain");
     exterminateStrainButton.addActionListener(arg0 -> {
+      final Object[] strains = envr.activeStrains.keySet().toArray();
+      if (strains.length == 0) {
+        return;
+      }
       final Strain strChoice = (Strain) JOptionPane.showInputDialog(new JFrame(), "Strain?",
-          "Strain Choice", JOptionPane.PLAIN_MESSAGE, null, envr.activeStrains.keySet().toArray(),
-          envr.activeStrains.keySet().toArray()[0]);
+          "Strain Choice", JOptionPane.PLAIN_MESSAGE, null, strains, strains[0]);
       final String strX = strChoice.getStrainName();
       envr.exterminate(strToStrain.get(strX));
       updateData();
