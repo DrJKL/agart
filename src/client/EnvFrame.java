@@ -304,7 +304,7 @@ class EnvFrame extends JFrame {
     envr = new Environment(ImageUtil.setupNewEnvironment(800, 600, false));
     myPanel = new MyPanel(envr.image);
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-    final Dimension d = new Dimension(envr.getWidth() + 150, envr.getHeight() + 100);
+    final Dimension d = new Dimension(envr.getWidth() + 160, envr.getHeight() + 95);
     setPreferredSize(d);
     pack();
     myPanel.repaint();
@@ -319,9 +319,9 @@ class EnvFrame extends JFrame {
     }
     envr = new Environment(bmg);
     myPanel = new MyPanel(envr.image);
-    final Dimension d = new Dimension(envr.getWidth() + 150, envr.getHeight() + 100);
+    final Dimension d = new Dimension(envr.getWidth() + 160, envr.getHeight() + 95);
     setPreferredSize(d);
-    this.pack();
+    pack();
 
   }
 
