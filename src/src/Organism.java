@@ -17,7 +17,7 @@ import core.TraitLimit;
 
 public class Organism {
 
-  Strain strain;
+  final Strain strain;
   private final Environment environment;
   private final int generation;
   private int childrenSpawned;
