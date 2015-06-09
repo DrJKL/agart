@@ -41,15 +41,15 @@ public class Organism {
 
   // New virus with random attributes at a set location
   public Organism(Environment environment, Strain strain, Point location) {
-    this(environment, strain, location, 0,
+    this(environment, strain, location, 0, //
         TraitLimit.MUTATION_CHANCE.randomValue(), //
         TraitLimit.MUTATION_DEGREE.randomValue(), //
         TraitLimit.MOVE_COST.randomValue(), //
         TraitLimit.REPRODUCTION_COST.randomValue(), //
-        TraitLimit.REPRODUCTION_CHANCE.randomValue(),
+        TraitLimit.REPRODUCTION_CHANCE.randomValue(), //
         TraitLimit.ENERGY_CAP.randomValue(), //
-        new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100)),
-        new DirectionPreference(randomInt(0, 3), randomInt(0, 3), randomInt(0, 3), randomInt(0, 3)));
+        ColorPreference.random(), //
+        DirectionPreference.random());
   }
 
   // New Virus with non-random attributes
@@ -114,25 +114,10 @@ public class Organism {
 
   // Creates new Virus with mutated attributes
   private Organism repr() {
-    final Point xLocation = findChildPoint();
-    final int xGeneration = generation + 1;
-
-    final int xMutationChance = mutateTrait(mutationChance);
-    final int xMutationDegree = mutateTrait(mutationDegree);
-
-    final int xMoveCost = mutateTrait(moveCost);
-
-    final int xReproductionCost = mutateTrait(reproductionCost);
-    final int xReproductionChance = mutateTrait(reproductionChance);
-
-    final int xEnergyCap = mutateTrait(energyCap);
-
-    final ColorPreference xColorPreference = colorPreference.mutate(this);
-    final DirectionPreference xDirectionPreference = directionPreference.mutate(this);
-
-    return new Organism(environment, strain, xLocation, xGeneration, xMutationChance,
-        xMutationDegree, xMoveCost, xReproductionCost, xReproductionChance, xEnergyCap,
-        xColorPreference, xDirectionPreference);
+    return new Organism(environment, strain, findChildPoint(), generation + 1,
+        mutateTrait(mutationChance), mutateTrait(mutationDegree), mutateTrait(moveCost),
+        mutateTrait(reproductionCost), mutateTrait(reproductionChance), mutateTrait(energyCap),
+        colorPreference.mutate(this), directionPreference.mutate(this));
   }
 
   // I'm pretty sure this is bugged.

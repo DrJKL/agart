@@ -1,5 +1,6 @@
 package core;
 
+import static core.Randomness.randomInt;
 import src.Organism;
 
 public class ColorPreference {
@@ -11,6 +12,10 @@ public class ColorPreference {
     this.redChance = redChance;
     this.greenChance = greenChance;
     this.blueChance = blueChance;
+  }
+
+  public static ColorPreference random() {
+    return new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
   }
 
   public ColorPreference mutate(Organism organism) {

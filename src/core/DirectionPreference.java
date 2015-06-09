@@ -1,5 +1,6 @@
 package core;
 
+import static core.Randomness.randomInt;
 import src.Organism;
 
 public class DirectionPreference {
@@ -15,7 +16,11 @@ public class DirectionPreference {
     this.eastChance = noPreference ? 1 : fix(eastChance);
     this.southChance = noPreference ? 1 : fix(southChance);
     this.westChance = noPreference ? 1 : fix(westChance);
+  }
 
+  public static DirectionPreference random() {
+    return new DirectionPreference( //
+        randomInt(0, 3), randomInt(0, 3), randomInt(0, 3), randomInt(0, 3));
   }
 
   public DirectionPreference mutate(Organism organism) {
