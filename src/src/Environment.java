@@ -38,14 +38,18 @@ public class Environment {
 
   public void add(int number, Strain str) {
     IntStream.range(0, number).forEach(i -> {
-      final Point potentialLocation = new Point();
-      do {
-        potentialLocation.move( //
-            randomInt(0, this.getWidth() - 1), //
-            randomInt(0, this.getHeight() - 1));
-      } while (this.orgAt(potentialLocation));
-      this.addOneAt(str, potentialLocation);
+      this.addOneAt(str, findEmptyLocation());
     });
+  }
+
+  private Point findEmptyLocation() {
+    final Point potentialLocation = new Point();
+    do {
+      potentialLocation.move( //
+          randomInt(0, this.getWidth() - 1), //
+          randomInt(0, this.getHeight() - 1));
+    } while (this.orgAt(potentialLocation));
+    return potentialLocation;
   }
 
   private Organism addOneAt(Strain str, Point point) {
