@@ -13,6 +13,7 @@ import core.CauseOfDeath;
 import core.ColorPreference;
 import core.Direction;
 import core.DirectionPreference;
+import core.Mutator;
 import core.TraitLimit;
 
 public class Organism {
@@ -24,12 +25,12 @@ public class Organism {
 
   private int updates, energy;
 
-  private final int mutationChance, reproductionChance;
-  private final int mutationDegree, reproductionCost;
+  private final int reproductionCost, reproductionChance;
   private final int moveCost, energyCap;
 
   private final Point location;
 
+  private final Mutator mutator;
   private final ColorPreference colorPreference;
   private final DirectionPreference directionPreference;
 
@@ -42,21 +43,19 @@ public class Organism {
   // New virus with random attributes at a set location
   public Organism(Environment environment, Strain strain, Point location) {
     this(environment, strain, location, 0, //
-        TraitLimit.MUTATION_CHANCE.randomValue(), //
-        TraitLimit.MUTATION_DEGREE.randomValue(), //
         TraitLimit.MOVE_COST.randomValue(), //
         TraitLimit.REPRODUCTION_COST.randomValue(), //
         TraitLimit.REPRODUCTION_CHANCE.randomValue(), //
         TraitLimit.ENERGY_CAP.randomValue(), //
+        Mutator.random(), //
         ColorPreference.random(), //
         DirectionPreference.random());
   }
 
   // New Virus with non-random attributes
   private Organism(Environment environment, Strain strain, Point location, int generation,
-      int mutationChance, int mutationDegree, int moveCost, int reproductionCost,
-      int reproductionChance, int energyCap, ColorPreference colorPreference,
-      DirectionPreference directionPreference) {
+      int moveCost, int reproductionCost, int reproductionChance, int energyCap, Mutator mutator,
+      ColorPreference colorPreference, DirectionPreference directionPreference) {
     this.environment = environment;
     this.strain = strain;
     this.location = location;
@@ -69,9 +68,8 @@ public class Organism {
     this.moveCost = moveCost;
     this.reproductionCost = reproductionCost;
     this.reproductionChance = reproductionChance;
-    this.mutationChance = mutationChance;
-    this.mutationDegree = mutationDegree;
 
+    this.mutator = mutator;
     this.colorPreference = colorPreference;
     this.directionPreference = directionPreference;
   }
@@ -115,9 +113,9 @@ public class Organism {
   // Creates new Virus with mutated attributes
   private Organism repr() {
     return new Organism(environment, strain, findChildPoint(), generation + 1,
-        mutateTrait(mutationChance), mutateTrait(mutationDegree), mutateTrait(moveCost),
-        mutateTrait(reproductionCost), mutateTrait(reproductionChance), mutateTrait(energyCap),
-        colorPreference.mutate(this), directionPreference.mutate(this));
+        mutateTrait(moveCost), mutateTrait(reproductionCost), mutateTrait(reproductionChance),
+        mutateTrait(energyCap), mutator.mutate(), colorPreference.mutate(this),
+        directionPreference.mutate(this));
   }
 
   // I'm pretty sure this is bugged.
@@ -132,12 +130,7 @@ public class Organism {
   }
 
   public int mutateTrait(int original) {
-    return shouldMutate() ? Math
-        .abs(randomInt(original - mutationDegree, original + mutationDegree)) : original;
-  }
-
-  private boolean shouldMutate() {
-    return Math.random() * 100 < mutationChance;
+    return mutator.mutateTrait(original);
   }
 
   public void move() {
@@ -244,7 +237,7 @@ public class Organism {
     builder.append(", childrenSpawned=").append(childrenSpawned);
     builder.append(", updates=").append(updates);
     builder.append(", energy=").append(energy);
-    builder.append(", mutation=").append(mutationChance);
+    builder.append(", mutation=").append(mutator);
     builder.append(", moveCost=").append(moveCost);
     builder.append(", reprCost=").append(reproductionCost);
     builder.append(", energyCap=").append(energyCap);
