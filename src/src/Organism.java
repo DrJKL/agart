@@ -25,8 +25,8 @@ public class Organism {
 
   private int updates, energy;
 
-  private final int reproductionCost, reproductionChance;
-  private final int moveCost, energyCap;
+  private final int reproductionChance;
+  private final int moveCost, replicationEnergyCap;
 
   private final Point location;
 
@@ -44,7 +44,6 @@ public class Organism {
   public Organism(Environment environment, Strain strain, Point location) {
     this(environment, strain, location, 0, //
         TraitLimit.MOVE_COST.randomValue(), //
-        TraitLimit.REPRODUCTION_COST.randomValue(), //
         TraitLimit.REPRODUCTION_CHANCE.randomValue(), //
         TraitLimit.ENERGY_CAP.randomValue(), //
         Mutator.random(), //
@@ -54,7 +53,7 @@ public class Organism {
 
   // New Virus with non-random attributes
   private Organism(Environment environment, Strain strain, Point location, int generation,
-      int moveCost, int reproductionCost, int reproductionChance, int energyCap, Mutator mutator,
+      int moveCost, int reproductionChance, int energyCap, Mutator mutator,
       ColorPreference colorPreference, DirectionPreference directionPreference) {
     this.environment = environment;
     this.strain = strain;
@@ -62,11 +61,10 @@ public class Organism {
     this.generation = generation;
     this.strain.updateYoungest(generation);
 
-    this.energyCap = energyCap;
+    this.replicationEnergyCap = energyCap;
     this.energy = energyCap / 2;
 
     this.moveCost = moveCost;
-    this.reproductionCost = reproductionCost;
     this.reproductionChance = reproductionChance;
 
     this.mutator = mutator;
@@ -113,9 +111,8 @@ public class Organism {
   // Creates new Virus with mutated attributes
   private Organism repr() {
     return new Organism(environment, strain, findChildPoint(), generation + 1,
-        mutateTrait(moveCost), mutateTrait(reproductionCost), mutateTrait(reproductionChance),
-        mutateTrait(energyCap), mutator.mutate(), colorPreference.mutate(this),
-        directionPreference.mutate(this));
+        mutateTrait(moveCost), mutateTrait(reproductionChance), mutateTrait(replicationEnergyCap),
+        mutator.mutate(), colorPreference.mutate(this), directionPreference.mutate(this));
   }
 
   // I'm pretty sure this is bugged.
@@ -222,8 +219,7 @@ public class Organism {
   }
 
   private boolean canReplicate() {
-    return energy >= energyCap - 20 //
-        && energy >= reproductionCost //
+    return energy >= replicationEnergyCap - 20 //
         && generation < BREED_CAP //
         && childrenSpawned < MAX_KIDS //
         && Math.random() * 100 < reproductionChance;
@@ -239,8 +235,7 @@ public class Organism {
     builder.append(", energy=").append(energy);
     builder.append(", mutation=").append(mutator);
     builder.append(", moveCost=").append(moveCost);
-    builder.append(", reprCost=").append(reproductionCost);
-    builder.append(", energyCap=").append(energyCap);
+    builder.append(", energyCap=").append(replicationEnergyCap);
     builder.append(", location=").append(location);
     builder.append("]");
     return builder.toString();
