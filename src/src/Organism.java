@@ -113,11 +113,11 @@ public class Organism {
     }
     battery.halve();
     childrenSpawned++;
-    environment.addKid(repr());
+    environment.addKid(generateOffspring());
   }
 
   // Creates new Virus with mutated attributes
-  private Organism repr() {
+  private Organism generateOffspring() {
     return new Organism(environment, strain, findChildPoint(), generation + 1,
         mutateTrait(moveCost), mutateTrait(reproductionChance), battery.mutate(this),
         mutator.mutate(), colorPreference.mutate(this), directionPreference.mutate(this));
