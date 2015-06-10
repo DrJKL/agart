@@ -34,6 +34,7 @@ import strains.DrippyStrain;
 import strains.FloatyStrain;
 import strains.MultiTaskingStrain;
 import strains.RayStrain;
+import strains.SearchingStrain;
 import core.ImageUtil;
 
 @SuppressWarnings("serial")
@@ -65,7 +66,7 @@ class EnvFrame extends JFrame {
   private final Set<JButton> orgButtons = new HashSet<>();
   private final Set<JButton> dataButtons = new HashSet<>();
 
-  private static final int MAX_DELAY = 140;
+  private static final int MAX_DELAY = 500;
 
   public EnvFrame() {
     setTitle("VIRUS");
@@ -75,7 +76,7 @@ class EnvFrame extends JFrame {
     fc.addChoosableFileFilter(new ImageFilter());
     setUpEnvironment();
     final List<Strain> strainOptions = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
-        new FloatyStrain(), new RayStrain(), new MultiTaskingStrain());
+        new FloatyStrain(), new RayStrain(), new MultiTaskingStrain(), new SearchingStrain());
     strainOptions.forEach(s -> {
       strToStrain.put(s.getStrainName(), s);
     });
@@ -158,6 +159,7 @@ class EnvFrame extends JFrame {
       myTimer.setDelay(1000 / (speedBar.getValue()));
       randTimer.setDelay(1000 / (speedBar.getValue()));
     });
+    speedBar.setValue(MAX_DELAY / 2);
 
     mainControlsPanel.add(new JLabel(" Slow"));
     mainControlsPanel.add(speedBar);

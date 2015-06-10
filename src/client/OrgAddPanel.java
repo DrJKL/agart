@@ -14,6 +14,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import strains.SearchingStrain;
+
 @SuppressWarnings("serial")
 class OrgAddPanel extends JPanel implements ActionListener {
 
@@ -36,7 +38,8 @@ class OrgAddPanel extends JPanel implements ActionListener {
         makeStrainButton(dripStrain, KeyEvent.VK_2), //
         makeStrainButton(floatStrain, KeyEvent.VK_3), //
         makeStrainButton(rayStrain, KeyEvent.VK_4),
-        makeStrainButton(multiTaskingStrain, KeyEvent.VK_5));
+        makeStrainButton(multiTaskingStrain, KeyEvent.VK_5),
+        makeStrainButton(SearchingStrain.NAME, KeyEvent.VK_6));
     buttons.get(0).setSelected(true);
 
     buttons.forEach(button -> button.addActionListener(this));

@@ -16,5 +16,4 @@ public interface Strain {
 
   /** This method defines the 'AI' of the organisms in this strain. */
   void update(Organism org);
-
 }
