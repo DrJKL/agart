@@ -1,13 +1,12 @@
 package src;
 
 import static core.Numbers.randomInt;
+import static java.util.Map.Entry.comparingByValue;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.IntStream;
 
 import core.Battery;
@@ -181,12 +180,9 @@ public class Organism {
   }
 
   public Direction viewMaxAll() {
-    final Map<Direction, Color> view = setView();
-    final Comparator<Color> byTotalNutrition = (a, b) -> Integer.compare(totalNutrition(a),
-        totalNutrition(b));
-    final Entry<Direction, Color> max = view.entrySet().stream()
-        .max(Entry.comparingByValue(byTotalNutrition)).get();
-    return max.getKey();
+    return setView().entrySet().stream()
+        .max(comparingByValue((a, b) -> Integer.compare(totalNutrition(a), totalNutrition(b))))
+        .get().getKey();
   }
 
   public void feast() {
@@ -198,11 +194,7 @@ public class Organism {
   }
 
   private void acquireRand() {
-    final int totX = colorPreference.total();
-    if (totX < 1) {
-      return;
-    }
-    final int rand = randomInt(1, totX);
+    final int rand = randomInt(1, colorPreference.total());
     if (rand <= colorPreference.inRed()) {
       acquireRed();
     } else if (rand <= colorPreference.inGreen()) {
