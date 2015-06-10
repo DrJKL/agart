@@ -3,7 +3,6 @@ package src;
 import static core.Numbers.randomInt;
 import static java.util.Map.Entry.comparingByValue;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.util.Map;
 import java.util.function.Function;
@@ -160,14 +159,12 @@ public class Organism {
   }
 
   private Map<Direction, Integer> setView() {
-    return Direction.shuffled().stream().collect(Collectors.toMap(Function.identity(), d -> {
-      final Color color = environment.getColor(d.translatedCopy(location));
-      return colorPreference.weightedValue(color) / (totalNutrition(color) + 1);
-    }));
-  }
-
-  private static Integer totalNutrition(Color color) {
-    return color.getBlue() + color.getRed() + color.getGreen();
+    return Direction
+        .shuffled()
+        .stream()
+        .collect(
+            Collectors.toMap(Function.identity(), d -> colorPreference.weightedValue(environment
+                .getColor(d.translatedCopy(location)))));
   }
 
   public Direction viewMaxAll() {
