@@ -14,16 +14,15 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import strains.DefaultStrain;
+import strains.DrippyStrain;
+import strains.FloatyStrain;
+import strains.MultiTaskingStrain;
+import strains.RayStrain;
 import strains.SearchingStrain;
 
 @SuppressWarnings("serial")
 class OrgAddPanel extends JPanel implements ActionListener {
-
-  static String defaultStrain = "Default VIRUS";
-  static String dripStrain = "Drippy VIRUS";
-  static String floatStrain = "Floaty VIRUS";
-  static String rayStrain = "Ray VIRUS";
-  static String multiTaskingStrain = "Multitasking VIRUS";
 
   String chosenStrain;
 
@@ -31,16 +30,16 @@ class OrgAddPanel extends JPanel implements ActionListener {
 
     super(new BorderLayout());
 
-    chosenStrain = defaultStrain;
+    chosenStrain = SearchingStrain.NAME;
 
     final List<JRadioButton> buttons = Arrays.asList(
-        makeStrainButton(defaultStrain, KeyEvent.VK_1),
-        makeStrainButton(dripStrain, KeyEvent.VK_2), //
-        makeStrainButton(floatStrain, KeyEvent.VK_3), //
-        makeStrainButton(rayStrain, KeyEvent.VK_4),
-        makeStrainButton(multiTaskingStrain, KeyEvent.VK_5),
+        makeStrainButton(DefaultStrain.NAME, KeyEvent.VK_1),
+        makeStrainButton(DrippyStrain.NAME, KeyEvent.VK_2), //
+        makeStrainButton(FloatyStrain.NAME, KeyEvent.VK_3), //
+        makeStrainButton(RayStrain.NAME, KeyEvent.VK_4),
+        makeStrainButton(MultiTaskingStrain.NAME, KeyEvent.VK_5),
         makeStrainButton(SearchingStrain.NAME, KeyEvent.VK_6));
-    buttons.get(0).setSelected(true);
+    buttons.get(5).setSelected(true);
 
     buttons.forEach(button -> button.addActionListener(this));
 

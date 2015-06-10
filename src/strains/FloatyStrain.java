@@ -8,11 +8,12 @@ import core.Direction;
 
 public class FloatyStrain implements Strain {
 
+  public static final String NAME = "Floaty VIRUS";
   int youngest = -1;
 
   @Override
   public String getStrainName() {
-    return "Floaty VIRUS";
+    return NAME;
   }
 
   @Override

@@ -8,11 +8,12 @@ import core.Direction;
 
 public class DrippyStrain implements Strain {
 
+  public static final String NAME = "Drippy VIRUS";
   int youngest = -1;
 
   @Override
   public String getStrainName() {
-    return "Drippy VIRUS";
+    return NAME;
   }
 
   @Override

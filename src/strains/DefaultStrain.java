@@ -7,11 +7,12 @@ import src.Strain;
 
 public class DefaultStrain implements Strain {
 
+  public static final String NAME = "Default VIRUS";
   int youngest = -1;
 
   @Override
   public String getStrainName() {
-    return "Default VIRUS";
+    return NAME;
   }
 
   @Override

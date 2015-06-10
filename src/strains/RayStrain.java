@@ -7,11 +7,12 @@ import src.Strain;
 
 public class RayStrain implements Strain {
 
+  public static final String NAME = "Ray VIRUS";
   int youngest = -1;
 
   @Override
   public String getStrainName() {
-    return "Ray VIRUS";
+    return NAME;
   }
 
   @Override

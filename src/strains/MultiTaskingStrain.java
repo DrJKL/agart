@@ -7,11 +7,12 @@ import src.Strain;
 
 public class MultiTaskingStrain implements Strain {
 
+  public static final String NAME = "Multitasking VIRUS";
   int youngest = -1;
 
   @Override
   public String getStrainName() {
-    return "Multitasking VIRUS";
+    return NAME;
   }
 
   @Override
