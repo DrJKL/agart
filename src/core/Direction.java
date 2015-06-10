@@ -1,6 +1,6 @@
 package core;
 
-import static core.Randomness.randomInt;
+import static core.Numbers.randomInt;
 
 import java.awt.Point;
 

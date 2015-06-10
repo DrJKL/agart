@@ -1,9 +1,10 @@
 package src;
 
-import static core.Randomness.randomInt;
+import static core.Numbers.randomInt;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -181,9 +182,10 @@ public class Organism {
 
   public Direction viewMaxAll() {
     final Map<Direction, Color> view = setView();
+    final Comparator<Color> byTotalNutrition = (a, b) -> Integer.compare(totalNutrition(a),
+        totalNutrition(b));
     final Entry<Direction, Color> max = view.entrySet().stream()
-        .max((a, b) -> Integer.compare(totalNutrition(a.getValue()), totalNutrition(b.getValue())))
-        .get();
+        .max(Entry.comparingByValue(byTotalNutrition)).get();
     return max.getKey();
   }
 

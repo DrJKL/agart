@@ -19,6 +19,6 @@ public enum TraitLimit {
   }
 
   public int randomValue() {
-    return Randomness.randomInt(low, high);
+    return Numbers.randomInt(low, high);
   }
 }

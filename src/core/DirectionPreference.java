@@ -1,6 +1,7 @@
 package core;
 
-import static core.Randomness.randomInt;
+import static core.Numbers.fix;
+import static core.Numbers.randomInt;
 import src.Organism;
 
 public class DirectionPreference {
@@ -48,7 +49,7 @@ public class DirectionPreference {
   }
 
   public Direction getWeightedRandomDirection() {
-    final int rand = Randomness.randomInt(1, total());
+    final int rand = Numbers.randomInt(1, total());
     if (rand <= goNorth()) {
       return Direction.NORTH;
     } else if (rand <= goEast()) {
@@ -59,9 +60,4 @@ public class DirectionPreference {
       return Direction.WEST;
     }
   }
-
-  private static int fix(int value) {
-    return Math.max(value, 0);
-  }
-
 }

@@ -1,6 +1,6 @@
 package core;
 
-import static core.Randomness.randomInt;
+import static core.Numbers.randomInt;
 
 public class Mutator {
   private final int mutationChance, mutationDegree;

@@ -1,6 +1,7 @@
 package core;
 
-import static core.Randomness.randomInt;
+import static core.Numbers.fix;
+import static core.Numbers.randomInt;
 import src.Organism;
 
 public class ColorPreference {
@@ -9,9 +10,10 @@ public class ColorPreference {
   public final int blueChance;
 
   public ColorPreference(int redChance, int greenChance, int blueChance) {
-    this.redChance = redChance;
-    this.greenChance = greenChance;
-    this.blueChance = blueChance;
+    final boolean noPreference = fix(redChance) + fix(greenChance) + fix(blueChance) == 0;
+    this.redChance = noPreference ? 1 : fix(redChance);
+    this.greenChance = noPreference ? 1 : fix(greenChance);
+    this.blueChance = noPreference ? 1 : fix(blueChance);
   }
 
   public static ColorPreference random() {
