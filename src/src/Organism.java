@@ -100,10 +100,6 @@ public class Organism {
     return battery.empty();
   }
 
-  private boolean tooTired() {
-    return !battery.hasAtLeast(moveCost);
-  }
-
   private boolean canReplicate() {
     return battery.overCap()//
         && generation < BREED_CAP //
@@ -112,7 +108,7 @@ public class Organism {
   }
 
   public void replicate() {
-    if (!hasSpace() || !canReplicate()) {
+    if (!canReplicate()) {
       return;
     }
     battery.halve();
@@ -146,9 +142,8 @@ public class Organism {
     move(Direction.random());
   }
 
-  /** dir >= 0 and dir <4 */
   public void move(Direction dir) {
-    if (tooTired()) {
+    if (!battery.hasAtLeast(moveCost)) {
       return;
     }
     dir.tranlate(location);
@@ -157,14 +152,6 @@ public class Organism {
 
   public void movePreferentially() {
     move(directionPreference.getWeightedRandomDirection());
-  }
-
-  private boolean hasSpace() {
-    return IntStream.rangeClosed(location.y - 3, location.y + 3).anyMatch(i -> {
-      return IntStream.rangeClosed(location.x - 3, location.x + 3).anyMatch(j -> {
-        return !environment.orgAt(i, j);
-      });
-    });
   }
 
   private Map<Direction, Color> setView() {
