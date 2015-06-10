@@ -2,6 +2,9 @@ package core;
 
 import static core.Numbers.fix;
 import static core.Numbers.randomInt;
+
+import java.awt.Color;
+
 import src.Organism;
 
 public class ColorPreference {
@@ -35,5 +38,10 @@ public class ColorPreference {
 
   public int inGreen() {
     return redChance + greenChance;
+  }
+
+  public int weightedValue(Color color) {
+    return (redChance * color.getRed()) + (greenChance * color.getGreen())
+        + (blueChance * color.getBlue());
   }
 }

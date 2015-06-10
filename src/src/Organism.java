@@ -160,12 +160,10 @@ public class Organism {
   }
 
   private Map<Direction, Integer> setView() {
-    return Direction
-        .shuffled()
-        .stream()
-        .collect(
-            Collectors.toMap(Function.identity(),
-                d -> totalNutrition(environment.getColor(d.translatedCopy(location)))));
+    return Direction.shuffled().stream().collect(Collectors.toMap(Function.identity(), d -> {
+      final Color color = environment.getColor(d.translatedCopy(location));
+      return colorPreference.weightedValue(color) / (totalNutrition(color) + 1);
+    }));
   }
 
   private static Integer totalNutrition(Color color) {
