@@ -32,6 +32,7 @@ import src.Strain;
 import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
+import strains.MultiTaskingStrain;
 import strains.RayStrain;
 import core.ImageUtil;
 
@@ -74,7 +75,7 @@ class EnvFrame extends JFrame {
     fc.addChoosableFileFilter(new ImageFilter());
     setUpEnvironment();
     final List<Strain> strainOptions = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
-        new FloatyStrain(), new RayStrain());
+        new FloatyStrain(), new RayStrain(), new MultiTaskingStrain());
     strainOptions.forEach(s -> {
       strToStrain.put(s.getStrainName(), s);
     });
