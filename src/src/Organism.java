@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.IntStream;
 
+import core.Battery;
 import core.CauseOfDeath;
 import core.ColorPreference;
 import core.Direction;
@@ -23,10 +24,11 @@ public class Organism {
   private final int generation;
   private int childrenSpawned;
 
-  private int updates, energy;
+  private final Battery battery;
 
+  private int updates;
   private final int reproductionChance;
-  private final int moveCost, replicationEnergyCap;
+  private final int moveCost;
 
   private final Point location;
 
@@ -45,7 +47,7 @@ public class Organism {
     this(environment, strain, location, 0, //
         TraitLimit.MOVE_COST.randomValue(), //
         TraitLimit.REPRODUCTION_CHANCE.randomValue(), //
-        TraitLimit.ENERGY_CAP.randomValue(), //
+        Battery.random(), //
         Mutator.random(), //
         ColorPreference.random(), //
         DirectionPreference.random());
@@ -53,7 +55,7 @@ public class Organism {
 
   // New Virus with non-random attributes
   private Organism(Environment environment, Strain strain, Point location, int generation,
-      int moveCost, int reproductionChance, int energyCap, Mutator mutator,
+      int moveCost, int reproductionChance, Battery battery, Mutator mutator,
       ColorPreference colorPreference, DirectionPreference directionPreference) {
     this.environment = environment;
     this.strain = strain;
@@ -61,8 +63,7 @@ public class Organism {
     this.generation = generation;
     this.strain.updateYoungest(generation);
 
-    this.replicationEnergyCap = energyCap;
-    this.energy = energyCap / 2;
+    this.battery = battery;
 
     this.moveCost = moveCost;
     this.reproductionChance = reproductionChance;
@@ -96,14 +97,25 @@ public class Organism {
   }
 
   public boolean outOfEnergy() {
-    return energy <= 0;
+    return battery.empty();
+  }
+
+  private boolean tooTired() {
+    return !battery.hasAtLeast(moveCost);
+  }
+
+  private boolean canReplicate() {
+    return battery.overCap()//
+        && generation < BREED_CAP //
+        && childrenSpawned < MAX_KIDS //
+        && Math.random() * 100 < reproductionChance;
   }
 
   public void replicate() {
     if (!hasSpace() || !canReplicate()) {
       return;
     }
-    energy /= 2;
+    battery.halve();
     childrenSpawned++;
     environment.addKid(repr());
   }
@@ -111,7 +123,7 @@ public class Organism {
   // Creates new Virus with mutated attributes
   private Organism repr() {
     return new Organism(environment, strain, findChildPoint(), generation + 1,
-        mutateTrait(moveCost), mutateTrait(reproductionChance), mutateTrait(replicationEnergyCap),
+        mutateTrait(moveCost), mutateTrait(reproductionChance), battery.mutate(this),
         mutator.mutate(), colorPreference.mutate(this), directionPreference.mutate(this));
   }
 
@@ -140,7 +152,7 @@ public class Organism {
       return;
     }
     dir.tranlate(location);
-    energy -= moveCost;
+    battery.addEnergy(-moveCost);
   }
 
   public void movePreferentially() {
@@ -199,30 +211,19 @@ public class Organism {
   }
 
   private void acquireRed() {
-    energy += environment.takeRed(location, -randomInt(1, 20));
+    battery.addEnergy(environment.takeRed(location, -randomInt(1, 20)));
   }
 
   private void acquireGreen() {
-    energy += environment.takeGreen(location, -randomInt(1, 20));
+    battery.addEnergy(environment.takeGreen(location, -randomInt(1, 20)));
   }
 
   private void acquireBlue() {
-    energy += environment.takeBlue(location, -randomInt(1, 20));
-  }
-
-  public boolean tooTired() {
-    return energy < moveCost;
+    battery.addEnergy(environment.takeBlue(location, -randomInt(1, 20)));
   }
 
   public Point getLocation() {
     return location;
-  }
-
-  private boolean canReplicate() {
-    return energy >= replicationEnergyCap - 20 //
-        && generation < BREED_CAP //
-        && childrenSpawned < MAX_KIDS //
-        && Math.random() * 100 < reproductionChance;
   }
 
   @Override
@@ -232,10 +233,9 @@ public class Organism {
     builder.append(", generation=").append(generation);
     builder.append(", childrenSpawned=").append(childrenSpawned);
     builder.append(", updates=").append(updates);
-    builder.append(", energy=").append(energy);
+    builder.append(", energy=").append(battery);
     builder.append(", mutation=").append(mutator);
     builder.append(", moveCost=").append(moveCost);
-    builder.append(", energyCap=").append(replicationEnergyCap);
     builder.append(", location=").append(location);
     builder.append("]");
     return builder.toString();
