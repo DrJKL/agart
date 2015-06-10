@@ -138,6 +138,10 @@ public class Organism {
     return mutator.mutateTrait(original);
   }
 
+  public int timesToMove() {
+    return randomInt(0, MOVES_EACH);
+  }
+
   public void move() {
     move(Direction.random());
   }
@@ -176,11 +180,7 @@ public class Organism {
     IntStream.range(0, 15).forEach(j -> acquireRand());
   }
 
-  public int timesToMove() {
-    return randomInt(0, MOVES_EACH);
-  }
-
-  private void acquireRand() {
+  public void acquireRand() {
     final int rand = randomInt(1, colorPreference.total());
     if (rand <= colorPreference.inRed()) {
       acquireRed();
