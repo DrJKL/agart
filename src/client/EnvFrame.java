@@ -9,10 +9,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
@@ -62,7 +63,7 @@ class EnvFrame extends JFrame {
   private final JPanel mainControlsPanel, organismControls;
   private final OrgAddPanel orgAddPanel;
 
-  private final HashMap<String, Strain> strToStrain = new HashMap<>();
+  private final Map<String, Strain> strToStrain;
   private final Set<JButton> orgButtons = new HashSet<>();
   private final Set<JButton> dataButtons = new HashSet<>();
 
@@ -75,11 +76,10 @@ class EnvFrame extends JFrame {
     final JFileChooser fc = new JFileChooser();
     fc.addChoosableFileFilter(new ImageFilter());
     setUpEnvironment();
-    final List<Strain> strainOptions = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
-        new FloatyStrain(), new RayStrain(), new MultiTaskingStrain(), new SearchingStrain());
-    strainOptions.forEach(s -> {
-      strToStrain.put(s.getStrainName(), s);
-    });
+    strToStrain = Arrays
+        .asList(new DefaultStrain(), new DrippyStrain(), new FloatyStrain(), new RayStrain(),
+            new MultiTaskingStrain(), new SearchingStrain()).stream()
+        .collect(Collectors.toMap(Strain::getStrainName, Function.identity()));
 
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
