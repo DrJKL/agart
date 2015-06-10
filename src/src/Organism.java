@@ -5,8 +5,9 @@ import static java.util.Map.Entry.comparingByValue;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import core.Battery;
@@ -158,12 +159,13 @@ public class Organism {
     move(directionPreference.getWeightedRandomDirection());
   }
 
-  private Map<Direction, Color> setView() {
-    final Map<Direction, Color> view = new HashMap<>();
-    for (final Direction dir : Direction.values()) {
-      view.put(dir, environment.getColor(dir.translatedCopy(location)));
-    }
-    return view;
+  private Map<Direction, Integer> setView() {
+    return Direction
+        .shuffled()
+        .stream()
+        .collect(
+            Collectors.toMap(Function.identity(),
+                d -> totalNutrition(environment.getColor(d.translatedCopy(location)))));
   }
 
   private static Integer totalNutrition(Color color) {
@@ -171,8 +173,7 @@ public class Organism {
   }
 
   public Direction viewMaxAll() {
-    return setView().entrySet().stream()
-        .max(comparingByValue((a, b) -> Integer.compare(totalNutrition(a), totalNutrition(b))))
+    return setView().entrySet().stream().unordered().max(comparingByValue(Integer::compareTo))
         .get().getKey();
   }
 
