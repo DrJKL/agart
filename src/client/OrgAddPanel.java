@@ -17,6 +17,7 @@ import javax.swing.JRadioButton;
 import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
+import strains.MultiTaskingRayStrain;
 import strains.MultiTaskingStrain;
 import strains.RayStrain;
 import strains.SearchingStrain;
@@ -38,7 +39,8 @@ class OrgAddPanel extends JPanel implements ActionListener {
         makeStrainButton(FloatyStrain.NAME, KeyEvent.VK_3), //
         makeStrainButton(RayStrain.NAME, KeyEvent.VK_4),
         makeStrainButton(MultiTaskingStrain.NAME, KeyEvent.VK_5),
-        makeStrainButton(SearchingStrain.NAME, KeyEvent.VK_6));
+        makeStrainButton(SearchingStrain.NAME, KeyEvent.VK_6),
+        makeStrainButton(MultiTaskingRayStrain.NAME, KeyEvent.VK_7));
     buttons.get(5).setSelected(true);
 
     buttons.forEach(button -> button.addActionListener(this));
@@ -53,7 +55,7 @@ class OrgAddPanel extends JPanel implements ActionListener {
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
     final Dimension d = new Dimension();
-    d.setSize(5000, 100);
+    d.setSize(5000, 200);
     this.setMaximumSize(d);
   }
 

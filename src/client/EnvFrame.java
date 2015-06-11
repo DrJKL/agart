@@ -33,6 +33,7 @@ import src.Strain;
 import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
+import strains.MultiTaskingRayStrain;
 import strains.MultiTaskingStrain;
 import strains.RayStrain;
 import strains.SearchingStrain;
@@ -67,7 +68,7 @@ class EnvFrame extends JFrame {
   private final Set<JButton> orgButtons = new HashSet<>();
   private final Set<JButton> dataButtons = new HashSet<>();
 
-  private static final int MAX_DELAY = 500;
+  private static final int MAX_DELAY = 1000;
 
   public EnvFrame() {
     setTitle("VIRUS");
@@ -78,7 +79,7 @@ class EnvFrame extends JFrame {
     setUpEnvironment();
     strToStrain = Arrays
         .asList(new DefaultStrain(), new DrippyStrain(), new FloatyStrain(), new RayStrain(),
-            new MultiTaskingStrain(), new SearchingStrain()).stream()
+            new MultiTaskingStrain(), new SearchingStrain(), new MultiTaskingRayStrain()).stream()
         .collect(Collectors.toMap(Strain::getStrainName, Function.identity()));
 
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
