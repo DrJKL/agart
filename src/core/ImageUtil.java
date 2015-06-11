@@ -17,6 +17,18 @@ public class ImageUtil {
 
   private static final int MINIMUM_COLOR_VALUE = 30;
 
+  public static int takeColor(BufferedImage image, Point point, int delta, FoodColor color) {
+    switch (color) {
+    case RED:
+      return takeRed(image, point, delta);
+    case GREEN:
+      return takeGreen(image, point, delta);
+    case BLUE:
+      return takeBlue(image, point, delta);
+    }
+    throw new RuntimeException();
+  }
+
   public static int takeRed(BufferedImage image, Point point, int delta) {
     final Color color = getColor(image, point);
     final int original = color.getRed();

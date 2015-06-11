@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import core.FoodColor;
 import core.ImageUtil;
 
 public class Environment {
@@ -134,15 +135,8 @@ public class Environment {
     return inBounds(point) ? new Color(image.getRGB(point.x, point.y)) : Color.BLACK;
   }
 
-  public int takeRed(Point point, int newRed) {
-    return ImageUtil.takeRed(image, point, newRed);
+  public int takeColor(Point point, int toTake, FoodColor color) {
+    return ImageUtil.takeColor(image, point, toTake, color);
   }
 
-  public int takeGreen(Point point, int newGreen) {
-    return ImageUtil.takeGreen(image, point, newGreen);
-  }
-
-  public int takeBlue(Point point, int newBlue) {
-    return ImageUtil.takeBlue(image, point, newBlue);
-  }
 }

@@ -177,26 +177,8 @@ public class Organism {
   }
 
   public void acquireRand() {
-    final int rand = randomInt(1, colorPreference.total());
-    if (rand <= colorPreference.inRed()) {
-      acquireRed();
-    } else if (rand <= colorPreference.inGreen()) {
-      acquireGreen();
-    } else {
-      acquireBlue();
-    }
-  }
-
-  private void acquireRed() {
-    battery.addEnergy(environment.takeRed(location, -randomInt(1, 20)));
-  }
-
-  private void acquireGreen() {
-    battery.addEnergy(environment.takeGreen(location, -randomInt(1, 20)));
-  }
-
-  private void acquireBlue() {
-    battery.addEnergy(environment.takeBlue(location, -randomInt(1, 20)));
+    battery.addEnergy(environment.takeColor(location, -randomInt(1, 20),
+        colorPreference.getWeightedRandomColor()));
   }
 
   public Point getLocation() {

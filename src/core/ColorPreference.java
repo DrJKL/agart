@@ -40,6 +40,17 @@ public class ColorPreference {
     return redChance + greenChance;
   }
 
+  public FoodColor getWeightedRandomColor() {
+    final int rand = randomInt(1, total());
+    if (rand <= inRed()) {
+      return FoodColor.RED;
+    } else if (rand <= inGreen()) {
+      return FoodColor.GREEN;
+    } else {
+      return FoodColor.BLUE;
+    }
+  }
+
   public int weightedValue(Color color) {
     return (redChance * color.getRed()) + (greenChance * color.getGreen())
         + (blueChance * color.getBlue());
