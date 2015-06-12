@@ -118,20 +118,10 @@ public class Organism {
 
   // Creates new Virus with mutated attributes
   private Organism generateOffspring() {
-    return new Organism(environment, strain, findChildPoint(), generation + 1,
-        mutateTrait(moveCost), mutateTrait(reproductionChance), battery.mutate(this),
-        mutator.mutate(), colorPreference.mutate(this), directionPreference.mutate(this));
-  }
-
-  // I'm pretty sure this is bugged.
-  private Point findChildPoint() {
-    int r = location.y;
-    int c = location.x;
-    while (r == location.y && c == location.x) {
-      r = randomInt(location.y - 3, location.y + 3);
-      c = randomInt(location.x - 3, location.x + 3);
-    }
-    return new Point(c, r);
+    return new Organism(environment, strain, Direction.random().translatedCopy(location),
+        generation + 1, mutateTrait(moveCost), mutateTrait(reproductionChance),
+        battery.mutate(this), mutator.mutate(), colorPreference.mutate(this),
+        directionPreference.mutate(this));
   }
 
   public int mutateTrait(int original) {
