@@ -10,7 +10,7 @@ public class OrthoStrain implements Strain {
 
   public static final String NAME = "Ortho VIRUS";
   int youngest = -1;
-  Direction dir = Direction.random();
+  static Direction dir = Direction.random();
 
   @Override
   public String getStrainName() {
@@ -32,13 +32,16 @@ public class OrthoStrain implements Strain {
     return youngest;
   }
 
+  public static void shiftDirectionMaybe() {
+    if (Math.random() < 0.05) {
+      dir = Direction.random();
+    }
+  }
+
   @Override
   public void update(Organism org) {
     org.feast();
     org.replicate();
-    if (Math.random() < 0.01) {
-      dir = Direction.random();
-    }
     IntStream.range(0, org.timesToMove()).forEach(i -> org.move(dir));
     org.check();
   }
