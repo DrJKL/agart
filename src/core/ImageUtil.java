@@ -29,7 +29,7 @@ public class ImageUtil {
     throw new RuntimeException();
   }
 
-  public static int takeRed(BufferedImage image, Point point, int delta) {
+  private static int takeRed(BufferedImage image, Point point, int delta) {
     final Color color = getColor(image, point);
     final int original = color.getRed();
     if (original < MINIMUM_COLOR_VALUE) {
@@ -40,7 +40,7 @@ public class ImageUtil {
     return original - newValue;
   }
 
-  public static int takeGreen(BufferedImage image, Point point, int delta) {
+  private static int takeGreen(BufferedImage image, Point point, int delta) {
     final Color color = getColor(image, point);
     final int original = color.getGreen();
     if (original < MINIMUM_COLOR_VALUE) {
@@ -51,7 +51,7 @@ public class ImageUtil {
     return original - newValue;
   }
 
-  public static int takeBlue(BufferedImage image, Point point, int delta) {
+  private static int takeBlue(BufferedImage image, Point point, int delta) {
     final Color color = getColor(image, point);
     final int original = color.getBlue();
     if (original < MINIMUM_COLOR_VALUE) {
