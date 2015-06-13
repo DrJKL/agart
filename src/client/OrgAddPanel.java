@@ -20,6 +20,7 @@ import strains.DrippyStrain;
 import strains.FloatyStrain;
 import strains.MultiTaskingRayStrain;
 import strains.MultiTaskingStrain;
+import strains.OrthoStrain;
 import strains.RayStrain;
 import strains.SearchingStrain;
 
@@ -28,7 +29,7 @@ class OrgAddPanel extends JPanel implements ActionListener {
 
   public static final List<Strain> strains = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
       new FloatyStrain(), new RayStrain(), new MultiTaskingStrain(), new SearchingStrain(),
-      new MultiTaskingRayStrain());
+      new MultiTaskingRayStrain(), new OrthoStrain());
 
   String chosenStrain;
 
