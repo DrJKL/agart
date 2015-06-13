@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,13 +29,6 @@ import javax.swing.Timer;
 
 import src.Environment;
 import src.Strain;
-import strains.DefaultStrain;
-import strains.DrippyStrain;
-import strains.FloatyStrain;
-import strains.MultiTaskingRayStrain;
-import strains.MultiTaskingStrain;
-import strains.RayStrain;
-import strains.SearchingStrain;
 import core.ImageUtil;
 
 @SuppressWarnings("serial")
@@ -77,10 +69,8 @@ class EnvFrame extends JFrame {
     final JFileChooser fc = new JFileChooser();
     fc.addChoosableFileFilter(new ImageFilter());
     setUpEnvironment();
-    strToStrain = Arrays
-        .asList(new DefaultStrain(), new DrippyStrain(), new FloatyStrain(), new RayStrain(),
-            new MultiTaskingStrain(), new SearchingStrain(), new MultiTaskingRayStrain()).stream()
-        .collect(Collectors.toMap(Strain::getStrainName, Function.identity()));
+    strToStrain = OrgAddPanel.strains.stream().collect(
+        Collectors.toMap(Strain::getStrainName, Function.identity()));
 
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 

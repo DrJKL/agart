@@ -5,15 +5,16 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import src.Strain;
 import strains.DefaultStrain;
 import strains.DrippyStrain;
 import strains.FloatyStrain;
@@ -25,6 +26,10 @@ import strains.SearchingStrain;
 @SuppressWarnings("serial")
 class OrgAddPanel extends JPanel implements ActionListener {
 
+  public static final List<Strain> strains = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
+      new FloatyStrain(), new RayStrain(), new MultiTaskingStrain(), new SearchingStrain(),
+      new MultiTaskingRayStrain());
+
   String chosenStrain;
 
   public OrgAddPanel() {
@@ -33,14 +38,8 @@ class OrgAddPanel extends JPanel implements ActionListener {
 
     chosenStrain = SearchingStrain.NAME;
 
-    final List<JRadioButton> buttons = Arrays.asList(
-        makeStrainButton(DefaultStrain.NAME, KeyEvent.VK_1),
-        makeStrainButton(DrippyStrain.NAME, KeyEvent.VK_2), //
-        makeStrainButton(FloatyStrain.NAME, KeyEvent.VK_3), //
-        makeStrainButton(RayStrain.NAME, KeyEvent.VK_4),
-        makeStrainButton(MultiTaskingStrain.NAME, KeyEvent.VK_5),
-        makeStrainButton(SearchingStrain.NAME, KeyEvent.VK_6),
-        makeStrainButton(MultiTaskingRayStrain.NAME, KeyEvent.VK_7));
+    final List<JRadioButton> buttons = strains.stream().map(Strain::getStrainName)
+        .map(OrgAddPanel::makeStrainButton).collect(Collectors.toList());
     buttons.get(5).setSelected(true);
 
     buttons.forEach(button -> button.addActionListener(this));
@@ -59,9 +58,8 @@ class OrgAddPanel extends JPanel implements ActionListener {
     this.setMaximumSize(d);
   }
 
-  private static JRadioButton makeStrainButton(String name, int mnemonic) {
+  private static JRadioButton makeStrainButton(String name) {
     final JRadioButton strainButton = new JRadioButton(name);
-    strainButton.setMnemonic(mnemonic);
     strainButton.setActionCommand(name);
     return strainButton;
   }
