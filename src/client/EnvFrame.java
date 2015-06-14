@@ -159,7 +159,7 @@ class EnvFrame extends JFrame {
 
   private JButton createExterminateStrainButton() {
     final JButton exterminateStrainButton = new JButton("Exterminate Strain");
-    exterminateStrainButton.addActionListener(arg0 -> {
+    exterminateStrainButton.addActionListener(e -> {
       final Object[] strains = envr.activeStrains.keySet().toArray();
       if (strains.length == 0) {
         return;
@@ -194,11 +194,7 @@ class EnvFrame extends JFrame {
 
   private JButton createSingleStepButton() {
     final JButton singleStepButton = new JButton("Step");
-    singleStepButton.addActionListener(e -> {
-      envr.update();
-      updateData();
-      myPanel.repaint();
-    });
+    singleStepButton.addActionListener(e -> doTheThing());
     return singleStepButton;
   }
 
@@ -280,22 +276,27 @@ class EnvFrame extends JFrame {
   }
 
   private void toggleRandomButtons() {
-    Stream.concat(orgButtons.stream(), dataButtons.stream()).forEach(button -> {
-      button.setEnabled(!randTimer.isRunning());
-    });
+    Stream.concat(orgButtons.stream(), dataButtons.stream()).forEach(
+        button -> button.setEnabled(!randTimer.isRunning()));
   }
 
   private void toggleRunningButtons() {
     if (randTimer.isRunning()) {
       return;
     }
-    dataButtons.forEach(button -> {
-      button.setEnabled(!myTimer.isRunning());
-    });
+    dataButtons.forEach(button -> button.setEnabled(!myTimer.isRunning()));
   }
 
   private void setUpEnvironment() {
-    envr = new Environment(ImageUtil.setupNewEnvironment(800, 600, false));
+    setupEnvironment(ImageUtil.setupNewEnvironment(800, 600, false));
+  }
+
+  private void setUpEnvironment(File img) {
+    setupEnvironment(getImage(img));
+  }
+
+  private void setupEnvironment(final BufferedImage bmg) {
+    envr = new Environment(bmg);
     myPanel = new MyPanel(envr.image);
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
     final Dimension d = new Dimension(envr.getWidth() + 160, envr.getHeight() + 95);
@@ -304,28 +305,23 @@ class EnvFrame extends JFrame {
     myPanel.repaint();
   }
 
-  private void setUpEnvironment(File img) {
-    BufferedImage bmg = null;
+  private static BufferedImage getImage(File img) {
     try {
-      bmg = ImageIO.read(img);
+      return ImageIO.read(img);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
-    envr = new Environment(bmg);
-    myPanel = new MyPanel(envr.image);
-    final Dimension d = new Dimension(envr.getWidth() + 160, envr.getHeight() + 95);
-    setPreferredSize(d);
-    pack();
-
   }
 
   private Timer addTimer() {
-    final ActionListener updater = e -> {
-      envr.update();
-      updateData();
-      myPanel.repaint();
-    };
+    final ActionListener updater = e -> doTheThing();
     return new Timer(MAX_DELAY / 2, updater);
+  }
+
+  private void doTheThing() {
+    envr.update();
+    updateData();
+    myPanel.repaint();
   }
 
   private Timer addRandomTimer() {
@@ -335,9 +331,7 @@ class EnvFrame extends JFrame {
         strain.resetYoungest();
         envr.add(1, strain);
       }
-      envr.update();
-      updateData();
-      myPanel.repaint();
+      doTheThing();
     };
     return new Timer(MAX_DELAY / 2, updater);
   }
