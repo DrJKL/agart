@@ -68,7 +68,7 @@ class EnvFrame extends JFrame {
     organismControls = new JPanel();
     orgAddPanel = new OrgAddPanel();
 
-    mainControlsPanel.setLayout(new GridLayout(0, 5, 2, 2));
+    mainControlsPanel.setLayout(new GridLayout(0, 4, 2, 2));
 
     organismControls.setLayout(new BoxLayout(organismControls, BoxLayout.Y_AXIS));
 
