@@ -32,7 +32,6 @@ class EnvFrame extends JFrame {
 
   private MyPanel myPanel;
 
-  private final Timer myTimer;
   private final Timer randTimer;
 
   private final JButton saveImageButton;
@@ -65,7 +64,6 @@ class EnvFrame extends JFrame {
 
     contentPane.add(myPanel, "Center");
 
-    myTimer = addTimer();
     randTimer = addRandomTimer();
 
     mainControlsPanel = new JPanel();
@@ -123,7 +121,6 @@ class EnvFrame extends JFrame {
   private void addSpeedSlider() {
     final JSlider speedBar = new JSlider(1, MAX_DELAY);
     speedBar.addChangeListener(ce -> {
-      myTimer.setDelay(1000 / (speedBar.getValue()));
       randTimer.setDelay(1000 / (speedBar.getValue()));
     });
     speedBar.setValue(MAX_DELAY / 2);
@@ -212,11 +209,6 @@ class EnvFrame extends JFrame {
     setPreferredSize(d);
     pack();
     myPanel.repaint();
-  }
-
-  private Timer addTimer() {
-    final ActionListener updater = e -> doTheThing();
-    return new Timer(MAX_DELAY / 2, updater);
   }
 
   private void doTheThing() {
