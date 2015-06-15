@@ -32,10 +32,10 @@ class EnvFrame extends JFrame {
   private final Timer randTimer;
 
   private final JButton saveImageButton;
-  private final JButton multOrgAddButton;
-  private final JButton exterminateStrainButton;
   private final JButton startStopRandomButton;
   private final JButton newImageButton;
+  private final JButton multOrgAddButton;
+  private final JButton exterminateStrainButton;
 
   private final JPanel mainControlsPanel;
   private final OrganismControls organismControls;
@@ -52,10 +52,6 @@ class EnvFrame extends JFrame {
 
     randTimer = addRandomTimer();
 
-    mainControlsPanel = new JPanel();
-
-    mainControlsPanel.setLayout(new GridLayout(0, 4, 2, 2));
-
     newImageButton = createNewImageButton(contentPane);
     startStopRandomButton = createStartStopRandomButton();
 
@@ -65,10 +61,8 @@ class EnvFrame extends JFrame {
     multOrgAddButton = createMultOrgAddButton();
     exterminateStrainButton = createExterminateStrainButton();
 
-    mainControlsPanel.add(newImageButton);
-    mainControlsPanel.add(saveImageButton);
-    mainControlsPanel.add(addSpeedSlider(randTimer));
-    mainControlsPanel.add(startStopRandomButton);
+    mainControlsPanel = new MainControls(startStopRandomButton, addSpeedSlider(randTimer),
+        saveImageButton, newImageButton);
 
     organismControls = new OrganismControls(new OrgAddPanel(), new JLabel(), new JLabel(),
         multOrgAddButton, exterminateStrainButton);
@@ -217,4 +211,15 @@ class EnvFrame extends JFrame {
 
   }
 
+  private static class MainControls extends JPanel {
+    public MainControls(JButton startStopRandomButton, JSlider speedSlider,
+        JButton saveImageButton, JButton newImageButton) {
+      setLayout(new GridLayout(0, 4, 2, 2));
+
+      add(newImageButton);
+      add(saveImageButton);
+      add(speedSlider);
+      add(startStopRandomButton);
+    }
+  }
 }
