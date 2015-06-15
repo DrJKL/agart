@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 public class Client {
 
   public static void main(String[] args) throws Exception {
-    javax.swing.SwingUtilities.invokeLater(() -> doGUI());
+    javax.swing.SwingUtilities.invokeLater(Client::doGUI);
   }
 
   private static void doGUI() {
