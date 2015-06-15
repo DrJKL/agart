@@ -29,7 +29,6 @@ import core.ImageUtil;
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
   private Environment envr;
-
   private MyPanel myPanel;
 
   private final Timer randTimer;
@@ -96,9 +95,10 @@ class EnvFrame extends JFrame {
 
     mainControlsPanel.add(newImageButton);
     mainControlsPanel.add(saveImageButton);
+    mainControlsPanel.add(addSpeedSlider(randTimer));
+    mainControlsPanel.add(startStopRandomButton);
 
     organismControls.add(orgAddPanel);
-
     organismControls.add(numOrgLabel);
     organismControls.add(numUpdatesLabel);
     organismControls.add(orgAddButton);
@@ -109,23 +109,19 @@ class EnvFrame extends JFrame {
     orgButtons.add(multOrgAddButton);
     orgButtons.add(exterminateStrainButton);
 
-    addSpeedSlider();
-
-    mainControlsPanel.add(startStopRandomButton);
-
     contentPane.add(mainControlsPanel, "North");
     contentPane.add(organismControls, "East");
 
   }
 
-  private void addSpeedSlider() {
+  private static JSlider addSpeedSlider(Timer timer) {
     final JSlider speedBar = new JSlider(1, MAX_DELAY);
     speedBar.addChangeListener(ce -> {
-      randTimer.setDelay(1000 / (speedBar.getValue()));
+      timer.setDelay(1000 / (speedBar.getValue()));
     });
     speedBar.setValue(MAX_DELAY / 2);
-
-    mainControlsPanel.add(speedBar);
+    timer.setDelay(1000 / (speedBar.getValue()));
+    return speedBar;
   }
 
   private JButton createExterminateStrainButton() {
@@ -137,8 +133,7 @@ class EnvFrame extends JFrame {
       }
       final Strain strChoice = (Strain) JOptionPane.showInputDialog(new JFrame(), "Strain?",
           "Strain Choice", JOptionPane.PLAIN_MESSAGE, null, strains, strains[0]);
-      final String strX = strChoice.getStrainName();
-      envr.exterminate(strToStrain.get(strX));
+      envr.exterminate(strToStrain.get(strChoice.getStrainName()));
       updateData();
     });
     return exterminateStrainButton;
@@ -233,4 +228,5 @@ class EnvFrame extends JFrame {
     numOrgLabel.setText("Organisms: " + envr.livingOrgs());
     numUpdatesLabel.setText("Updates: " + envr.updates);
   }
+
 }
