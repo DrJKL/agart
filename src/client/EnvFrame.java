@@ -6,16 +6,12 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -40,25 +36,19 @@ class EnvFrame extends JFrame {
   private final Timer myTimer;
   private final Timer randTimer;
 
-  private final JButton startStopButton;
-
-  private final JButton singleStepButton;
   private final JButton saveImageButton;
-  private final JButton saveNegButton;
   private final JButton orgAddButton;
   private final JButton multOrgAddButton;
   private final JButton exterminateStrainButton;
   private final JButton startStopRandomButton;
   private final JButton newImageButton;
 
-  private final JButton setImageButton;
   private final JLabel numOrgLabel, numUpdatesLabel;
   private final JPanel mainControlsPanel, organismControls;
   private final OrgAddPanel orgAddPanel;
 
   private final Map<String, Strain> strToStrain;
   private final Set<JButton> orgButtons = new HashSet<>();
-  private final Set<JButton> dataButtons = new HashSet<>();
 
   private static final int MAX_DELAY = 1000;
 
@@ -91,18 +81,10 @@ class EnvFrame extends JFrame {
     numUpdatesLabel = new JLabel("Updates: " + envr.updates);
 
     newImageButton = createNewImageButton(contentPane);
-    setImageButton = createSetImageButton(contentPane, fc);
     startStopRandomButton = createStartStopRandomButton();
-
-    startStopButton = createStartStopButton();
-
-    singleStepButton = createSingleStepButton();
 
     saveImageButton = new JButton("Save Image");
     saveImageButton.addActionListener(e -> envr.saveImage());
-
-    saveNegButton = new JButton("Save Negative");
-    saveNegButton.addActionListener(e -> envr.saveNegative());
 
     orgAddButton = createOrgAddButton();
     multOrgAddButton = createMultOrgAddButton();
@@ -116,17 +98,12 @@ class EnvFrame extends JFrame {
     exterminateStrainButton.setAlignmentX((float) 0.5);
 
     mainControlsPanel.add(newImageButton);
-    // mainControlsPanel.add(startStopButton);
-    // mainControlsPanel.add(singleStepButton);
     mainControlsPanel.add(saveImageButton);
-    // mainControlsPanel.add(saveNegButton);
-    // mainControlsPanel.add(setImageButton);
 
     organismControls.add(orgAddPanel);
 
     organismControls.add(numOrgLabel);
     organismControls.add(numUpdatesLabel);
-
     organismControls.add(orgAddButton);
     organismControls.add(multOrgAddButton);
     organismControls.add(exterminateStrainButton);
@@ -152,9 +129,7 @@ class EnvFrame extends JFrame {
     });
     speedBar.setValue(MAX_DELAY / 2);
 
-    // mainControlsPanel.add(new JLabel(" Slow"));
     mainControlsPanel.add(speedBar);
-    // mainControlsPanel.add(new JLabel("Fast "));
   }
 
   private JButton createExterminateStrainButton() {
@@ -192,19 +167,9 @@ class EnvFrame extends JFrame {
     return orgAddButton;
   }
 
-  private JButton createSingleStepButton() {
-    final JButton singleStepButton = new JButton("Step");
-    singleStepButton.addActionListener(e -> doTheThing());
-    return singleStepButton;
-  }
-
   private JButton createStartStopRandomButton() {
     final JButton startStopRandomButton = new JButton("Start Random");
     startStopRandomButton.addActionListener(e -> {
-      if (myTimer.isRunning()) {
-        myTimer.stop();
-        startStopButton.setText("Start");
-      }
       if (randTimer.isRunning()) {
         randTimer.stop();
         startStopRandomButton.setText("Start Random");
@@ -213,37 +178,13 @@ class EnvFrame extends JFrame {
         startStopRandomButton.setText("Pause Random");
       }
       toggleRandomButtons();
-      toggleRunningButtons();
     });
     return startStopRandomButton;
-  }
-
-  private JButton createSetImageButton(final Container contentPane, final JFileChooser fc) {
-    final JButton setImageButton = new JButton("Set Image");
-    setImageButton.addActionListener(e -> {
-      fc.showOpenDialog(null);
-      final File img = fc.getSelectedFile();
-      if (img == null) {
-        return;
-      }
-      setUpEnvironment(img);
-      setSize(envr.getWidth(), envr.getHeight());
-      myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-      updateData();
-      myPanel.repaint();
-      contentPane.add(myPanel, "Center");
-      contentPane.validate();
-    });
-    return setImageButton;
   }
 
   private JButton createNewImageButton(final Container contentPane) {
     final JButton newImageButton = new JButton("Reset");
     newImageButton.addActionListener(e -> {
-      if (myTimer.isRunning()) {
-        myTimer.stop();
-        startStopButton.setText("Start");
-      }
       if (randTimer.isRunning()) {
         randTimer.stop();
         startStopRandomButton.setText("Start Random");
@@ -251,51 +192,18 @@ class EnvFrame extends JFrame {
       setUpEnvironment();
       updateData();
       toggleRandomButtons();
-      toggleRunningButtons();
       contentPane.add(myPanel, "Center");
       myPanel.repaint();
     });
     return newImageButton;
   }
 
-  private JButton createStartStopButton() {
-    final JButton startStopButton = new JButton("Start");
-    startStopButton.addActionListener(e -> {
-      if (randTimer.isRunning()) {
-        randTimer.stop();
-        startStopRandomButton.setText("Start Random");
-      }
-      if (myTimer.isRunning()) {
-        myTimer.stop();
-        startStopButton.setText("Start");
-      } else {
-        myTimer.start();
-        startStopButton.setText("Pause");
-      }
-      toggleRandomButtons();
-      toggleRunningButtons();
-    });
-    return startStopButton;
-  }
-
   private void toggleRandomButtons() {
-    Stream.concat(orgButtons.stream(), dataButtons.stream()).forEach(
-        button -> button.setEnabled(!randTimer.isRunning()));
-  }
-
-  private void toggleRunningButtons() {
-    if (randTimer.isRunning()) {
-      return;
-    }
-    dataButtons.forEach(button -> button.setEnabled(!myTimer.isRunning()));
+    orgButtons.stream().forEach(button -> button.setEnabled(!randTimer.isRunning()));
   }
 
   private void setUpEnvironment() {
     setupEnvironment(ImageUtil.setupNewEnvironment(800, 600, false));
-  }
-
-  private void setUpEnvironment(File img) {
-    setupEnvironment(getImage(img));
   }
 
   private void setupEnvironment(final BufferedImage bmg) {
@@ -309,14 +217,6 @@ class EnvFrame extends JFrame {
     setPreferredSize(d);
     pack();
     myPanel.repaint();
-  }
-
-  private static BufferedImage getImage(File img) {
-    try {
-      return ImageIO.read(img);
-    } catch (final IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   private Timer addTimer() {
