@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -30,6 +32,9 @@ class OrgAddPanel extends JPanel implements ActionListener {
   public static final List<Strain> strains = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
       new FloatyStrain(), new RayStrain(), new MultiTaskingStrain(), new SearchingStrain(),
       new MultiTaskingRayStrain(), new OrthoStrain());
+
+  private static final Map<String, Strain> strToStrain = strains.stream().collect(
+      Collectors.toMap(Strain::getStrainName, Function.identity()));
 
   String chosenStrain;
 
@@ -70,12 +75,12 @@ class OrgAddPanel extends JPanel implements ActionListener {
     chosenStrain = e.getActionCommand();
   }
 
-  public String getChosenStrain() {
-    return chosenStrain;
+  public Strain getChosenStrain() {
+    return getChosenStrain(chosenStrain);
   }
 
-  public String getChosenStrain(String strain) {
-    return chosenStrain;
+  public Strain getChosenStrain(String strain) {
+    return strToStrain.get(strain);
   }
 
 }

@@ -5,10 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -43,8 +40,6 @@ class EnvFrame extends JFrame {
   private final JPanel mainControlsPanel;
   private final OrganismControls organismControls;
 
-  private final Map<String, Strain> strToStrain;
-
   private static final int MAX_DELAY = 1000;
 
   public EnvFrame() {
@@ -52,8 +47,6 @@ class EnvFrame extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     final Container contentPane = getContentPane();
     setUpEnvironment();
-    strToStrain = OrgAddPanel.strains.stream().collect(
-        Collectors.toMap(Strain::getStrainName, Function.identity()));
 
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
@@ -106,7 +99,7 @@ class EnvFrame extends JFrame {
       }
       final Strain strChoice = (Strain) JOptionPane.showInputDialog(new JFrame(), "Strain?",
           "Strain Choice", JOptionPane.PLAIN_MESSAGE, null, strains, strains[0]);
-      envr.exterminate(strToStrain.get(strChoice.getStrainName()));
+      envr.exterminate(organismControls.orgAddPanel.getChosenStrain(strChoice.getStrainName()));
       organismControls.updateData(envr);
     });
     return exterminateStrainButton;
@@ -116,7 +109,7 @@ class EnvFrame extends JFrame {
     final JButton multOrgAddButton = new JButton("Add Organisms");
     multOrgAddButton.addActionListener(e -> {
       final int num = Integer.parseInt(JOptionPane.showInputDialog("Number of Organisms?"));
-      envr.add(num, strToStrain.get(organismControls.orgAddPanel.getChosenStrain()));
+      envr.add(num, organismControls.orgAddPanel.getChosenStrain());
       organismControls.updateData(envr);
     });
     return multOrgAddButton;
@@ -175,7 +168,7 @@ class EnvFrame extends JFrame {
   private Timer addRandomTimer() {
     final ActionListener updater = e -> {
       if (envr.livingOrgs() == 0) {
-        final Strain strain = strToStrain.get(organismControls.orgAddPanel.getChosenStrain());
+        final Strain strain = organismControls.orgAddPanel.getChosenStrain();
         strain.resetYoungest();
         envr.add(1, strain);
       }
