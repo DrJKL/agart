@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -52,15 +51,11 @@ class EnvFrame extends JFrame {
     setTitle("VIRUS");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     final Container contentPane = getContentPane();
-    final JFileChooser fc = new JFileChooser();
-    fc.addChoosableFileFilter(new ImageFilter());
     setUpEnvironment();
     strToStrain = OrgAddPanel.strains.stream().collect(
         Collectors.toMap(Strain::getStrainName, Function.identity()));
 
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-
-    contentPane.add(myPanel, "Center");
 
     randTimer = addRandomTimer();
 
@@ -104,6 +99,7 @@ class EnvFrame extends JFrame {
     orgButtons.add(multOrgAddButton);
     orgButtons.add(exterminateStrainButton);
 
+    contentPane.add(myPanel, "Center");
     contentPane.add(mainControlsPanel, "North");
     contentPane.add(organismControls, "East");
 
