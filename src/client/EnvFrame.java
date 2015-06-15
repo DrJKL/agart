@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -203,17 +202,13 @@ class EnvFrame extends JFrame {
   }
 
   private void setUpEnvironment() {
-    setupEnvironment(ImageUtil.setupNewEnvironment(800, 600, false));
-  }
-
-  private void setupEnvironment(final BufferedImage bmg) {
-    envr = new Environment(bmg);
+    envr = new Environment(ImageUtil.setupNewEnvironment(800, 600, false));
     if (myPanel != null) {
       remove(myPanel);
     }
     myPanel = new MyPanel(envr.image);
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-    final Dimension d = new Dimension(envr.getWidth() + 160, envr.getHeight() + 95);
+    final Dimension d = new Dimension(envr.getWidth() + 213, envr.getHeight() + 66);
     setPreferredSize(d);
     pack();
     myPanel.repaint();
