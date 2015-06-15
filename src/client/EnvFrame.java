@@ -116,11 +116,11 @@ class EnvFrame extends JFrame {
     exterminateStrainButton.setAlignmentX((float) 0.5);
 
     mainControlsPanel.add(newImageButton);
-    // mainControlsPanel.add(startStopButton);
-    // mainControlsPanel.add(singleStepButton);
+    mainControlsPanel.add(startStopButton);
+    mainControlsPanel.add(singleStepButton);
     mainControlsPanel.add(saveImageButton);
-    // mainControlsPanel.add(saveNegButton);
-    // mainControlsPanel.add(setImageButton);
+    mainControlsPanel.add(saveNegButton);
+    mainControlsPanel.add(setImageButton);
 
     organismControls.add(orgAddPanel);
 
@@ -152,9 +152,9 @@ class EnvFrame extends JFrame {
     });
     speedBar.setValue(MAX_DELAY / 2);
 
-    // mainControlsPanel.add(new JLabel(" Slow"));
+    mainControlsPanel.add(new JLabel(" Slow"));
     mainControlsPanel.add(speedBar);
-    // mainControlsPanel.add(new JLabel("Fast "));
+    mainControlsPanel.add(new JLabel("Fast "));
   }
 
   private JButton createExterminateStrainButton() {
@@ -223,9 +223,6 @@ class EnvFrame extends JFrame {
     setImageButton.addActionListener(e -> {
       fc.showOpenDialog(null);
       final File img = fc.getSelectedFile();
-      if (img == null) {
-        return;
-      }
       setUpEnvironment(img);
       setSize(envr.getWidth(), envr.getHeight());
       myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -300,9 +297,6 @@ class EnvFrame extends JFrame {
 
   private void setupEnvironment(final BufferedImage bmg) {
     envr = new Environment(bmg);
-    if (myPanel != null) {
-      remove(myPanel);
-    }
     myPanel = new MyPanel(envr.image);
     myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
     final Dimension d = new Dimension(envr.getWidth() + 160, envr.getHeight() + 95);
