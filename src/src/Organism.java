@@ -167,6 +167,9 @@ public class Organism {
   }
 
   public void acquireRand() {
+    if (battery.overCap()) {
+      return;
+    }
     battery.addEnergy(environment.takeColor(location, -randomInt(1, 20),
         colorPreference.getWeightedRandomColor()));
   }

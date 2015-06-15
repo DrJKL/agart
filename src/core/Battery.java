@@ -32,7 +32,7 @@ public class Battery {
   }
 
   public boolean overCap() {
-    return energy >= energyCap;
+    return energy >= energyCap * 1.5;
   }
 
   public boolean empty() {
