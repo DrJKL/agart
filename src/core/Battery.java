@@ -4,11 +4,11 @@ import src.Organism;
 
 public class Battery {
   private int energy;
-  private final int replicationEnergyCap;
+  private final int energyCap;
 
-  private Battery(int replicationEnergyCap) {
-    this.replicationEnergyCap = replicationEnergyCap;
-    this.energy = replicationEnergyCap / 2; // Start half full.
+  private Battery(int energyCap) {
+    this.energyCap = energyCap;
+    this.energy = energyCap / 2; // Start half full.
   }
 
   public static Battery random() {
@@ -16,7 +16,7 @@ public class Battery {
   }
 
   public Battery mutate(Organism organism) {
-    return new Battery(organism.mutateTrait(replicationEnergyCap));
+    return new Battery(organism.mutateTrait(energyCap));
   }
 
   public void addEnergy(int energy) {
@@ -32,7 +32,7 @@ public class Battery {
   }
 
   public boolean overCap() {
-    return energy >= replicationEnergyCap;
+    return energy >= energyCap;
   }
 
   public boolean empty() {
