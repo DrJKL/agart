@@ -32,7 +32,11 @@ public class Battery {
   }
 
   public boolean overCap() {
-    return energy >= energyCap * 1.5;
+    return energy >= energyCap;
+  }
+
+  public boolean fullToBursting() {
+    return energy >= energyCap * 2;
   }
 
   public boolean empty() {

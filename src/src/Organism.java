@@ -167,7 +167,7 @@ public class Organism {
   }
 
   public void acquireRand() {
-    if (battery.overCap()) {
+    if (battery.fullToBursting()) {
       return;
     }
     battery.addEnergy(environment.takeColor(location, -randomInt(1, 20),
