@@ -34,7 +34,6 @@ class EnvFrame extends JFrame {
   private final Timer randTimer;
 
   private final JButton saveImageButton;
-  private final JButton orgAddButton;
   private final JButton multOrgAddButton;
   private final JButton exterminateStrainButton;
   private final JButton startStopRandomButton;
@@ -82,14 +81,12 @@ class EnvFrame extends JFrame {
     saveImageButton = new JButton("Save Image");
     saveImageButton.addActionListener(e -> envr.saveImage());
 
-    orgAddButton = createOrgAddButton();
     multOrgAddButton = createMultOrgAddButton();
     exterminateStrainButton = createExterminateStrainButton();
 
     numOrgLabel.setAlignmentX((float) 0.5);
     numUpdatesLabel.setAlignmentX((float) 0.5);
 
-    orgAddButton.setAlignmentX((float) 0.5);
     multOrgAddButton.setAlignmentX((float) 0.5);
     exterminateStrainButton.setAlignmentX((float) 0.5);
 
@@ -101,11 +98,9 @@ class EnvFrame extends JFrame {
     organismControls.add(orgAddPanel);
     organismControls.add(numOrgLabel);
     organismControls.add(numUpdatesLabel);
-    organismControls.add(orgAddButton);
     organismControls.add(multOrgAddButton);
     organismControls.add(exterminateStrainButton);
 
-    orgButtons.add(orgAddButton);
     orgButtons.add(multOrgAddButton);
     orgButtons.add(exterminateStrainButton);
 
@@ -147,15 +142,6 @@ class EnvFrame extends JFrame {
       updateData();
     });
     return multOrgAddButton;
-  }
-
-  private JButton createOrgAddButton() {
-    final JButton orgAddButton = new JButton("Add Organism");
-    orgAddButton.addActionListener(e -> {
-      envr.add(1, strToStrain.get(orgAddPanel.getChosenStrain()));
-      updateData();
-    });
-    return orgAddButton;
   }
 
   private JButton createStartStopRandomButton() {
