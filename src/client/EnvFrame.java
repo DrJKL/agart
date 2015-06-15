@@ -38,9 +38,8 @@ class EnvFrame extends JFrame {
   private final JButton startStopRandomButton;
   private final JButton newImageButton;
 
-  private final JLabel numOrgLabel, numUpdatesLabel;
-  private final JPanel mainControlsPanel, organismControls;
-  private final OrgAddPanel orgAddPanel;
+  private final JPanel mainControlsPanel;
+  private final OrganismControls organismControls;
 
   private final Map<String, Strain> strToStrain;
   private final Set<JButton> orgButtons = new HashSet<>();
@@ -60,15 +59,8 @@ class EnvFrame extends JFrame {
     randTimer = addRandomTimer();
 
     mainControlsPanel = new JPanel();
-    organismControls = new JPanel();
-    orgAddPanel = new OrgAddPanel();
 
     mainControlsPanel.setLayout(new GridLayout(0, 4, 2, 2));
-
-    organismControls.setLayout(new BoxLayout(organismControls, BoxLayout.Y_AXIS));
-
-    numOrgLabel = new JLabel("Organisms: " + envr.livingOrgs());
-    numUpdatesLabel = new JLabel("Updates: " + envr.updates);
 
     newImageButton = createNewImageButton(contentPane);
     startStopRandomButton = createStartStopRandomButton();
@@ -79,22 +71,14 @@ class EnvFrame extends JFrame {
     multOrgAddButton = createMultOrgAddButton();
     exterminateStrainButton = createExterminateStrainButton();
 
-    numOrgLabel.setAlignmentX((float) 0.5);
-    numUpdatesLabel.setAlignmentX((float) 0.5);
-
-    multOrgAddButton.setAlignmentX((float) 0.5);
-    exterminateStrainButton.setAlignmentX((float) 0.5);
-
     mainControlsPanel.add(newImageButton);
     mainControlsPanel.add(saveImageButton);
     mainControlsPanel.add(addSpeedSlider(randTimer));
     mainControlsPanel.add(startStopRandomButton);
 
-    organismControls.add(orgAddPanel);
-    organismControls.add(numOrgLabel);
-    organismControls.add(numUpdatesLabel);
-    organismControls.add(multOrgAddButton);
-    organismControls.add(exterminateStrainButton);
+    organismControls = new OrganismControls(new OrgAddPanel(), new JLabel(), new JLabel(),
+        multOrgAddButton, exterminateStrainButton);
+    organismControls.updateData(envr);
 
     orgButtons.add(multOrgAddButton);
     orgButtons.add(exterminateStrainButton);
@@ -125,7 +109,7 @@ class EnvFrame extends JFrame {
       final Strain strChoice = (Strain) JOptionPane.showInputDialog(new JFrame(), "Strain?",
           "Strain Choice", JOptionPane.PLAIN_MESSAGE, null, strains, strains[0]);
       envr.exterminate(strToStrain.get(strChoice.getStrainName()));
-      updateData();
+      organismControls.updateData(envr);
     });
     return exterminateStrainButton;
   }
@@ -134,8 +118,8 @@ class EnvFrame extends JFrame {
     final JButton multOrgAddButton = new JButton("Add Organisms");
     multOrgAddButton.addActionListener(e -> {
       final int num = Integer.parseInt(JOptionPane.showInputDialog("Number of Organisms?"));
-      envr.add(num, strToStrain.get(orgAddPanel.getChosenStrain()));
-      updateData();
+      envr.add(num, strToStrain.get(organismControls.orgAddPanel.getChosenStrain()));
+      organismControls.updateData(envr);
     });
     return multOrgAddButton;
   }
@@ -163,7 +147,7 @@ class EnvFrame extends JFrame {
         startStopRandomButton.setText("Start Random");
       }
       setUpEnvironment();
-      updateData();
+      organismControls.updateData(envr);
       toggleRandomButtons();
       contentPane.add(myPanel, "Center");
       myPanel.repaint();
@@ -190,14 +174,14 @@ class EnvFrame extends JFrame {
 
   private void doTheThing() {
     envr.update();
-    updateData();
+    organismControls.updateData(envr);
     myPanel.repaint();
   }
 
   private Timer addRandomTimer() {
     final ActionListener updater = e -> {
       if (envr.livingOrgs() == 0) {
-        final Strain strain = strToStrain.get(orgAddPanel.getChosenStrain());
+        final Strain strain = strToStrain.get(organismControls.orgAddPanel.getChosenStrain());
         strain.resetYoungest();
         envr.add(1, strain);
       }
@@ -206,9 +190,38 @@ class EnvFrame extends JFrame {
     return new Timer(MAX_DELAY / 2, updater);
   }
 
-  private void updateData() {
-    numOrgLabel.setText("Organisms: " + envr.livingOrgs());
-    numUpdatesLabel.setText("Updates: " + envr.updates);
+  private static class OrganismControls extends JPanel {
+    public final OrgAddPanel orgAddPanel;
+    private final JLabel numOrgLabel;
+    private final JLabel numUpdatesLabel;
+
+    public OrganismControls(OrgAddPanel orgAddPanel, JLabel numOrgLabel, JLabel numUpdatesLabel,
+        JButton multOrgAddButton, JButton exterminateStrainButton) {
+
+      this.orgAddPanel = orgAddPanel;
+      this.numOrgLabel = numOrgLabel;
+      this.numUpdatesLabel = numUpdatesLabel;
+
+      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+      add(orgAddPanel);
+      add(numOrgLabel);
+      add(numUpdatesLabel);
+      add(multOrgAddButton);
+      add(exterminateStrainButton);
+
+      numOrgLabel.setAlignmentX((float) 0.5);
+      numUpdatesLabel.setAlignmentX((float) 0.5);
+
+      multOrgAddButton.setAlignmentX((float) 0.5);
+      exterminateStrainButton.setAlignmentX((float) 0.5);
+    }
+
+    void updateData(Environment envr) {
+      numOrgLabel.setText("Organisms: " + envr.livingOrgs());
+      numUpdatesLabel.setText("Updates: " + envr.updates);
+    }
+
   }
 
 }
