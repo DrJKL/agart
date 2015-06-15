@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -23,6 +22,9 @@ import javax.swing.Timer;
 
 import src.Environment;
 import src.Strain;
+
+import com.google.common.collect.ImmutableSet;
+
 import core.ImageUtil;
 
 @SuppressWarnings("serial")
@@ -42,7 +44,6 @@ class EnvFrame extends JFrame {
   private final OrganismControls organismControls;
 
   private final Map<String, Strain> strToStrain;
-  private final Set<JButton> orgButtons = new HashSet<>();
 
   private static final int MAX_DELAY = 1000;
 
@@ -79,9 +80,6 @@ class EnvFrame extends JFrame {
     organismControls = new OrganismControls(new OrgAddPanel(), new JLabel(), new JLabel(),
         multOrgAddButton, exterminateStrainButton);
     organismControls.updateData(envr);
-
-    orgButtons.add(multOrgAddButton);
-    orgButtons.add(exterminateStrainButton);
 
     contentPane.add(myPanel, "Center");
     contentPane.add(mainControlsPanel, "North");
@@ -134,7 +132,7 @@ class EnvFrame extends JFrame {
         randTimer.start();
         startStopRandomButton.setText("Pause Random");
       }
-      toggleRandomButtons();
+      organismControls.toggleRandomButtons(!randTimer.isRunning());
     });
     return startStopRandomButton;
   }
@@ -148,15 +146,11 @@ class EnvFrame extends JFrame {
       }
       setUpEnvironment();
       organismControls.updateData(envr);
-      toggleRandomButtons();
+      organismControls.toggleRandomButtons(!randTimer.isRunning());
       contentPane.add(myPanel, "Center");
       myPanel.repaint();
     });
     return newImageButton;
-  }
-
-  private void toggleRandomButtons() {
-    orgButtons.stream().forEach(button -> button.setEnabled(!randTimer.isRunning()));
   }
 
   private void setUpEnvironment() {
@@ -194,6 +188,7 @@ class EnvFrame extends JFrame {
     public final OrgAddPanel orgAddPanel;
     private final JLabel numOrgLabel;
     private final JLabel numUpdatesLabel;
+    private final Set<JButton> buttons;
 
     public OrganismControls(OrgAddPanel orgAddPanel, JLabel numOrgLabel, JLabel numUpdatesLabel,
         JButton multOrgAddButton, JButton exterminateStrainButton) {
@@ -201,6 +196,7 @@ class EnvFrame extends JFrame {
       this.orgAddPanel = orgAddPanel;
       this.numOrgLabel = numOrgLabel;
       this.numUpdatesLabel = numUpdatesLabel;
+      this.buttons = ImmutableSet.of(multOrgAddButton, exterminateStrainButton);
 
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -220,6 +216,10 @@ class EnvFrame extends JFrame {
     void updateData(Environment envr) {
       numOrgLabel.setText("Organisms: " + envr.livingOrgs());
       numUpdatesLabel.setText("Updates: " + envr.updates);
+    }
+
+    void toggleRandomButtons(boolean enabled) {
+      buttons.stream().forEach(button -> button.setEnabled(enabled));
     }
 
   }

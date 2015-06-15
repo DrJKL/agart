@@ -74,4 +74,8 @@ class OrgAddPanel extends JPanel implements ActionListener {
     return chosenStrain;
   }
 
+  public String getChosenStrain(String strain) {
+    return chosenStrain;
+  }
+
 }
