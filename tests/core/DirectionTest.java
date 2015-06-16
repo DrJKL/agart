@@ -17,4 +17,9 @@ public class DirectionTest {
     Assert.assertEquals(new Point(0, -1), northOfOriginal);
   }
 
+  @Test
+  public void testTurning() {
+    Assert.assertEquals(Direction.EAST, Direction.NORTH.turnRight());
+    Assert.assertEquals(Direction.WEST, Direction.NORTH.turnLeft());
+  }
 }

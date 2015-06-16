@@ -19,6 +19,14 @@ public enum Direction {
     this.point = new Point(dx, dy);
   }
 
+  public Direction turnRight() {
+    return values()[(ordinal() + 1) % values().length];
+  }
+
+  public Direction turnLeft() {
+    return values()[(ordinal() + values().length - 1) % values().length];
+  }
+
   public Point translatedCopy(Point other) {
     final Point newPoint = other.getLocation();
     newPoint.translate(point.x, point.y);
