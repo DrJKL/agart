@@ -20,6 +20,7 @@ import javax.swing.Timer;
 import src.Environment;
 import src.Strain;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 
 import core.ImageUtil;
@@ -89,7 +90,7 @@ class EnvFrame extends JFrame {
     final JButton multOrgAddButton = new JButton("Add Organisms");
     multOrgAddButton.addActionListener(e -> {
       final String numberInput = JOptionPane.showInputDialog("Number of Organisms?");
-      if (numberInput == null) {
+      if (Strings.isNullOrEmpty(numberInput)) {
         return;
       }
       envr.add(Integer.parseInt(numberInput), organismControls.orgAddPanel.getChosenStrain());
