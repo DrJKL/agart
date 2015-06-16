@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import strains.OrthoStrain;
+import strains.TurningStrain;
 import core.FoodColor;
 import core.ImageUtil;
 
@@ -88,6 +89,7 @@ public class Environment {
 
   public void update() {
     OrthoStrain.shiftDirectionMaybe();
+    TurningStrain.shiftDirectionMaybe();
     activeStrains.values().stream().flatMap(List::stream).forEach(o -> o.update());
     buryTheDead();
     raiseTheKids();
