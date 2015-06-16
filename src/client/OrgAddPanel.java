@@ -43,7 +43,7 @@ class OrgAddPanel extends JPanel implements ActionListener {
 
     super(new BorderLayout());
 
-    chosenStrain = SearchingStrain.NAME;
+    chosenStrain = "Searching VIRUS";
 
     final List<JRadioButton> buttons = strains.stream().map(Strain::getStrainName)
         .map(OrgAddPanel::makeStrainButton).collect(Collectors.toList());

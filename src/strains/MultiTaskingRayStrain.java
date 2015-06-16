@@ -7,12 +7,9 @@ import src.Strain;
 
 public class MultiTaskingRayStrain implements Strain {
 
-  public static final String NAME = "Multitasking Ray VIRUS";
-  int youngest = -1;
-
   @Override
   public String getStrainName() {
-    return NAME;
+    return "Multitasking Ray VIRUS";
   }
 
   @Override

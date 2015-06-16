@@ -8,13 +8,9 @@ import core.Direction;
 
 public class SearchingStrain implements Strain {
 
-  public static final String NAME = "Searching VIRUS";
-
-  int youngest = -1;
-
   @Override
   public String getStrainName() {
-    return NAME;
+    return "Searching VIRUS";
   }
 
   @Override

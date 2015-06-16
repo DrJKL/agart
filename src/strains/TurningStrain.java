@@ -8,13 +8,11 @@ import core.Direction;
 
 public class TurningStrain implements Strain {
 
-  public static final String NAME = "Turning VIRUS";
-  int youngest = -1;
-  static Direction dir = Direction.random();
+  private static Direction dir = Direction.random();
 
   @Override
   public String getStrainName() {
-    return NAME;
+    return "Turning VIRUS";
   }
 
   public static void shiftDirectionMaybe() {
