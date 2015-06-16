@@ -28,7 +28,6 @@ public class Organism {
   private final Battery battery;
 
   private int updates;
-  private final int reproductionChance;
   private final int moveCost;
 
   private final Point location;
@@ -47,7 +46,6 @@ public class Organism {
   public Organism(Environment environment, Strain strain, Point location) {
     this(environment, strain, location, 0, //
         TraitLimit.MOVE_COST.randomValue(), //
-        TraitLimit.REPRODUCTION_CHANCE.randomValue(), //
         Battery.random(), //
         Mutator.random(), //
         ColorPreference.random(), //
@@ -56,22 +54,21 @@ public class Organism {
 
   // New Virus with non-random attributes
   private Organism(Environment environment, Strain strain, Point location, int generation,
-      int moveCost, int reproductionChance, Battery battery, Mutator mutator,
-      ColorPreference colorPreference, DirectionPreference directionPreference) {
+      int moveCost, Battery battery, Mutator mutator, ColorPreference colorPreference,
+      DirectionPreference directionPreference) {
     this.environment = environment;
     this.strain = strain;
     this.location = location;
     this.generation = generation;
-    Youngest.updateYoungest(strain, generation);
 
     this.battery = battery;
-
     this.moveCost = moveCost;
-    this.reproductionChance = reproductionChance;
 
     this.mutator = mutator;
     this.colorPreference = colorPreference;
     this.directionPreference = directionPreference;
+
+    Youngest.updateYoungest(strain, generation);
   }
 
   public void update() {
@@ -106,7 +103,7 @@ public class Organism {
     return battery.overCap()//
         && generation < BREED_CAP //
         && childrenSpawned < MAX_KIDS //
-        && Math.random() * 100 < reproductionChance;
+        && Math.random() < 0.5;
   }
 
   public void replicate() {
@@ -121,9 +118,8 @@ public class Organism {
   // Creates new Virus with mutated attributes
   private Organism generateOffspring() {
     return new Organism(environment, strain, Direction.random().translatedCopy(location),
-        generation + 1, mutateTrait(moveCost), mutateTrait(reproductionChance),
-        battery.mutate(this), mutator.mutate(), colorPreference.mutate(this),
-        directionPreference.mutate(this));
+        generation + 1, mutateTrait(moveCost), battery.mutate(this), mutator.mutate(),
+        colorPreference.mutate(this), directionPreference.mutate(this));
   }
 
   public int mutateTrait(int original) {
@@ -194,5 +190,4 @@ public class Organism {
     builder.append("]");
     return builder.toString();
   }
-
 }
