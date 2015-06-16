@@ -46,7 +46,6 @@ class EnvFrame extends JFrame {
     setTitle("VIRUS");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     final Container contentPane = getContentPane();
-    setUpEnvironment(contentPane);
 
     randTimer = addRandomTimer();
 
@@ -62,9 +61,9 @@ class EnvFrame extends JFrame {
     mainControlsPanel = new MainControls(startStopRandomButton, saveImageButton, newImageButton,
         randTimer);
 
-    organismControls = new OrganismControls(new OrgAddPanel(), new JLabel(), new JLabel(),
-        multOrgAddButton, exterminateStrainButton);
-    organismControls.updateData(envr);
+    organismControls = new OrganismControls(new OrgAddPanel(), multOrgAddButton,
+        exterminateStrainButton);
+    setUpEnvironment(contentPane);
 
     contentPane.add(mainControlsPanel, "North");
     contentPane.add(organismControls, "East");
@@ -116,11 +115,7 @@ class EnvFrame extends JFrame {
 
   private JButton createNewImageButton(final Container contentPane) {
     final JButton newImageButton = new JButton("Reset");
-    newImageButton.addActionListener(e -> {
-      setUpEnvironment(contentPane);
-      organismControls.updateData(envr);
-
-    });
+    newImageButton.addActionListener(e -> setUpEnvironment(contentPane));
     return newImageButton;
   }
 
@@ -136,6 +131,7 @@ class EnvFrame extends JFrame {
     pack();
     contentPane.add(myPanel, "Center");
     myPanel.repaint();
+    organismControls.updateData(envr);
   }
 
   private void doTheThing() {
@@ -162,12 +158,11 @@ class EnvFrame extends JFrame {
     private final JLabel numUpdatesLabel;
     private final Set<JButton> buttons;
 
-    public OrganismControls(OrgAddPanel orgAddPanel, JLabel numOrgLabel, JLabel numUpdatesLabel,
-        JButton multOrgAddButton, JButton exterminateStrainButton) {
-
+    public OrganismControls(OrgAddPanel orgAddPanel, JButton multOrgAddButton,
+        JButton exterminateStrainButton) {
       this.orgAddPanel = orgAddPanel;
-      this.numOrgLabel = numOrgLabel;
-      this.numUpdatesLabel = numUpdatesLabel;
+      this.numOrgLabel = new JLabel();
+      this.numUpdatesLabel = new JLabel();
       this.buttons = ImmutableSet.of(multOrgAddButton, exterminateStrainButton);
 
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -195,7 +190,6 @@ class EnvFrame extends JFrame {
     void toggleRandomButtons(boolean enabled) {
       buttons.stream().forEach(button -> button.setEnabled(enabled));
     }
-
   }
 
   private static class MainControls extends JPanel {
