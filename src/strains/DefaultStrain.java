@@ -16,21 +16,6 @@ public class DefaultStrain implements Strain {
   }
 
   @Override
-  public void resetYoungest() {
-    youngest = -1;
-  }
-
-  @Override
-  public void updateYoungest(int orgGen) {
-    youngest = Math.max(orgGen, youngest);
-  }
-
-  @Override
-  public int getYoungest() {
-    return youngest;
-  }
-
-  @Override
   public void update(Organism org) {
     org.feast();
     org.replicate();

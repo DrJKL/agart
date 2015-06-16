@@ -16,21 +16,6 @@ public class MultiTaskingRayStrain implements Strain {
   }
 
   @Override
-  public void resetYoungest() {
-    youngest = -1;
-  }
-
-  @Override
-  public void updateYoungest(int orgGen) {
-    youngest = Math.max(orgGen, youngest);
-  }
-
-  @Override
-  public int getYoungest() {
-    return youngest;
-  }
-
-  @Override
   public void update(Organism org) {
     IntStream.range(0, org.timesToMove()).forEach(i -> {
       IntStream.range(0, 5).forEach(j -> org.acquireRand());

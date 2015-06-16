@@ -147,7 +147,6 @@ class EnvFrame extends JFrame {
       if (envr.livingOrgs() == 0) {
         final Strain strain = organismControls.orgAddPanel.getChosenStrain();
         Youngest.resetYoungest(strain);
-        strain.resetYoungest();
         envr.add(1, strain);
       }
       doTheThing();

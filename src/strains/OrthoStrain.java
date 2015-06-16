@@ -17,21 +17,6 @@ public class OrthoStrain implements Strain {
     return NAME;
   }
 
-  @Override
-  public void resetYoungest() {
-    youngest = -1;
-  }
-
-  @Override
-  public void updateYoungest(int orgGen) {
-    youngest = Math.max(youngest, orgGen);
-  }
-
-  @Override
-  public int getYoungest() {
-    return youngest;
-  }
-
   public static void shiftDirectionMaybe() {
     if (Math.random() < 0.05) {
       dir = Direction.random();

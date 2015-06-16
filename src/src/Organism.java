@@ -63,7 +63,6 @@ public class Organism {
     this.location = location;
     this.generation = generation;
     Youngest.updateYoungest(strain, generation);
-    this.strain.updateYoungest(generation);
 
     this.battery = battery;
 
@@ -88,7 +87,7 @@ public class Organism {
 
   public boolean forcedOutByTheYouth() {
     return environment.overPopulated(strain) && //
-        (generation + 1 < strain.getYoungest() || generation + 1 < Youngest.getYoungest(strain));
+        (generation + 1 < Youngest.getYoungest(strain));
   }
 
   public boolean outOfBounds() {
