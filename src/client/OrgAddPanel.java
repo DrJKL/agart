@@ -25,13 +25,14 @@ import strains.MultiTaskingStrain;
 import strains.OrthoStrain;
 import strains.RayStrain;
 import strains.SearchingStrain;
+import strains.TurningStrain;
 
 @SuppressWarnings("serial")
 class OrgAddPanel extends JPanel implements ActionListener {
 
   public static final List<Strain> strains = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
       new FloatyStrain(), new RayStrain(), new MultiTaskingStrain(), new SearchingStrain(),
-      new MultiTaskingRayStrain(), new OrthoStrain());
+      new MultiTaskingRayStrain(), new OrthoStrain(), new TurningStrain());
 
   private static final Map<String, Strain> strToStrain = strains.stream().collect(
       Collectors.toMap(Strain::getStrainName, Function.identity()));
