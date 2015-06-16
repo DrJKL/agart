@@ -48,8 +48,6 @@ class EnvFrame extends JFrame {
     final Container contentPane = getContentPane();
     setUpEnvironment();
 
-    myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-
     randTimer = addRandomTimer();
 
     newImageButton = createNewImageButton(contentPane);
@@ -61,8 +59,8 @@ class EnvFrame extends JFrame {
     multOrgAddButton = createMultOrgAddButton();
     exterminateStrainButton = createExterminateStrainButton();
 
-    mainControlsPanel = new MainControls(startStopRandomButton, addSpeedSlider(randTimer),
-        saveImageButton, newImageButton);
+    mainControlsPanel = new MainControls(startStopRandomButton, saveImageButton, newImageButton,
+        randTimer);
 
     organismControls = new OrganismControls(new OrgAddPanel(), new JLabel(), new JLabel(),
         multOrgAddButton, exterminateStrainButton);
@@ -72,16 +70,6 @@ class EnvFrame extends JFrame {
     contentPane.add(mainControlsPanel, "North");
     contentPane.add(organismControls, "East");
 
-  }
-
-  private static JSlider addSpeedSlider(Timer timer) {
-    final JSlider speedBar = new JSlider(1, MAX_DELAY);
-    speedBar.addChangeListener(ce -> {
-      timer.setDelay(1000 / (speedBar.getValue()));
-    });
-    speedBar.setValue(MAX_DELAY / 2);
-    timer.setDelay(1000 / (speedBar.getValue()));
-    return speedBar;
   }
 
   private JButton createExterminateStrainButton() {
@@ -127,13 +115,8 @@ class EnvFrame extends JFrame {
   private JButton createNewImageButton(final Container contentPane) {
     final JButton newImageButton = new JButton("Reset");
     newImageButton.addActionListener(e -> {
-      if (randTimer.isRunning()) {
-        randTimer.stop();
-        startStopRandomButton.setText("Start Random");
-      }
       setUpEnvironment();
       organismControls.updateData(envr);
-      organismControls.toggleRandomButtons(!randTimer.isRunning());
       contentPane.add(myPanel, "Center");
       myPanel.repaint();
     });
@@ -150,6 +133,7 @@ class EnvFrame extends JFrame {
     final Dimension d = new Dimension(envr.getWidth() + 213, envr.getHeight() + 66);
     setPreferredSize(d);
     pack();
+    myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
     myPanel.repaint();
   }
 
@@ -212,14 +196,23 @@ class EnvFrame extends JFrame {
   }
 
   private static class MainControls extends JPanel {
-    public MainControls(JButton startStopRandomButton, JSlider speedSlider,
-        JButton saveImageButton, JButton newImageButton) {
+    public MainControls(JButton startStopRandomButton, JButton saveImageButton,
+        JButton newImageButton, Timer timer) {
       setLayout(new GridLayout(0, 4, 2, 2));
 
       add(newImageButton);
       add(saveImageButton);
-      add(speedSlider);
+      add(addSpeedSlider(timer));
       add(startStopRandomButton);
+    }
+
+    private static JSlider addSpeedSlider(Timer timer) {
+      final JSlider speedBar = new JSlider(1, MAX_DELAY, MAX_DELAY);
+      speedBar.addChangeListener(ce -> {
+        timer.setDelay(1000 / (speedBar.getValue()));
+      });
+      timer.setDelay(1000 / (speedBar.getValue()));
+      return speedBar;
     }
   }
 }
