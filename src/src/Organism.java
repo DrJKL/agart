@@ -16,6 +16,7 @@ import core.Direction;
 import core.DirectionPreference;
 import core.Mutator;
 import core.TraitLimit;
+import core.Youngest;
 
 public class Organism {
 
@@ -61,6 +62,7 @@ public class Organism {
     this.strain = strain;
     this.location = location;
     this.generation = generation;
+    Youngest.updateYoungest(strain, generation);
     this.strain.updateYoungest(generation);
 
     this.battery = battery;
@@ -85,7 +87,8 @@ public class Organism {
   }
 
   public boolean forcedOutByTheYouth() {
-    return environment.overPopulated(strain) && generation + 1 < strain.getYoungest();
+    return environment.overPopulated(strain) && //
+        (generation + 1 < strain.getYoungest() || generation + 1 < Youngest.getYoungest(strain));
   }
 
   public boolean outOfBounds() {
