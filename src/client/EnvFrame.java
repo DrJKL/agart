@@ -46,7 +46,7 @@ class EnvFrame extends JFrame {
     setTitle("VIRUS");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     final Container contentPane = getContentPane();
-    setUpEnvironment();
+    setUpEnvironment(contentPane);
 
     randTimer = addRandomTimer();
 
@@ -66,7 +66,6 @@ class EnvFrame extends JFrame {
         multOrgAddButton, exterminateStrainButton);
     organismControls.updateData(envr);
 
-    contentPane.add(myPanel, "Center");
     contentPane.add(mainControlsPanel, "North");
     contentPane.add(organismControls, "East");
 
@@ -90,8 +89,11 @@ class EnvFrame extends JFrame {
   private JButton createMultOrgAddButton() {
     final JButton multOrgAddButton = new JButton("Add Organisms");
     multOrgAddButton.addActionListener(e -> {
-      final int num = Integer.parseInt(JOptionPane.showInputDialog("Number of Organisms?"));
-      envr.add(num, organismControls.orgAddPanel.getChosenStrain());
+      final String numberInput = JOptionPane.showInputDialog("Number of Organisms?");
+      if (numberInput == null) {
+        return;
+      }
+      envr.add(Integer.parseInt(numberInput), organismControls.orgAddPanel.getChosenStrain());
       organismControls.updateData(envr);
     });
     return multOrgAddButton;
@@ -115,15 +117,14 @@ class EnvFrame extends JFrame {
   private JButton createNewImageButton(final Container contentPane) {
     final JButton newImageButton = new JButton("Reset");
     newImageButton.addActionListener(e -> {
-      setUpEnvironment();
+      setUpEnvironment(contentPane);
       organismControls.updateData(envr);
-      contentPane.add(myPanel, "Center");
-      myPanel.repaint();
+
     });
     return newImageButton;
   }
 
-  private void setUpEnvironment() {
+  private void setUpEnvironment(Container contentPane) {
     envr = new Environment(ImageUtil.setupNewEnvironment(800, 600, false));
     if (myPanel != null) {
       remove(myPanel);
@@ -133,7 +134,7 @@ class EnvFrame extends JFrame {
     final Dimension d = new Dimension(envr.getWidth() + 213, envr.getHeight() + 66);
     setPreferredSize(d);
     pack();
-    myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+    contentPane.add(myPanel, "Center");
     myPanel.repaint();
   }
 
@@ -170,6 +171,7 @@ class EnvFrame extends JFrame {
       this.buttons = ImmutableSet.of(multOrgAddButton, exterminateStrainButton);
 
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+      setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
 
       add(orgAddPanel);
       add(numOrgLabel);
@@ -177,11 +179,12 @@ class EnvFrame extends JFrame {
       add(multOrgAddButton);
       add(exterminateStrainButton);
 
-      numOrgLabel.setAlignmentX((float) 0.5);
-      numUpdatesLabel.setAlignmentX((float) 0.5);
+      orgAddPanel.setAlignmentX(LEFT_ALIGNMENT);
+      numOrgLabel.setAlignmentX(LEFT_ALIGNMENT);
+      numUpdatesLabel.setAlignmentX(LEFT_ALIGNMENT);
 
-      multOrgAddButton.setAlignmentX((float) 0.5);
-      exterminateStrainButton.setAlignmentX((float) 0.5);
+      multOrgAddButton.setAlignmentX(LEFT_ALIGNMENT);
+      exterminateStrainButton.setAlignmentX(LEFT_ALIGNMENT);
     }
 
     void updateData(Environment envr) {
