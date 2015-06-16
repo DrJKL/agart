@@ -4,7 +4,6 @@ public enum TraitLimit {
   MUTATION_CHANCE(0, 33),
   MUTATION_DEGREE(2, 8),
   MOVE_COST(20, 50),
-  REPRODUCTION_COST(20, 50),
   ENERGY_CAP(200, 500),
 
   ;
