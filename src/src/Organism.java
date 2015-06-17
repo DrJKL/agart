@@ -83,9 +83,9 @@ public class Organism {
     }
   }
 
-  public boolean forcedOutByTheYouth() {
+  public boolean sacrificedForYourChildren() {
     return environment.overPopulated(strain) && //
-        (generation + 1 < Youngest.getYoungest(strain));
+        childrenSpawned > 0;
   }
 
   public boolean outOfBounds() {

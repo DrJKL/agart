@@ -26,7 +26,7 @@ public enum CauseOfDeath {
   GERICIDE("Gericide") {
     @Override
     public boolean rollTheDice(Organism organism) {
-      return organism.forcedOutByTheYouth();
+      return organism.sacrificedForYourChildren();
     }
   },
   DRAGONS("Dragons") {
