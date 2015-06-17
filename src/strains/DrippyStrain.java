@@ -25,7 +25,6 @@ public class DrippyStrain implements Strain {
         org.move();
       }
     });
-
     org.check();
   }
 }
