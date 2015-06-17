@@ -24,7 +24,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 
 import core.ImageUtil;
-import core.Youngest;
 
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
@@ -145,9 +144,7 @@ class EnvFrame extends JFrame {
   private Timer addRandomTimer() {
     final ActionListener updater = e -> {
       if (envr.livingOrgs() == 0) {
-        final Strain strain = organismControls.orgAddPanel.getChosenStrain();
-        Youngest.resetYoungest(strain);
-        envr.add(1, strain);
+        envr.add(1, organismControls.orgAddPanel.getChosenStrain());
       }
       doTheThing();
     };

@@ -17,7 +17,6 @@ import core.Direction;
 import core.DirectionPreference;
 import core.Mutator;
 import core.TraitLimit;
-import core.Youngest;
 
 public class Organism {
 
@@ -69,7 +68,6 @@ public class Organism {
 
     this.moveCost = moveCost;
     this.generation = generation;
-    Youngest.updateYoungest(strain, generation);
   }
 
   public void update() {
