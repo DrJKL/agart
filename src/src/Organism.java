@@ -44,30 +44,30 @@ public class Organism {
 
   // New virus with random attributes at a set location
   public Organism(Environment environment, Strain strain, Point location) {
-    this(environment, strain, location, 0, //
-        TraitLimit.MOVE_COST.randomValue(), //
-        Battery.random(), //
+    this(environment, strain, location, Battery.random(), //
         Mutator.random(), //
         ColorPreference.random(), //
-        DirectionPreference.random());
+        DirectionPreference.random(), //
+        TraitLimit.MOVE_COST.randomValue(), //
+        0); // Generation
   }
 
   // New Virus with non-random attributes
-  private Organism(Environment environment, Strain strain, Point location, int generation,
-      int moveCost, Battery battery, Mutator mutator, ColorPreference colorPreference,
-      DirectionPreference directionPreference) {
+  private Organism(Environment environment, Strain strain, Point location, Battery battery,
+      Mutator mutator, ColorPreference colorPreference, DirectionPreference directionPreference,
+      int moveCost, int generation) {
     this.environment = environment;
     this.strain = strain;
     this.location = location;
-    this.generation = generation;
 
     this.battery = battery;
-    this.moveCost = moveCost;
 
     this.mutator = mutator;
     this.colorPreference = colorPreference;
     this.directionPreference = directionPreference;
 
+    this.moveCost = moveCost;
+    this.generation = generation;
     Youngest.updateYoungest(strain, generation);
   }
 
@@ -118,8 +118,8 @@ public class Organism {
   // Creates new Virus with mutated attributes
   private Organism generateOffspring() {
     return new Organism(environment, strain, Direction.random().translatedCopy(location),
-        generation + 1, mutateTrait(moveCost), battery.mutate(this), mutator.mutate(),
-        colorPreference.mutate(this), directionPreference.mutate(this));
+        battery.mutate(this), mutator.mutate(), colorPreference.mutate(this),
+        directionPreference.mutate(this), mutateTrait(moveCost), generation + 1);
   }
 
   public int mutateTrait(int original) {
