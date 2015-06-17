@@ -4,6 +4,7 @@ import static core.Numbers.randomInt;
 import static java.util.Map.Entry.comparingByValue;
 
 import java.awt.Point;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -147,8 +148,8 @@ public class Organism {
   }
 
   private Map<Direction, Integer> setView() {
-    return Direction
-        .shuffled()
+    return Arrays
+        .asList(Direction.values())
         .stream()
         .collect(
             Collectors.toMap(Function.identity(), d -> colorPreference.weightedValue(environment

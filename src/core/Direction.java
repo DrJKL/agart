@@ -3,9 +3,6 @@ package core;
 import static core.Numbers.randomInt;
 
 import java.awt.Point;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public enum Direction {
   NORTH(0, -1),
@@ -39,12 +36,5 @@ public enum Direction {
 
   public static Direction random() {
     return values()[randomInt(0, 3)];
-  }
-
-  private static final List<Direction> directionsToShuffle = Arrays.asList(values());
-
-  public static List<Direction> shuffled() {
-    Collections.shuffle(directionsToShuffle);
-    return directionsToShuffle;
   }
 }
