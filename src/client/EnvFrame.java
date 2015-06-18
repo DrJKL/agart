@@ -1,12 +1,9 @@
 package client;
 
-import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -23,8 +20,7 @@ import core.ImageUtil;
 
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
-  private Environment envr;
-  private MyPanel myPanel;
+  private final MyPanel myPanel;
 
   private final Timer randTimer;
 
@@ -42,15 +38,15 @@ class EnvFrame extends JFrame {
   public EnvFrame() {
     setTitle("VIRUS");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    final Container contentPane = getContentPane();
 
     randTimer = addRandomTimer();
 
-    newImageButton = createNewImageButton(contentPane);
+    newImageButton = createNewImageButton();
     startStopRandomButton = createStartStopRandomButton();
 
+    myPanel = setUpEnvironment();
     saveImageButton = new JButton("Save Image");
-    saveImageButton.addActionListener(e -> envr.saveImage());
+    saveImageButton.addActionListener(e -> myPanel.environment.saveImage());
 
     multOrgAddButton = createMultOrgAddButton();
     exterminateStrainButton = createExterminateStrainButton();
@@ -60,8 +56,9 @@ class EnvFrame extends JFrame {
 
     organismControls = new OrganismControls(new OrgAddPanel(), multOrgAddButton,
         exterminateStrainButton);
-    setUpEnvironment(contentPane);
 
+    final Container contentPane = getContentPane();
+    contentPane.add(myPanel, "Center");
     contentPane.add(mainControlsPanel, "North");
     contentPane.add(organismControls, "East");
 
@@ -70,14 +67,15 @@ class EnvFrame extends JFrame {
   private JButton createExterminateStrainButton() {
     final JButton exterminateStrainButton = new JButton("Exterminate Strain");
     exterminateStrainButton.addActionListener(e -> {
-      final Object[] strains = envr.activeStrains.keySet().toArray();
+      final Object[] strains = myPanel.environment.activeStrains.keySet().toArray();
       if (strains.length == 0) {
         return;
       }
       final Strain strChoice = (Strain) JOptionPane.showInputDialog(new JFrame(), "Strain?",
           "Strain Choice", JOptionPane.PLAIN_MESSAGE, null, strains, strains[0]);
-      envr.exterminate(organismControls.orgAddPanel.getChosenStrain(strChoice.getStrainName()));
-      organismControls.updateData(envr);
+      myPanel.environment.exterminate(organismControls.orgAddPanel.getChosenStrain(strChoice
+          .getStrainName()));
+      organismControls.updateData(myPanel.environment);
     });
     return exterminateStrainButton;
   }
@@ -89,8 +87,9 @@ class EnvFrame extends JFrame {
       if (Strings.isNullOrEmpty(numberInput)) {
         return;
       }
-      envr.add(Integer.parseInt(numberInput), organismControls.orgAddPanel.getChosenStrain());
-      organismControls.updateData(envr);
+      myPanel.environment.add(Integer.parseInt(numberInput),
+          organismControls.orgAddPanel.getChosenStrain());
+      organismControls.updateData(myPanel.environment);
     });
     return multOrgAddButton;
   }
@@ -110,37 +109,30 @@ class EnvFrame extends JFrame {
     return startStopRandomButton;
   }
 
-  private JButton createNewImageButton(final Container contentPane) {
+  private JButton createNewImageButton() {
     final JButton newImageButton = new JButton("Reset");
-    newImageButton.addActionListener(e -> setUpEnvironment(contentPane));
+    newImageButton.addActionListener(e -> myPanel.setEnvironment(newEnvironment()));
     return newImageButton;
   }
 
-  private void setUpEnvironment(Container contentPane) {
-    envr = new Environment(ImageUtil.setupNewEnvironment(800, 600, false));
-    if (myPanel != null) {
-      remove(myPanel);
-    }
-    myPanel = new MyPanel(envr.image);
-    myPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-    final Dimension d = new Dimension(envr.getWidth() + 213, envr.getHeight() + 66);
-    setPreferredSize(d);
-    pack();
-    contentPane.add(myPanel, "Center");
-    myPanel.repaint();
-    organismControls.updateData(envr);
+  private static MyPanel setUpEnvironment() {
+    return new MyPanel(newEnvironment());
+  }
+
+  private static Environment newEnvironment() {
+    return new Environment(ImageUtil.setupNewEnvironment(800, 600, false));
   }
 
   private void doTheThing() {
-    envr.update();
-    organismControls.updateData(envr);
+    myPanel.environment.update();
+    organismControls.updateData(myPanel.environment);
     myPanel.repaint();
   }
 
   private Timer addRandomTimer() {
     final ActionListener updater = e -> {
-      if (envr.livingOrgs() == 0) {
-        envr.add(1, organismControls.orgAddPanel.getChosenStrain());
+      if (myPanel.environment.livingOrgs() == 0) {
+        myPanel.environment.add(1, organismControls.orgAddPanel.getChosenStrain());
       }
       doTheThing();
     };

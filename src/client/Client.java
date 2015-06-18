@@ -1,9 +1,13 @@
 package client;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+
+import src.Environment;
 
 public class Client {
 
@@ -21,14 +25,22 @@ public class Client {
 @SuppressWarnings("serial")
 class MyPanel extends JPanel {
 
-  private final BufferedImage bf;
+  Environment environment;
 
-  public MyPanel(BufferedImage image) {
-    bf = image;
+  public MyPanel(Environment environment) {
+    setEnvironment(environment);
+  }
+
+  public void setEnvironment(Environment environment) {
+    this.environment = environment;
+    setBorder(BorderFactory.createLineBorder(Color.black));
+    final Dimension d = new Dimension(environment.getWidth(), environment.getHeight());
+    setPreferredSize(d);
+    repaint();
   }
 
   @Override
   protected void paintComponent(Graphics g) {
-    g.drawImage(bf, 0, 0, this);
+    g.drawImage(environment.image, 0, 0, this);
   }
 }
