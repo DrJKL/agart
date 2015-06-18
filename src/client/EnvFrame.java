@@ -44,7 +44,7 @@ class EnvFrame extends JFrame {
     newImageButton = createNewImageButton();
     startStopRandomButton = createStartStopRandomButton();
 
-    myPanel = setUpEnvironment();
+    myPanel = new MyPanel(newEnvironment());
     saveImageButton = new JButton("Save Image");
     saveImageButton.addActionListener(e -> myPanel.environment.saveImage());
 
@@ -115,10 +115,6 @@ class EnvFrame extends JFrame {
     return newImageButton;
   }
 
-  private static MyPanel setUpEnvironment() {
-    return new MyPanel(newEnvironment());
-  }
-
   private static Environment newEnvironment() {
     return new Environment(ImageUtil.setupNewEnvironment(800, 600, false));
   }
@@ -152,9 +148,7 @@ class EnvFrame extends JFrame {
 
     private static JSlider addSpeedSlider(Timer timer) {
       final JSlider speedBar = new JSlider(1, MAX_DELAY, MAX_DELAY);
-      speedBar.addChangeListener(ce -> {
-        timer.setDelay(1000 / (speedBar.getValue()));
-      });
+      speedBar.addChangeListener(ce -> timer.setDelay(1000 / (speedBar.getValue())));
       timer.setDelay(1000 / (speedBar.getValue()));
       return speedBar;
     }
