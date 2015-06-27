@@ -1,14 +1,12 @@
 package client;
 
 import java.awt.Container;
-import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 import javax.swing.Timer;
 
 import src.Environment;
@@ -33,7 +31,7 @@ class EnvFrame extends JFrame {
   private final JPanel mainControlsPanel;
   private final OrganismControls organismControls;
 
-  private static final int MAX_DELAY = 1000;
+  static final int MAX_DELAY = 1000;
 
   public EnvFrame() {
     setTitle("VIRUS");
@@ -133,24 +131,5 @@ class EnvFrame extends JFrame {
       doTheThing();
     };
     return new Timer(MAX_DELAY / 2, updater);
-  }
-
-  private static class MainControls extends JPanel {
-    public MainControls(JButton startStopRandomButton, JButton saveImageButton,
-        JButton newImageButton, Timer timer) {
-      setLayout(new GridLayout(0, 4, 2, 2));
-
-      add(newImageButton);
-      add(saveImageButton);
-      add(addSpeedSlider(timer));
-      add(startStopRandomButton);
-    }
-
-    private static JSlider addSpeedSlider(Timer timer) {
-      final JSlider speedBar = new JSlider(1, MAX_DELAY, MAX_DELAY);
-      speedBar.addChangeListener(ce -> timer.setDelay(1000 / (speedBar.getValue())));
-      timer.setDelay(1000 / (speedBar.getValue()));
-      return speedBar;
-    }
   }
 }
