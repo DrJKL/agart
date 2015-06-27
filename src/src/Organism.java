@@ -1,11 +1,11 @@
 package src;
 
-import static core.Numbers.randomInt;
 import static java.util.Map.Entry.comparingByValue;
 
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -20,6 +20,7 @@ import core.TraitLimit;
 
 public class Organism {
 
+  private static final Random RANDOM = new Random();
   final Strain strain;
   private final Environment environment;
   private final int generation;
@@ -126,7 +127,7 @@ public class Organism {
   }
 
   public int timesToMove() {
-    return randomInt(0, MOVES_EACH);
+    return RANDOM.nextInt(MOVES_EACH);
   }
 
   public void move() {
@@ -167,7 +168,7 @@ public class Organism {
     if (battery.fullToBursting()) {
       return;
     }
-    battery.addEnergy(environment.takeColor(location, -randomInt(1, 20),
+    battery.addEnergy(environment.takeColor(location, -RANDOM.nextInt(20),
         colorPreference.getWeightedRandomColor()));
   }
 

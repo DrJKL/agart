@@ -1,7 +1,5 @@
 package src;
 
-import static core.Numbers.randomInt;
-
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -9,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import strains.OrthoStrain;
@@ -18,6 +17,7 @@ import core.ImageUtil;
 
 public class Environment {
 
+  private static final Random RANDOM = new Random();
   private static final int MAX_POPULATION = 100;
   public final HashMap<Strain, LinkedList<Organism>> activeStrains = new HashMap<>();
   public final BufferedImage image;
@@ -49,8 +49,8 @@ public class Environment {
     final Point potentialLocation = new Point();
     do {
       potentialLocation.move( //
-          randomInt(0, this.getWidth() - 1), //
-          randomInt(0, this.getHeight() - 1));
+          RANDOM.nextInt(this.getWidth() - 1), //
+          RANDOM.nextInt(this.getHeight() - 1));
     } while (this.orgAt(potentialLocation));
     return potentialLocation;
   }

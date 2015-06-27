@@ -1,13 +1,16 @@
 package core;
 
 import static core.Numbers.fix;
-import static core.Numbers.randomInt;
 
 import java.awt.Color;
+import java.util.Random;
 
 import src.Organism;
 
 public class ColorPreference {
+
+  private static final Random RANDOM = new Random();
+
   public final int redChance;
   public final int greenChance;
   public final int blueChance;
@@ -20,7 +23,7 @@ public class ColorPreference {
   }
 
   public static ColorPreference random() {
-    return new ColorPreference(randomInt(1, 100), randomInt(1, 100), randomInt(1, 100));
+    return new ColorPreference(RANDOM.nextInt(100), RANDOM.nextInt(100), RANDOM.nextInt(100));
   }
 
   public ColorPreference mutate(Organism organism) {
@@ -41,10 +44,10 @@ public class ColorPreference {
   }
 
   public FoodColor getWeightedRandomColor() {
-    final int rand = randomInt(1, total());
-    if (rand <= inRed()) {
+    final int rand = RANDOM.nextInt(total());
+    if (rand < inRed()) {
       return FoodColor.RED;
-    } else if (rand <= inGreen()) {
+    } else if (rand < inGreen()) {
       return FoodColor.GREEN;
     } else {
       return FoodColor.BLUE;

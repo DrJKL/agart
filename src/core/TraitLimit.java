@@ -2,7 +2,7 @@ package core;
 
 public enum TraitLimit {
   MUTATION_CHANCE(0, 33),
-  MUTATION_DEGREE(2, 8),
+  MUTATION_DEGREE(10, 15),
   MOVE_COST(20, 50),
   ENERGY_CAP(200, 500),
 

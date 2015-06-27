@@ -1,10 +1,13 @@
 package core;
 
 import static core.Numbers.fix;
-import static core.Numbers.randomInt;
+
+import java.util.Random;
+
 import src.Organism;
 
 public class DirectionPreference {
+  private static final Random RANDOM = new Random();
   public final int northChance;
   public final int eastChance;
   public final int southChance;
@@ -21,7 +24,7 @@ public class DirectionPreference {
 
   public static DirectionPreference random() {
     return new DirectionPreference( //
-        randomInt(0, 3), randomInt(0, 3), randomInt(0, 3), randomInt(0, 3));
+        RANDOM.nextInt(4), RANDOM.nextInt(4), RANDOM.nextInt(4), RANDOM.nextInt(4));
   }
 
   public DirectionPreference mutate(Organism organism) {
@@ -49,12 +52,12 @@ public class DirectionPreference {
   }
 
   public Direction getWeightedRandomDirection() {
-    final int rand = Numbers.randomInt(1, total());
-    if (rand <= goNorth()) {
+    final int rand = RANDOM.nextInt(total());
+    if (rand < goNorth()) {
       return Direction.NORTH;
-    } else if (rand <= goEast()) {
+    } else if (rand < goEast()) {
       return Direction.EAST;
-    } else if (rand <= goSouth()) {
+    } else if (rand < goSouth()) {
       return Direction.SOUTH;
     } else {
       return Direction.WEST;
