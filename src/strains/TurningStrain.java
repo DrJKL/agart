@@ -12,7 +12,7 @@ public class TurningStrain implements Strain {
 
   @Override
   public String getStrainName() {
-    return "Turning VIRUS";
+    return "Turning";
   }
 
   public static void shiftDirectionMaybe() {

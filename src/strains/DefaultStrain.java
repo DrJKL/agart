@@ -9,7 +9,7 @@ public class DefaultStrain implements Strain {
 
   @Override
   public String getStrainName() {
-    return "Default VIRUS";
+    return "Default";
   }
 
   @Override

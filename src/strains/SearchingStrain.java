@@ -9,7 +9,7 @@ public class SearchingStrain implements Strain {
 
   @Override
   public String getStrainName() {
-    return "Searching VIRUS";
+    return "Searching";
   }
 
   @Override

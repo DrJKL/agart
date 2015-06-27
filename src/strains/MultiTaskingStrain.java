@@ -9,7 +9,7 @@ public class MultiTaskingStrain implements Strain {
 
   @Override
   public String getStrainName() {
-    return "Multitasking VIRUS";
+    return "MT";
   }
 
   @Override

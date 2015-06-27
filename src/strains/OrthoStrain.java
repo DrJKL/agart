@@ -12,7 +12,7 @@ public class OrthoStrain implements Strain {
 
   @Override
   public String getStrainName() {
-    return "Ortho VIRUS";
+    return "Ortho";
   }
 
   public static void shiftDirectionMaybe() {

@@ -9,7 +9,7 @@ public class RayStrain implements Strain {
 
   @Override
   public String getStrainName() {
-    return "Ray VIRUS";
+    return "Ray";
   }
 
   @Override

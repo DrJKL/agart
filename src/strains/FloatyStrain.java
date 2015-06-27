@@ -10,7 +10,7 @@ public class FloatyStrain implements Strain {
 
   @Override
   public String getStrainName() {
-    return "Floaty VIRUS";
+    return "Floaty";
   }
 
   @Override
