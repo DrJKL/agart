@@ -18,8 +18,7 @@ import javax.swing.JRadioButton;
 
 import src.Strain;
 import strains.DefaultStrain;
-import strains.DrippyStrain;
-import strains.FloatyStrain;
+import strains.DirectionalStrain;
 import strains.MultiTaskingRayStrain;
 import strains.MultiTaskingStrain;
 import strains.OrthoStrain;
@@ -30,9 +29,10 @@ import strains.TurningStrain;
 @SuppressWarnings("serial")
 class OrgAddPanel extends JPanel implements ActionListener {
 
-  public static final List<Strain> strains = Arrays.asList(new DefaultStrain(), new DrippyStrain(),
-      new FloatyStrain(), new RayStrain(), new MultiTaskingStrain(), new SearchingStrain(),
-      new MultiTaskingRayStrain(), new OrthoStrain(), new TurningStrain());
+  public static final List<Strain> strains = Arrays.asList(new DefaultStrain(),
+      DirectionalStrain.drippy(), DirectionalStrain.floaty(), new RayStrain(),
+      new MultiTaskingStrain(), new SearchingStrain(), new MultiTaskingRayStrain(),
+      new OrthoStrain(), new TurningStrain());
 
   private static final Map<String, Strain> strToStrain = strains.stream().collect(
       Collectors.toMap(Strain::getStrainName, Function.identity()));
