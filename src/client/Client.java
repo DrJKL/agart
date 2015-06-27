@@ -29,13 +29,12 @@ class MyPanel extends JPanel {
 
   public MyPanel(Environment environment) {
     setEnvironment(environment);
+    setBorder(BorderFactory.createLineBorder(Color.black));
   }
 
   public void setEnvironment(Environment environment) {
     this.environment = environment;
-    setBorder(BorderFactory.createLineBorder(Color.black));
-    final Dimension d = new Dimension(environment.getWidth(), environment.getHeight());
-    setPreferredSize(d);
+    setPreferredSize(new Dimension(environment.getWidth(), environment.getHeight()));
     repaint();
   }
 
