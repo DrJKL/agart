@@ -20,7 +20,7 @@ import core.ImageUtil;
 
 @SuppressWarnings("serial")
 class EnvFrame extends JFrame {
-  private final MyPanel myPanel;
+  private final EnvironmentPanel environmentPanel;
 
   private final Timer randTimer;
 
@@ -44,9 +44,9 @@ class EnvFrame extends JFrame {
     newImageButton = createNewImageButton();
     startStopRandomButton = createStartStopRandomButton();
 
-    myPanel = new MyPanel(newEnvironment());
+    environmentPanel = new EnvironmentPanel(newEnvironment());
     saveImageButton = new JButton("Save Image");
-    saveImageButton.addActionListener(e -> myPanel.environment.saveImage());
+    saveImageButton.addActionListener(e -> environmentPanel.environment.saveImage());
 
     multOrgAddButton = createMultOrgAddButton();
     exterminateStrainButton = createExterminateStrainButton();
@@ -58,7 +58,7 @@ class EnvFrame extends JFrame {
         exterminateStrainButton);
 
     final Container contentPane = getContentPane();
-    contentPane.add(myPanel, "Center");
+    contentPane.add(environmentPanel, "Center");
     contentPane.add(mainControlsPanel, "North");
     contentPane.add(organismControls, "East");
 
@@ -67,15 +67,15 @@ class EnvFrame extends JFrame {
   private JButton createExterminateStrainButton() {
     final JButton exterminateStrainButton = new JButton("Exterminate Strain");
     exterminateStrainButton.addActionListener(e -> {
-      final Object[] strains = myPanel.environment.activeStrains.keySet().toArray();
+      final Object[] strains = environmentPanel.environment.activeStrains.keySet().toArray();
       if (strains.length == 0) {
         return;
       }
       final Strain strChoice = (Strain) JOptionPane.showInputDialog(new JFrame(), "Strain?",
           "Strain Choice", JOptionPane.PLAIN_MESSAGE, null, strains, strains[0]);
-      myPanel.environment.exterminate(organismControls.orgAddPanel.getChosenStrain(strChoice
+      environmentPanel.environment.exterminate(organismControls.orgAddPanel.getChosenStrain(strChoice
           .getStrainName()));
-      organismControls.updateData(myPanel.environment);
+      organismControls.updateData(environmentPanel.environment);
     });
     return exterminateStrainButton;
   }
@@ -87,9 +87,9 @@ class EnvFrame extends JFrame {
       if (Strings.isNullOrEmpty(numberInput)) {
         return;
       }
-      myPanel.environment.add(Integer.parseInt(numberInput),
+      environmentPanel.environment.add(Integer.parseInt(numberInput),
           organismControls.orgAddPanel.getChosenStrain());
-      organismControls.updateData(myPanel.environment);
+      organismControls.updateData(environmentPanel.environment);
     });
     return multOrgAddButton;
   }
@@ -111,7 +111,7 @@ class EnvFrame extends JFrame {
 
   private JButton createNewImageButton() {
     final JButton newImageButton = new JButton("Reset");
-    newImageButton.addActionListener(e -> myPanel.setEnvironment(newEnvironment()));
+    newImageButton.addActionListener(e -> environmentPanel.setEnvironment(newEnvironment()));
     return newImageButton;
   }
 
@@ -120,15 +120,15 @@ class EnvFrame extends JFrame {
   }
 
   private void doTheThing() {
-    myPanel.environment.update();
-    organismControls.updateData(myPanel.environment);
-    myPanel.repaint();
+    environmentPanel.environment.update();
+    organismControls.updateData(environmentPanel.environment);
+    environmentPanel.repaint();
   }
 
   private Timer addRandomTimer() {
     final ActionListener updater = e -> {
-      if (myPanel.environment.livingOrgs() == 0) {
-        myPanel.environment.add(1, organismControls.orgAddPanel.getChosenStrain());
+      if (environmentPanel.environment.livingOrgs() == 0) {
+        environmentPanel.environment.add(1, organismControls.orgAddPanel.getChosenStrain());
       }
       doTheThing();
     };
