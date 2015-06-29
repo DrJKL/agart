@@ -1,8 +1,9 @@
 package core;
 
-import static core.Numbers.randomInt;
+import java.util.Random;
 
 public class Mutator {
+  private static final Random RANDOM = new Random();
   private final int mutationChance, mutationDegree;
 
   private Mutator(int mutationChance, int mutationDegree) {
@@ -20,12 +21,15 @@ public class Mutator {
   }
 
   public int mutateTrait(int original) {
-    return shouldMutate() ? Math
-        .abs(randomInt(original - mutationDegree, original + mutationDegree)) : original;
+    return Math.abs(original + changeDegree());
+  }
+
+  public int changeDegree() {
+    return shouldMutate() ? mutationDegree - RANDOM.nextInt(1 + (2 * mutationDegree)) : 0;
   }
 
   private boolean shouldMutate() {
-    return Math.random() * 100 < mutationChance;
+    return mutationDegree > 0 && Math.random() * 100 < mutationChance;
   }
 
 }
