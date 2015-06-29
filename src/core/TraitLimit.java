@@ -1,5 +1,7 @@
 package core;
 
+import java.util.Random;
+
 public enum TraitLimit {
   MUTATION_CHANCE(0, 33),
   MUTATION_DEGREE(10, 15),
@@ -7,6 +9,8 @@ public enum TraitLimit {
   ENERGY_CAP(200, 500),
 
   ;
+
+  private static final Random RANDOM = new Random();
 
   public final int low;
   public final int high;
@@ -17,6 +21,6 @@ public enum TraitLimit {
   }
 
   public int randomValue() {
-    return Numbers.randomInt(low, high);
+    return high == low ? high : low + RANDOM.nextInt(high - low);
   }
 }
