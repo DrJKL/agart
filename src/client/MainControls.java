@@ -8,6 +8,9 @@ import javax.swing.JSlider;
 import javax.swing.Timer;
 
 class MainControls extends JPanel {
+
+  private static final long serialVersionUID = 8273021329461978902L;
+
   public MainControls(JButton startStopRandomButton, JButton saveImageButton,
       JButton newImageButton, Timer timer) {
     setLayout(new GridLayout(0, 4, 2, 2));

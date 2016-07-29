@@ -8,11 +8,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import src.Environment;
-
 import com.google.common.collect.ImmutableSet;
 
+import src.Environment;
+
 public class OrganismControls extends JPanel {
+  private static final long serialVersionUID = -3186503206426099003L;
   public final OrgAddPanel orgAddPanel;
   private final JLabel numOrgLabel;
   private final JLabel numUpdatesLabel;
